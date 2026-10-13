@@ -132,7 +132,7 @@ const CodeBlockContext = createContext<CodeBlockContextType>({
 // Highlighter cache (singleton per language)
 const highlighterCache = new Map<
   string,
-  Promise<HighlighterGeneric<BundledLanguage, BundledTheme>>
+  Promise<HighlighterGeneric<ShikiLanguage, BundledTheme>>
 >();
 
 // Token cache
@@ -149,7 +149,7 @@ const getTokensCacheKey = (code: string, language: BundledLanguage) => {
 
 const getHighlighter = (
   language: BundledLanguage,
-): Promise<HighlighterGeneric<BundledLanguage, BundledTheme>> => {
+): Promise<HighlighterGeneric<ShikiLanguage, BundledTheme>> => {
   const cached = highlighterCache.get(language);
   if (cached) {
     return cached;
