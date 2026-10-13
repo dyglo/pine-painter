@@ -21,7 +21,12 @@ import {
   useRef,
   useState,
 } from "react";
-import type { BundledLanguage as ShikiLanguage, BundledTheme, HighlighterGeneric, ThemedToken } from "shiki";
+import type {
+  BundledLanguage as ShikiLanguage,
+  BundledTheme,
+  HighlighterGeneric,
+  ThemedToken,
+} from "shiki";
 import { createHighlighter } from "shiki";
 
 type BundledLanguage = ShikiLanguage | "text";
