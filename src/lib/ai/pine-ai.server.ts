@@ -23,8 +23,8 @@ export type GenerateInput = {
   previousCode?: string | undefined;
   error?: string | undefined;
   runId?: string | undefined;
-  currentCode?: string;
-  history?: { role: "user" | "assistant"; content: string }[];
+  currentCode?: string | undefined;
+  history?: { role: "user" | "assistant"; content: string }[] | undefined;
 };
 
 export type GenerateResult =

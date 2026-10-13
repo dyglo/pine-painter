@@ -50,15 +50,11 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
         run: async (code) => {
           if (!ws) return { ok: false, error: "Chart not ready" };
           try {
-            handle?.remove();
-          } catch {
-            /* already gone */
-          }
-          handle = null;
-          try {
             const res = await ws.chart.runIndicator(code, { language: "pine" });
             if (res.ok) {
+              const previous = handle;
               handle = res.handle;
+              try { previous?.remove(); } catch { /* Already removed. */ }
               return { ok: true };
             }
             return { ok: false, error: formatError(res.error) };
