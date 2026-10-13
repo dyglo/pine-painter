@@ -145,22 +145,39 @@
 
 /* Pine Lab theme: terminal-dark with amber signal accent */
 .dark {
-  --background: oklch(0.16 0.01 250);
-  --foreground: oklch(0.93 0.01 250);
-  --card: oklch(0.19 0.012 250);
-  --muted: oklch(0.23 0.012 250);
-  --muted-foreground: oklch(0.65 0.015 250);
-  --border: oklch(0.28 0.015 250);
-  --input: oklch(0.28 0.015 250);
-  --primary: oklch(0.8 0.16 75);
-  --primary-foreground: oklch(0.18 0.02 75);
-  --accent: oklch(0.26 0.015 250);
-  --accent-foreground: oklch(0.95 0.01 250);
+  --background: oklch(0.158 0.003 248);
+  --foreground: oklch(0.94 0.003 248);
+  --card: oklch(0.199 0.005 248);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --secondary: oklch(0.265 0.008 248);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.238 0.009 248);
+  --muted-foreground: oklch(0.64 0.012 248);
+  --border: oklch(0.253 0.01 248);
+  --input: oklch(0.284 0.01 248);
+  --primary: oklch(0.94 0.003 248);
+  --primary-foreground: oklch(0.158 0.003 248);
+  --accent: oklch(0.284 0.01 248);
+  --accent-foreground: var(--foreground);
+  --ring: oklch(0.5 0.01 248);
   --destructive: oklch(0.65 0.2 25);
   --success: oklch(0.72 0.15 155);
 }
 @theme inline {
   --color-success: var(--success);
-  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.quant-workspace { height: 100dvh; }
+.quant-panel { width: 400px; max-width: calc(100vw - 48px); }
+.quant-dock [data-slot="input-group"] { background: var(--background); border-radius: 12px; }
+.quant-dock textarea { min-height: 82px; font-size: 13px; }
+.quant-panel [data-streamdown="list"] { padding-left: 1.1rem; }
+@media (max-width: 640px) {
+  .quant-panel { position: absolute; inset: 0 auto 0 0; z-index: 30; width: 360px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
