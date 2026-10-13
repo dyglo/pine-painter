@@ -8,7 +8,11 @@ export type ChartApi = {
 
 function formatError(err: unknown): string {
   if (!err) return "Unknown error";
-  const e = err as Error & { line?: number; column?: number; loc?: { line?: number; column?: number } };
+  const e = err as Error & {
+    line?: number;
+    column?: number;
+    loc?: { line?: number; column?: number };
+  };
   const parts = [e.message || String(err)];
   const line = e.line ?? e.loc?.line;
   const col = e.column ?? e.loc?.column;
@@ -54,7 +58,11 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
             if (res.ok) {
               const previous = handle;
               handle = res.handle;
-              try { previous?.remove(); } catch { /* Already removed. */ }
+              try {
+                previous?.remove();
+              } catch {
+                /* Already removed. */
+              }
               return { ok: true };
             }
             return { ok: false, error: formatError(res.error) };
