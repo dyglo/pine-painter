@@ -8,6 +8,10 @@ export function parsePineReply(text: string): PineReply {
   return {
     code,
     summary: summary.trim() || "- Updated the Pine Script indicator and its chart plots.",
-    suggestions: followUps.split("\n").map((s) => s.replace(/^\s*[-*\d.)]+\s*/, "").trim()).filter(Boolean).slice(0, 3),
+    suggestions: followUps
+      .split("\n")
+      .map((s) => s.replace(/^\s*[-*\d.)]+\s*/, "").trim())
+      .filter(Boolean)
+      .slice(0, 3),
   };
 }

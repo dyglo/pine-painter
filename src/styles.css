@@ -170,14 +170,37 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-.quant-workspace { height: 100dvh; }
-.quant-panel { width: 400px; max-width: calc(100vw - 48px); }
-.quant-dock [data-slot="input-group"] { background: var(--background); border-radius: 12px; }
-.quant-dock textarea { min-height: 82px; font-size: 13px; }
-.quant-panel [data-streamdown="list"] { padding-left: 1.1rem; }
+.quant-workspace {
+  height: 100dvh;
+}
+.quant-panel {
+  width: 400px;
+  max-width: calc(100vw - 48px);
+}
+.quant-dock [data-slot="input-group"] {
+  background: var(--background);
+  border-radius: 12px;
+}
+.quant-dock textarea {
+  min-height: 82px;
+  font-size: 13px;
+}
+.quant-panel [data-streamdown="list"] {
+  padding-left: 1.1rem;
+}
 @media (max-width: 640px) {
-  .quant-panel { position: absolute; inset: 0 auto 0 0; z-index: 30; width: 360px; }
+  .quant-panel {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: 360px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

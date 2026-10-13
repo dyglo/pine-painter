@@ -33,7 +33,8 @@ export type GenerateResult =
 
 export async function generatePineCode(input: GenerateInput): Promise<GenerateResult> {
   const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) return { ok: false, status: 401, message: "AI is not configured.", retryable: false };
+  if (!apiKey)
+    return { ok: false, status: 401, message: "AI is not configured.", retryable: false };
 
   const runIdFetch = createLovableAiGatewayRunIdFetch(input.runId);
   const provider = createOpenAI({
@@ -44,7 +45,8 @@ export async function generatePineCode(input: GenerateInput): Promise<GenerateRe
   });
 
   let userText = `Request: ${input.prompt}`;
-  if (input.currentCode) userText += `\n\nCurrent editor script:\n\`\`\`pine\n${input.currentCode}\n\`\`\``;
+  if (input.currentCode)
+    userText += `\n\nCurrent editor script:\n\`\`\`pine\n${input.currentCode}\n\`\`\``;
   if (input.previousCode && input.error) {
     userText += `\n\nYour previous script:\n\`\`\`pine\n${input.previousCode}\n\`\`\`\n\nIt failed on the chart with this error:\n${input.error}\n\nReturn the full fixed script.`;
   }
@@ -73,13 +75,16 @@ export async function generatePineCode(input: GenerateInput): Promise<GenerateRe
     if (streamError) throw streamError;
     const reply = parsePineReply(text);
     const { code } = reply;
-    if (!code) return { ok: false, status: 502, message: "The AI returned no code.", retryable: false };
+    if (!code)
+      return { ok: false, status: 502, message: "The AI returned no code.", retryable: false };
     return { ok: true, ...reply, runId: runIdFetch.getRunId() };
   } catch (error) {
     const status = APICallError.isInstance(error) ? (error.statusCode ?? 500) : 500;
     let message = error instanceof Error ? error.message : "AI request failed.";
-    if (status === 402) message = "AI credits are used up. Add credits in workspace billing settings.";
-    if (status === 429) message = "Too many requests right now. Please wait a moment and try again.";
+    if (status === 402)
+      message = "AI credits are used up. Add credits in workspace billing settings.";
+    if (status === 429)
+      message = "Too many requests right now. Please wait a moment and try again.";
     console.error(error);
     return { ok: false, status, message, retryable: status === 429 || status >= 500 };
   }

@@ -1,28 +1,57 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ClientOnly } from "@tanstack/react-router";
-import { lazy, Suspense, useCallback, useRef, useState } from "react";
-import { Bot, Check, Copy, Loader2, Play, Code2, AlertTriangle, CircleCheck } from "lucide-react";
-
+import { createFileRoute, ClientOnly } from "@tanstack/react-router";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import {
+  ArrowUp,
+  ArrowUpRight,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Code2,
+  Copy,
+  FileCode2,
+  Loader2,
+  MessageSquare,
+  Play,
+  CircleCheck,
+  AlertTriangle,
+  SquareTerminal,
+} from "lucide-react";
 import type { ChartApi } from "@/components/ChartWorkspace";
+import { Button } from "@/components/ui/button";
+import {
+  Conversation,
+  ConversationContent,
+  ConversationScrollButton,
+} from "@/components/ai-elements/conversation";
+import { Message, MessageContent, MessageResponse } from "@/components/ai-elements/message";
+import {
+  PromptInput,
+  PromptInputTextarea,
+  PromptInputFooter,
+  PromptInputSubmit,
+} from "@/components/ai-elements/prompt-input";
+import { Shimmer } from "@/components/ai-elements/shimmer";
+import { Tool, ToolHeader, ToolContent } from "@/components/ai-elements/tool";
 import { generatePine } from "@/lib/ai/pine-ai.functions";
 import { cn } from "@/lib/utils";
 
 const ChartWorkspace = lazy(() =>
   import("@/components/ChartWorkspace").then((m) => ({ default: m.ChartWorkspace })),
 );
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pine Lab — Write & test Pine Script indicators" },
+      { title: "Pine Lab — Quant indicator workspace" },
       {
         name: "description",
-        content: "Write, run and AI-generate TradingView Pine Script indicators on a live chart.",
+        content:
+          "Create, refine and test Pine Script indicators with GPT-5.6 on a live Vela chart.",
       },
-      { property: "og:title", content: "Pine Lab — Write & test Pine Script indicators" },
+      { property: "og:title", content: "Pine Lab — Quant indicator workspace" },
       {
         property: "og:description",
-        content: "Write, run and AI-generate TradingView Pine Script indicators on a live chart.",
+        content:
+          "An AI-assisted Pine Script editor and live chart in one focused trading workspace.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -30,7 +59,6 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
-
 const DEFAULT_CODE = `//@version=5
 indicator("EMA Ribbon", overlay=true)
 fast = input.int(9, "Fast")
@@ -40,240 +68,411 @@ s = ta.ema(close, slow)
 plot(f, "Fast EMA", color=color.orange, linewidth=2)
 plot(s, "Slow EMA", color=color.aqua, linewidth=2)
 `;
-
-const MAX_RETRIES = 3;
-
-type Status = { kind: "idle" } | { kind: "ok"; msg: string } | { kind: "error"; msg: string };
-type LogItem = { role: "user" | "step" | "ok" | "error"; text: string };
-
+type Status = { kind: "idle" | "ok" | "error"; msg?: string };
+type Part =
+  | { type: "text"; text: string }
+  | {
+      type: "chart-run";
+      state: "input-available" | "output-available" | "output-error";
+      text: string;
+    };
+type ChatMessage = {
+  id: number;
+  role: "user" | "assistant";
+  parts: Part[];
+  suggestions?: string[];
+};
+type HistoryTurn = { role: "user" | "assistant"; content: string };
 function Index() {
   const apiRef = useRef<ChartApi | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const historyRef = useRef<HistoryTurn[]>([]);
+  const busyRef = useRef(false);
+  const nextId = useRef(0);
   const [ready, setReady] = useState(false);
   const [code, setCode] = useState(DEFAULT_CODE);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [running, setRunning] = useState(false);
   const [copied, setCopied] = useState(false);
   const [tab, setTab] = useState<"code" | "ai">("ai");
+  const [collapsed, setCollapsed] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [busy, setBusy] = useState(false);
-  const [log, setLog] = useState<LogItem[]>([]);
-
+  const [phase, setPhase] = useState("Writing Pine Script…");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  useEffect(() => {
+    if (tab === "ai" && !collapsed) inputRef.current?.focus();
+  }, [tab, collapsed, busy]);
   const onReady = useCallback((api: ChartApi) => {
     apiRef.current = api;
-    setReady(true);
-    api.run(DEFAULT_CODE).then((r) =>
-      setStatus(r.ok ? { kind: "ok", msg: "Running on chart" } : { kind: "error", msg: r.error }),
-    );
+    api.run(DEFAULT_CODE).then((r) => {
+      setReady(true);
+      setStatus(r.ok ? { kind: "ok", msg: "Running on chart" } : { kind: "error", msg: r.error });
+    });
   }, []);
-
   const run = async (src = code) => {
     if (!apiRef.current) return null;
     setRunning(true);
-    const r = await apiRef.current.run(src);
-    setRunning(false);
-    setStatus(r.ok ? { kind: "ok", msg: "Running on chart" } : { kind: "error", msg: r.error });
-    return r;
-  };
-
-  const copy = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-
-  const ask = async () => {
-    const p = prompt.trim();
-    if (!p || busy || !apiRef.current) return;
-    setBusy(true);
-    setLog((l) => [...l, { role: "user", text: p }]);
-    setPrompt("");
-    let prev: string | undefined;
-    let err: string | undefined;
-    let runId: string | undefined;
     try {
-      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-        setLog((l) => [
-          ...l,
-          { role: "step", text: attempt === 0 ? "Writing indicator…" : `Fixing error (retry ${attempt}/${MAX_RETRIES})…` },
-        ]);
-        const res = await generatePine({ data: { prompt: p, previousCode: prev, error: err, runId } });
-        if (!res.ok) {
-          setLog((l) => [...l, { role: "error", text: res.message }]);
-          return;
-        }
-        runId = res.runId;
-        setCode(res.code);
-        const r = await run(res.code);
-        if (r?.ok) {
-          setLog((l) => [...l, { role: "ok", text: "Indicator is running on the chart." }]);
-          return;
-        }
-        prev = res.code;
-        err = r && !r.ok ? r.error : "Unknown error";
-        setLog((l) => [...l, { role: "error", text: err! }]);
-      }
-      setLog((l) => [...l, { role: "error", text: "Couldn't fix it after 3 retries. Try rephrasing or edit the code." }]);
-    } catch (e) {
-      setLog((l) => [...l, { role: "error", text: e instanceof Error ? e.message : "Request failed" }]);
+      const r = await apiRef.current.run(src);
+      setStatus(r.ok ? { kind: "ok", msg: "Running on chart" } : { kind: "error", msg: r.error });
+      return r;
     } finally {
-      setBusy(false);
+      setRunning(false);
     }
   };
-
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setStatus({ kind: "error", msg: "Could not copy. Select the script and copy it manually." });
+    }
+  };
+  const ask = async (request = prompt) => {
+    const p = request.trim();
+    if (!p || busyRef.current || running || !apiRef.current) return;
+    busyRef.current = true;
+    setBusy(true);
+    setPrompt("");
+    setTab("ai");
+    const userId = nextId.current++;
+    const assistantId = nextId.current++;
+    const history = [...historyRef.current];
+    historyRef.current.push({ role: "user", content: p });
+    setMessages((m) => [
+      ...m,
+      { id: userId, role: "user", parts: [{ type: "text", text: p }] },
+      { id: assistantId, role: "assistant", parts: [] },
+    ]);
+    const addPart = (part: Part) =>
+      setMessages((m) =>
+        m.map((item) =>
+          item.id === assistantId ? { ...item, parts: [...item.parts, part] } : item,
+        ),
+      );
+    let previousCode: string | undefined;
+    let error: string | undefined;
+    let runId: string | undefined;
+    try {
+      for (let attempt = 0; attempt <= 3; attempt++) {
+        setPhase(attempt === 0 ? "Writing Pine Script…" : `Refining script · ${attempt}/3…`);
+        const result = await generatePine({
+          data: { prompt: p, history, currentCode: code, previousCode, error, runId },
+        });
+        if (!result.ok) {
+          addPart({ type: "text", text: result.message });
+          historyRef.current.push({ role: "assistant", content: result.message });
+          return;
+        }
+        runId = result.runId;
+        setCode(result.code);
+        setPhase("Running on chart…");
+        const outcome = await run(result.code);
+        if (outcome?.ok) {
+          addPart({
+            type: "chart-run",
+            state: "output-available",
+            text: "Indicator applied to the live chart.",
+          });
+          addPart({ type: "text", text: `### What's Changed\n${result.summary}` });
+          setMessages((m) =>
+            m.map((item) =>
+              item.id === assistantId ? { ...item, suggestions: result.suggestions } : item,
+            ),
+          );
+          historyRef.current.push({
+            role: "assistant",
+            content: `\`\`\`pine\n${result.code}\n\`\`\`\n${result.summary}\n${result.suggestions.join("\n")}`,
+          });
+          return;
+        }
+        previousCode = result.code;
+        error = outcome && !outcome.ok ? outcome.error : "Chart not ready";
+        addPart({ type: "chart-run", state: "output-error", text: error });
+      }
+      const failure =
+        "The script still has an error after 3 repairs. You can refine the request or edit the script.";
+      addPart({ type: "text", text: failure });
+      historyRef.current.push({
+        role: "assistant",
+        content: `${failure}\n${previousCode ?? ""}\n${error ?? ""}`,
+      });
+    } catch (e) {
+      const text = e instanceof Error ? e.message : "Request failed";
+      addPart({ type: "text", text });
+      historyRef.current.push({ role: "assistant", content: text });
+    } finally {
+      busyRef.current = false;
+      setBusy(false);
+      inputRef.current?.focus();
+    }
+  };
   return (
-    <div className="dark flex h-screen w-screen overflow-hidden bg-background font-sans text-foreground">
-      <main className="relative min-w-0 flex-1">
+    <div className="quant-workspace dark relative flex w-full overflow-hidden bg-background font-sans text-foreground">
+      <aside
+        aria-label="Pine workspace panel"
+        className={cn(
+          "quant-panel shrink-0 flex-col border-r border-border bg-card",
+          collapsed ? "hidden" : "flex",
+        )}
+      >
+        <header className="flex h-16 shrink-0 items-center gap-3 border-b border-border px-5">
+          <div className="flex size-8 items-center justify-center rounded-md border border-input bg-background">
+            <SquareTerminal className="size-4" />
+          </div>
+          <div>
+            <h1 className="text-sm font-semibold">Pine Lab</h1>
+            <span className="text-[10px] text-muted-foreground">QUANT WORKSPACE</span>
+          </div>
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            className="ml-auto text-muted-foreground"
+            aria-label="Collapse panel"
+            title="Collapse panel"
+            onClick={() => setCollapsed(true)}
+          >
+            <ChevronLeft />
+          </Button>
+        </header>
+        <div
+          role="tablist"
+          aria-label="Workspace view"
+          className="flex h-12 shrink-0 gap-5 border-b border-border px-5"
+        >
+          {(["ai", "code"] as const).map((t) => (
+            <Button
+              key={t}
+              role="tab"
+              aria-selected={tab === t}
+              variant="ghost"
+              onClick={() => setTab(t)}
+              className={cn(
+                "h-full rounded-none border-b-2 px-0 text-xs hover:bg-transparent",
+                tab === t
+                  ? "border-primary text-foreground"
+                  : "border-transparent text-muted-foreground",
+              )}
+            >
+              {t === "ai" ? <MessageSquare /> : <Code2 />}
+              {t === "ai" ? "AI Chat" : "Pine Editor"}
+            </Button>
+          ))}
+        </div>
+        {tab === "ai" ? (
+          <Conversation className="min-h-0 flex-1">
+            <ConversationContent className="gap-6 px-5 py-6">
+              {messages.map((m) => (
+                <Message key={m.id} from={m.role} className="max-w-full">
+                  {m.role === "assistant" && (
+                    <div className="mb-1 flex items-center gap-2 text-xs font-medium">
+                      <SquareTerminal className="size-3.5 text-muted-foreground" />
+                      Pine Assistant
+                    </div>
+                  )}
+                  <MessageContent
+                    className={cn(
+                      "w-full leading-relaxed",
+                      m.role === "user" &&
+                        "group-[.is-user]:bg-secondary group-[.is-user]:text-secondary-foreground",
+                    )}
+                  >
+                    {m.parts.map((part, i) =>
+                      part.type === "text" ? (
+                        <MessageResponse key={i}>{part.text}</MessageResponse>
+                      ) : (
+                        <Tool key={i} defaultOpen={false} className="mb-0">
+                          <ToolHeader
+                            type="tool-chart"
+                            title="Run indicator"
+                            state={part.state}
+                            className="gap-2 p-2.5 [&_span]:text-[11px]"
+                          />
+                          <ToolContent>
+                            <pre className="whitespace-pre-wrap break-words font-mono text-xs">
+                              {part.text}
+                            </pre>
+                          </ToolContent>
+                        </Tool>
+                      ),
+                    )}
+                    {busy && m.id === messages.at(-1)?.id && (
+                      <Shimmer className="py-2 text-xs">{phase}</Shimmer>
+                    )}
+                  </MessageContent>
+                  {m.suggestions && (
+                    <div className="mt-2 flex flex-col gap-2">
+                      <span className="text-[10px] font-medium uppercase text-muted-foreground">
+                        Next steps
+                      </span>
+                      {m.suggestions.map((s) => (
+                        <Button
+                          key={s}
+                          variant="outline"
+                          disabled={busy || running}
+                          onClick={() => ask(s)}
+                          className="h-auto min-h-9 w-full justify-between gap-3 whitespace-normal bg-transparent px-3 py-2 text-left text-xs font-normal"
+                        >
+                          <span>{s}</span>
+                          <ArrowUpRight className="shrink-0 text-muted-foreground" />
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </Message>
+              ))}
+            </ConversationContent>
+            <ConversationScrollButton />
+          </Conversation>
+        ) : (
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-3">
+              <FileCode2 className="size-4 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">indicator.pine</span>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="ml-auto"
+                aria-label={copied ? "Copied" : "Copy Pine"}
+                title="Copy Pine"
+                onClick={copy}
+              >
+                {copied ? <Check /> : <Copy />}
+              </Button>
+              <Button size="sm" disabled={!ready || running || busy} onClick={() => run()}>
+                {running ? <Loader2 className="animate-spin" /> : <Play />}Run
+              </Button>
+            </div>
+            <textarea
+              aria-label="Pine Script code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              spellCheck={false}
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+                  e.preventDefault();
+                  if (ready && !running && !busy) run();
+                }
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  const t = e.currentTarget;
+                  const start = t.selectionStart;
+                  setCode(code.slice(0, start) + "    " + code.slice(t.selectionEnd));
+                  requestAnimationFrame(() => {
+                    t.selectionStart = t.selectionEnd = start + 4;
+                  });
+                }
+              }}
+              className="min-h-0 flex-1 resize-none bg-background p-4 font-mono text-xs leading-6 outline-none"
+            />
+            {status.kind !== "idle" && (
+              <div
+                role="status"
+                className={cn(
+                  "flex max-h-36 gap-2 overflow-auto border-t border-border px-4 py-3 text-xs",
+                  status.kind === "ok" ? "text-success" : "text-destructive",
+                )}
+              >
+                {status.kind === "ok" ? (
+                  <CircleCheck className="size-4 shrink-0" />
+                ) : (
+                  <AlertTriangle className="size-4 shrink-0" />
+                )}
+                <pre className="whitespace-pre-wrap break-words font-mono">{status.msg}</pre>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="quant-dock shrink-0 border-t border-border p-4">
+          <PromptInput onSubmit={({ text }) => ask(text)}>
+            <PromptInputTextarea
+              ref={inputRef}
+              aria-label="Message Pine Assistant"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe or refine an indicator…"
+              className="px-3.5 pt-3.5"
+            />
+            <PromptInputFooter className="px-3 pb-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-medium text-muted-foreground">GPT-5.6</span>
+                <span className="mx-1 h-3 border-l border-input" />
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  title="Open Pine editor"
+                  aria-label="Open Pine editor"
+                  onClick={() => setTab("code")}
+                >
+                  <Code2 />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  title="Copy current Pine Script"
+                  aria-label="Copy current Pine Script"
+                  onClick={copy}
+                >
+                  {copied ? <Check /> : <Copy />}
+                </Button>
+              </div>
+              <PromptInputSubmit
+                aria-label="Send message"
+                title="Send message"
+                status={busy ? "submitted" : "ready"}
+                disabled={busy || running || !ready || !prompt.trim()}
+              >
+                {busy ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <ArrowUp className="size-4" />
+                )}
+              </PromptInputSubmit>
+            </PromptInputFooter>
+          </PromptInput>
+          <div className="mt-3 flex items-center justify-between text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <span
+                className={cn(
+                  "size-1.5 rounded-full",
+                  ready ? "bg-success" : "bg-muted-foreground",
+                )}
+              />
+              {ready ? "Chart connected" : "Connecting chart…"}
+            </span>
+            <span>Pine Script v5 / v6</span>
+          </div>
+        </div>
+      </aside>
+      <main aria-label="Live chart" className="relative min-w-0 flex-1">
         <ClientOnly fallback={<ChartLoading />}>
           <Suspense fallback={<ChartLoading />}>
             <ChartWorkspace onReady={onReady} />
           </Suspense>
         </ClientOnly>
-      </main>
-
-      <aside className="flex w-[420px] shrink-0 flex-col border-l border-border bg-card">
-        <header className="flex items-center gap-2 border-b border-border px-4 py-3">
-          <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-          <h1 className="text-sm font-semibold tracking-wide">PINE LAB</h1>
-          <div className="ml-auto flex rounded-md bg-muted p-0.5 text-xs">
-            {(["ai", "code"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={cn(
-                  "flex items-center gap-1.5 rounded px-3 py-1.5 transition-colors",
-                  tab === t ? "bg-background text-foreground" : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {t === "ai" ? <Bot className="h-3.5 w-3.5" /> : <Code2 className="h-3.5 w-3.5" />}
-                {t === "ai" ? "Assistant" : "Editor"}
-              </button>
-            ))}
-          </div>
-        </header>
-
-        {tab === "code" ? (
-          <div className="flex min-h-0 flex-1 flex-col">
-            <div className="flex items-center gap-2 border-b border-border px-3 py-2">
-              <button
-                onClick={() => run()}
-                disabled={!ready || running}
-                className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
-              >
-                {running ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
-                Run
-              </button>
-              <button
-                onClick={copy}
-                className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs hover:bg-accent"
-              >
-                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? "Copied" : "Copy Pine"}
-              </button>
-              <span className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground">⌘↵ to run</span>
-            </div>
-            <textarea
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              onKeyDown={(e) => {
-                if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run();
-                if (e.key === "Tab") {
-                  e.preventDefault();
-                  const t = e.currentTarget;
-                  const s = t.selectionStart;
-                  const v = code.slice(0, s) + "    " + code.slice(t.selectionEnd);
-                  setCode(v);
-                  requestAnimationFrame(() => (t.selectionStart = t.selectionEnd = s + 4));
-                }
-              }}
-              spellCheck={false}
-              className="min-h-0 flex-1 resize-none bg-background p-4 font-mono text-[13px] leading-relaxed outline-none"
-            />
-            <StatusBar status={status} />
-          </div>
-        ) : (
-          <div className="flex min-h-0 flex-1 flex-col">
-            <div className="flex-1 space-y-2 overflow-y-auto p-4 text-sm">
-              {log.length === 0 && (
-                <div className="space-y-3 text-muted-foreground">
-                  <p>Describe an indicator and I'll write the Pine Script, run it on the chart, and fix any errors automatically.</p>
-                  {["RSI with overbought/oversold background", "Bollinger Bands with squeeze markers", "MACD histogram colored by momentum"].map((s) => (
-                    <button key={s} onClick={() => setPrompt(s)} className="block w-full rounded-md border border-border px-3 py-2 text-left text-xs hover:bg-accent hover:text-foreground">
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {log.map((m, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "rounded-md px-3 py-2",
-                    m.role === "user" && "ml-8 bg-primary text-primary-foreground",
-                    m.role === "step" && "text-xs text-muted-foreground",
-                    m.role === "ok" && "border border-success/40 text-success",
-                    m.role === "error" && "border border-destructive/40 font-mono text-xs text-destructive",
-                  )}
-                >
-                  {m.text}
-                </div>
-              ))}
-              {busy && <Loader2 className="h-4 w-4 animate-spin text-primary" />}
-            </div>
-            <div className="border-t border-border p-3">
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    ask();
-                  }
-                }}
-                rows={3}
-                placeholder="e.g. Supertrend with buy/sell labels"
-                className="w-full resize-none rounded-md border border-input bg-background p-3 text-sm outline-none focus:border-primary"
-              />
-              <div className="mt-2 flex items-center gap-2">
-                <button onClick={() => setTab("code")} className="text-xs text-muted-foreground hover:text-foreground">
-                  View code →
-                </button>
-                <button
-                  onClick={ask}
-                  disabled={busy || !ready || !prompt.trim()}
-                  className="ml-auto flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
-                >
-                  {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bot className="h-3.5 w-3.5" />}
-                  Generate
-                </button>
-              </div>
-            </div>
-          </div>
+        {collapsed && (
+          <Button
+            variant="outline"
+            size="icon-sm"
+            className="absolute left-2 top-14 z-40 bg-card"
+            aria-label="Expand panel"
+            title="Expand panel"
+            onClick={() => setCollapsed(false)}
+          >
+            <ChevronRight />
+          </Button>
         )}
-      </aside>
+      </main>
     </div>
   );
 }
-
-function StatusBar({ status }: { status: Status }) {
-  if (status.kind === "idle") return null;
-  const ok = status.kind === "ok";
-  return (
-    <div
-      className={cn(
-        "flex max-h-40 items-start gap-2 overflow-y-auto border-t px-3 py-2 font-mono text-xs",
-        ok ? "border-success/40 text-success" : "border-destructive/40 bg-destructive/10 text-destructive",
-      )}
-    >
-      {ok ? <CircleCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" /> : <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />}
-      <pre className="whitespace-pre-wrap">{status.msg}</pre>
-    </div>
-  );
-}
-
 function ChartLoading() {
   return (
-    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading chart…
+    <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
+      <Loader2 className="size-4 animate-spin" />
+      Loading chart…
     </div>
   );
 }
