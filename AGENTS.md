@@ -15,3 +15,5 @@
 - Preserve the existing single-session conversation; pass all completed turns and current editor code to each generation so follow-up edits retain context without adding storage or accounts.
 - Chat presentation uses installed AI Elements primitives; the existing buffered server-function result is retained because chart validation and self-heal happen on the client.
 - Replace the previous chart indicator only after the next run succeeds, so invalid edits do not remove the working plot.
+- Keep the activity rail as a permanent flex sibling of the collapsible panel and chart; collapse controls never live inside the chart canvas.
+- Generated chat scripts are immutable per-message snapshots with inline copy and edit actions; editing a snapshot loads it into the full-height numbered editor.
