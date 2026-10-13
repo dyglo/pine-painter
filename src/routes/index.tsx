@@ -1,11 +1,6 @@
 import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import {
-  ArrowUp,
-  ArrowUpRight,
-  Code2,
-  Loader2,
-} from "lucide-react";
+import { ArrowUp, ArrowUpRight, Code2, Loader2 } from "lucide-react";
 import { QuantRail } from "@/components/QuantRail";
 import { PineCodeCard } from "@/components/PineCodeCard";
 import { PineEditor } from "@/components/PineEditor";
@@ -173,7 +168,9 @@ function Index() {
           addPart({ type: "text", text: `### What's Changed\n${result.summary}` });
           setMessages((m) =>
             m.map((item) =>
-              item.id === assistantId ? { ...item, suggestions: result.suggestions, code: result.code } : item,
+              item.id === assistantId
+                ? { ...item, suggestions: result.suggestions, code: result.code }
+                : item,
             ),
           );
           historyRef.current.push({
@@ -203,34 +200,197 @@ function Index() {
       inputRef.current?.focus();
     }
   };
-  const selectView = (view: "ai" | "code") => { setTab(view); setCollapsed(false); };
+  const selectView = (view: "ai" | "code") => {
+    setTab(view);
+    setCollapsed(false);
+  };
   return (
     <div className="quant-workspace dark relative flex w-full overflow-hidden bg-background font-sans text-foreground">
-      <QuantRail view={tab} collapsed={collapsed} onView={selectView} onToggle={() => setCollapsed((v) => !v)} />
-      <aside aria-label="Pine workspace panel" aria-hidden={collapsed} inert={collapsed} className={cn("quant-panel flex shrink-0 flex-col overflow-hidden bg-card", collapsed && "quant-panel-collapsed")}>
+      <QuantRail
+        view={tab}
+        collapsed={collapsed}
+        onView={selectView}
+        onToggle={() => setCollapsed((v) => !v)}
+      />
+      <aside
+        aria-label="Pine workspace panel"
+        aria-hidden={collapsed}
+        inert={collapsed}
+        className={cn(
+          "quant-panel flex shrink-0 flex-col overflow-hidden bg-card",
+          collapsed && "quant-panel-collapsed",
+        )}
+      >
         <div className="quant-panel-inner flex h-full min-h-0 flex-col">
-        {tab === "ai" ? <>
-          <header className="flex h-14 shrink-0 items-center justify-between px-5"><h1 className="text-sm font-medium">Pine Lab <span className="ml-1 text-muted-foreground">/ Quant</span></h1><span className="text-[10px] text-muted-foreground">ASSISTANT</span></header>
-          <Conversation className="min-h-0 flex-1"><ConversationContent className="gap-6 px-5 py-5">
-            {messages.map((m) => <Message key={m.id} from={m.role} className="max-w-full">
-              {m.role === "assistant" && <div className="mb-1 text-[11px] font-medium text-muted-foreground">Pine Assistant</div>}
-              <MessageContent className={cn("w-full leading-relaxed", m.role === "user" && "group-[.is-user]:bg-secondary group-[.is-user]:text-secondary-foreground")}>
-                {m.parts.map((part, i) => part.type === "text" ? <MessageResponse key={i}>{part.text}</MessageResponse> : <Tool key={i} defaultOpen={false} className="mb-0 border-border/60"><ToolHeader type="tool-chart" title="Run indicator" state={part.state} className="gap-2 p-2.5 [&_span]:text-[11px]" /><ToolContent><pre className="whitespace-pre-wrap break-words font-mono text-xs">{part.text}</pre></ToolContent></Tool>)}
-                {busy && m.id === messages.at(-1)?.id && <Shimmer className="py-2 text-xs">{phase}</Shimmer>}
-              </MessageContent>
-              {m.code && <PineCodeCard code={m.code} onEdit={() => { if (m.code) setCode(m.code); selectView("code"); }} />}
-              {m.suggestions && <div className="mt-2 flex flex-col gap-1.5">{m.suggestions.map((suggestion) => <Button key={suggestion} variant="ghost" disabled={busy || running} onClick={() => ask(suggestion)} className="h-auto min-h-9 w-full justify-between gap-3 whitespace-normal rounded-md border border-border px-3 py-2 text-left text-xs font-normal text-muted-foreground"><span>{suggestion}</span><ArrowUpRight className="shrink-0" /></Button>)}</div>}
-            </Message>)}
-          </ConversationContent><ConversationScrollButton /></Conversation>
-          <div className="quant-dock shrink-0 p-4">
-            {!busy && <div className="mb-2 flex flex-wrap gap-1">{(messages.length ? ["Add alerts", "Refine styling"] : ["EMA ribbon", "RSI levels", "Bollinger Bands"]).map((suggestion) => <Button key={suggestion} variant="ghost" size="sm" className="h-6 px-2 text-[10px] font-normal text-muted-foreground" onClick={() => { setPrompt(suggestion); inputRef.current?.focus(); }}>{suggestion}<ArrowUpRight className="size-3" /></Button>)}</div>}
-            <PromptInput onSubmit={({ text }) => ask(text)}><PromptInputTextarea ref={inputRef} aria-label="Message Pine Assistant" value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="Describe or refine an indicator…" className="px-3.5 pt-3.5" /><PromptInputFooter className="px-3 pb-3"><div className="flex items-center gap-2"><span className="rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground">GPT-5.6</span><Button variant="ghost" size="icon-xs" title="Open Pine editor" aria-label="Open Pine editor" onClick={() => selectView("code")}><Code2 /></Button></div><PromptInputSubmit aria-label="Send message" title="Send message" status={busy ? "submitted" : "ready"} disabled={busy || running || !ready || !prompt.trim()}>{busy ? <Loader2 className="size-4 animate-spin" /> : <ArrowUp className="size-4" />}</PromptInputSubmit></PromptInputFooter></PromptInput>
-          </div>
-        </> : <PineEditor code={code} onChange={setCode} onRun={() => run()} onCopy={copy} copied={copied} disabled={!ready || running || busy} running={running} status={status} />}
+          {tab === "ai" ? (
+            <>
+              <header className="flex h-14 shrink-0 items-center justify-between px-5">
+                <h1 className="text-sm font-medium">
+                  Pine Lab <span className="ml-1 text-muted-foreground">/ Quant</span>
+                </h1>
+                <span className="text-[10px] text-muted-foreground">ASSISTANT</span>
+              </header>
+              <Conversation className="min-h-0 flex-1">
+                <ConversationContent className="gap-6 px-5 py-5">
+                  {messages.map((m) => (
+                    <Message key={m.id} from={m.role} className="max-w-full">
+                      {m.role === "assistant" && (
+                        <div className="mb-1 text-[11px] font-medium text-muted-foreground">
+                          Pine Assistant
+                        </div>
+                      )}
+                      <MessageContent
+                        className={cn(
+                          "w-full leading-relaxed",
+                          m.role === "user" &&
+                            "group-[.is-user]:bg-secondary group-[.is-user]:text-secondary-foreground",
+                        )}
+                      >
+                        {m.parts.map((part, i) =>
+                          part.type === "text" ? (
+                            <MessageResponse key={i}>{part.text}</MessageResponse>
+                          ) : (
+                            <Tool key={i} defaultOpen={false} className="mb-0 border-border/60">
+                              <ToolHeader
+                                type="tool-chart"
+                                title="Run indicator"
+                                state={part.state}
+                                className="gap-2 p-2.5 [&_span]:text-[11px]"
+                              />
+                              <ToolContent>
+                                <pre className="whitespace-pre-wrap break-words font-mono text-xs">
+                                  {part.text}
+                                </pre>
+                              </ToolContent>
+                            </Tool>
+                          ),
+                        )}
+                        {busy && m.id === messages.at(-1)?.id && (
+                          <Shimmer className="py-2 text-xs">{phase}</Shimmer>
+                        )}
+                      </MessageContent>
+                      {m.code && (
+                        <PineCodeCard
+                          code={m.code}
+                          onEdit={() => {
+                            if (m.code) setCode(m.code);
+                            selectView("code");
+                          }}
+                        />
+                      )}
+                      {m.suggestions && (
+                        <div className="mt-2 flex flex-col gap-1.5">
+                          {m.suggestions.map((suggestion) => (
+                            <Button
+                              key={suggestion}
+                              variant="ghost"
+                              disabled={busy || running}
+                              onClick={() => ask(suggestion)}
+                              className="h-auto min-h-9 w-full justify-between gap-3 whitespace-normal rounded-md border border-border px-3 py-2 text-left text-xs font-normal text-muted-foreground"
+                            >
+                              <span>{suggestion}</span>
+                              <ArrowUpRight className="shrink-0" />
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </Message>
+                  ))}
+                </ConversationContent>
+                <ConversationScrollButton />
+              </Conversation>
+              <div className="quant-dock shrink-0 p-4">
+                {!busy && (
+                  <div className="mb-2 flex flex-wrap gap-1">
+                    {(messages.length
+                      ? ["Add alerts", "Refine styling"]
+                      : ["EMA ribbon", "RSI levels", "Bollinger Bands"]
+                    ).map((suggestion) => (
+                      <Button
+                        key={suggestion}
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-[10px] font-normal text-muted-foreground"
+                        onClick={() => {
+                          setPrompt(suggestion);
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        {suggestion}
+                        <ArrowUpRight className="size-3" />
+                      </Button>
+                    ))}
+                  </div>
+                )}
+                <PromptInput onSubmit={({ text }) => ask(text)}>
+                  <PromptInputTextarea
+                    ref={inputRef}
+                    aria-label="Message Pine Assistant"
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    placeholder="Describe or refine an indicator…"
+                    className="px-3.5 pt-3.5"
+                  />
+                  <PromptInputFooter className="px-3 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
+                        GPT-5.6
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon-xs"
+                        title="Open Pine editor"
+                        aria-label="Open Pine editor"
+                        onClick={() => selectView("code")}
+                      >
+                        <Code2 />
+                      </Button>
+                    </div>
+                    <PromptInputSubmit
+                      aria-label="Send message"
+                      title="Send message"
+                      status={busy ? "submitted" : "ready"}
+                      disabled={busy || running || !ready || !prompt.trim()}
+                    >
+                      {busy ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <ArrowUp className="size-4" />
+                      )}
+                    </PromptInputSubmit>
+                  </PromptInputFooter>
+                </PromptInput>
+              </div>
+            </>
+          ) : (
+            <PineEditor
+              code={code}
+              onChange={setCode}
+              onRun={() => run()}
+              onCopy={copy}
+              copied={copied}
+              disabled={!ready || running || busy}
+              running={running}
+              status={status}
+            />
+          )}
         </div>
       </aside>
-      <main aria-label="Live chart" className="relative min-w-0 flex-1"><ClientOnly fallback={<ChartLoading />}><Suspense fallback={<ChartLoading />}><ChartWorkspace onReady={onReady} /></Suspense></ClientOnly></main>
+      <main aria-label="Live chart" className="relative min-w-0 flex-1">
+        <ClientOnly fallback={<ChartLoading />}>
+          <Suspense fallback={<ChartLoading />}>
+            <ChartWorkspace onReady={onReady} />
+          </Suspense>
+        </ClientOnly>
+      </main>
     </div>
   );
 }
-function ChartLoading() { return <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />Loading chart…</div>; }
+function ChartLoading() {
+  return (
+    <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
+      <Loader2 className="size-4 animate-spin" />
+      Loading chart…
+    </div>
+  );
+}

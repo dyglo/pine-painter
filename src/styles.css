@@ -177,7 +177,9 @@
   width: 400px;
   max-width: calc(100vw - 56px);
   border-right: 1px solid var(--border);
-  transition: width 180ms ease, max-width 180ms ease;
+  transition:
+    width 180ms ease,
+    max-width 180ms ease;
 }
 .quant-panel-inner {
   width: 400px;
