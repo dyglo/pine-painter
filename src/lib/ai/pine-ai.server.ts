@@ -16,22 +16,22 @@ If you are given a previous attempt and an error, fix the error and return the f
 
 export type GenerateInput = {
   prompt: string;
-  previousCode?: string;
-  error?: string;
-  runId?: string;
+  previousCode?: string | undefined;
+  error?: string | undefined;
+  runId?: string | undefined;
 };
 
 export type GenerateResult =
-  | { ok: true; code: string; runId?: string }
+  | { ok: true; code: string; runId?: string | undefined }
   | { ok: false; status: number; message: string; retryable: boolean };
 
 function extractCode(text: string) {
   const m = text.match(/```(?:pine|pinescript)?\s*\n([\s\S]*?)```/i);
-  return (m ? m[1] : text).trim();
+  return (m?.[1] ?? text).trim();
 }
 
 export async function generatePineCode(input: GenerateInput): Promise<GenerateResult> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) return { ok: false, status: 401, message: "AI is not configured.", retryable: false };
 
   const runIdFetch = createLovableAiGatewayRunIdFetch(input.runId);

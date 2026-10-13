@@ -8,10 +8,10 @@ export type ChartApi = {
 
 function formatError(err: unknown): string {
   if (!err) return "Unknown error";
-  const e = err as Record<string, unknown> & Error;
+  const e = err as Error & { line?: number; column?: number; loc?: { line?: number; column?: number } };
   const parts = [e.message || String(err)];
-  const line = e.line ?? (e.loc as { line?: number } | undefined)?.line;
-  const col = e.column ?? (e.loc as { column?: number } | undefined)?.column;
+  const line = e.line ?? e.loc?.line;
+  const col = e.column ?? e.loc?.column;
   if (line != null) parts.unshift(`Line ${line}${col != null ? `:${col}` : ""}`);
   return parts.join(" — ");
 }
