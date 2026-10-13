@@ -175,7 +175,20 @@
 }
 .quant-panel {
   width: 400px;
-  max-width: calc(100vw - 48px);
+  max-width: calc(100vw - 56px);
+  border-right: 1px solid var(--border);
+  transition:
+    width 180ms ease,
+    max-width 180ms ease;
+}
+.quant-panel-inner {
+  width: 400px;
+  max-width: calc(100vw - 56px);
+}
+.quant-panel-collapsed {
+  width: 0;
+  max-width: 0;
+  border-right: 0;
 }
 .quant-dock [data-slot="input-group"] {
   background: var(--background);
@@ -190,10 +203,10 @@
 }
 @media (max-width: 640px) {
   .quant-panel {
-    position: absolute;
-    inset: 0 auto 0 0;
-    z-index: 30;
-    width: 360px;
+    width: calc(100vw - 56px);
+  }
+  .quant-panel-collapsed {
+    width: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {

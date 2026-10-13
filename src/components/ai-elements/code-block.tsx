@@ -21,8 +21,15 @@ import {
   useRef,
   useState,
 } from "react";
-import type { BundledLanguage, BundledTheme, HighlighterGeneric, ThemedToken } from "shiki";
+import type {
+  BundledLanguage as ShikiLanguage,
+  BundledTheme,
+  HighlighterGeneric,
+  ThemedToken,
+} from "shiki";
 import { createHighlighter } from "shiki";
+
+type BundledLanguage = ShikiLanguage | "text";
 
 // Shiki uses bitflags for font styles: 1=italic, 2=bold, 4=underline
 // oxlint-disable-next-line eslint(no-bitwise)
@@ -125,7 +132,7 @@ const CodeBlockContext = createContext<CodeBlockContextType>({
 // Highlighter cache (singleton per language)
 const highlighterCache = new Map<
   string,
-  Promise<HighlighterGeneric<BundledLanguage, BundledTheme>>
+  Promise<HighlighterGeneric<ShikiLanguage, BundledTheme>>
 >();
 
 // Token cache
@@ -142,7 +149,7 @@ const getTokensCacheKey = (code: string, language: BundledLanguage) => {
 
 const getHighlighter = (
   language: BundledLanguage,
-): Promise<HighlighterGeneric<BundledLanguage, BundledTheme>> => {
+): Promise<HighlighterGeneric<ShikiLanguage, BundledTheme>> => {
   const cached = highlighterCache.get(language);
   if (cached) {
     return cached;
