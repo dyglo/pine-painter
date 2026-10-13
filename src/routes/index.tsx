@@ -456,7 +456,7 @@ function Index() {
           <Button
             variant="outline"
             size="icon-sm"
-            className="absolute left-2 top-14 z-40 bg-card"
+            className="absolute left-12 top-24 z-40 bg-card"
             aria-label="Expand panel"
             title="Expand panel"
             onClick={() => setCollapsed(false)}
