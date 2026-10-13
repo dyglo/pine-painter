@@ -25,7 +25,7 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
 
   useEffect(() => {
     let disposed = false;
-    let ws: { chart: any; destroy: () => void } | null = null;
+    let ws: InstanceType<typeof import("@luxalgo/vela/workspace").VelaWorkspace> | null = null;
     let handle: { remove: () => void } | null = null;
 
     (async () => {
@@ -37,18 +37,28 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
           import("@luxalgo/vela-pinets"),
         ]);
       if (disposed || !ref.current) return;
+      const tokens = getComputedStyle(ref.current);
+      const token = (name: string) => tokens.getPropertyValue(name).trim();
       ws = new VelaWorkspace(ref.current, {
         layout: false,
         symbol: "BTCUSDT",
         timeframe: "60",
         live: true,
-        theme: "dark",
+        theme: {
+          background: token("--background"),
+          textColor: token("--muted-foreground"),
+          gridColor: token("--card"),
+          borderColor: token("--border"),
+          upColor: token("--success"),
+          downColor: token("--destructive"),
+          fontFamily: token("--font-sans"),
+        },
         providers: {
           binance: () => new BinanceProvider(),
           coinbase: () => new CoinbaseProvider(),
         },
         engines: { pine: () => new PineEngine() },
-      } as any) as any;
+      });
 
       onReady({
         run: async (code) => {
