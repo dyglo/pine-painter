@@ -10,11 +10,12 @@ import {
 type Range = { from?: number; to?: number; limit?: number };
 
 function instrumentOf(ticker: string): OandaInstrument {
-  const t = ticker.toUpperCase().replace("/", "_");
-  if (!(OANDA_INSTRUMENTS as readonly string[]).includes(t)) {
+  const symbol = ticker.toUpperCase().replace(/[_/]/g, "");
+  const instrument = OANDA_INSTRUMENTS.find((candidate) => candidate.replace("_", "") === symbol);
+  if (!instrument) {
     throw new Error(`OANDA does not serve ${ticker}`);
   }
-  return t as OandaInstrument;
+  return instrument;
 }
 function granularityOf(tf: string) {
   const g = toGranularity(tf);
@@ -35,7 +36,7 @@ export class OandaProvider {
 
   async listSymbols() {
     return OANDA_INSTRUMENTS.map((ticker) => ({
-      ticker,
+      ticker: ticker.replace("_", ""),
       description: OANDA_DESCRIPTIONS[ticker],
       type: ticker === "XAU_USD" ? "commodity" : "forex",
     }));
@@ -44,7 +45,7 @@ export class OandaProvider {
   async getSymbolInfo(ticker: string) {
     const t = instrumentOf(ticker);
     return {
-      ticker: t,
+      ticker: t.replace("_", ""),
       description: OANDA_DESCRIPTIONS[t],
       type: t === "XAU_USD" ? "commodity" : "forex",
       currency: t.split("_")[1],
