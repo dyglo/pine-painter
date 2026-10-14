@@ -17,3 +17,4 @@
 - Replace the previous chart indicator only after the next run succeeds, so invalid edits do not remove the working plot.
 - Keep the activity rail as a permanent flex sibling of the collapsible panel and chart; collapse controls never live inside the chart canvas.
 - Generated chat scripts are immutable per-message snapshots with inline copy and edit actions; editing a snapshot loads it into the full-height numbered editor.
+- OANDA forex/gold data is a custom Vela provider (src/lib/oanda); OANDA calls run only in server functions with OANDA_API_TOKEN so the token never reaches the browser; live updates poll every 5s.
