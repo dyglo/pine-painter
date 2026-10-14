@@ -75,7 +75,7 @@ export async function fetchHistory(
   const limit = Math.min(Math.max(range.limit ?? 1500, 1), 20000);
   const from = range.from ?? to - step * limit;
   const all = new Map<number, Bar>();
-  for (const w of pageWindows(from, to, step, MAX)) {
+  for (const w of pageWindows(from, to, step, MAX - 10)) {
     // Align to step so cache keys repeat between calls.
     const a = Math.floor(w.from / step) * step;
     const b = Math.ceil(w.to / step) * step;
