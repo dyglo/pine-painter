@@ -84,7 +84,7 @@ export async function fetchHistory(
     let bars = getCached(key);
     if (!bars) {
       const params: Record<string, string> = { from: new Date(a).toISOString() };
-      if (isRecent) params["count"] = String(Math.min(MAX, Math.ceil((now - a) / step) + 1));
+      if (isRecent) params["count"] = String(Math.min(MAX, Math.ceil((now - a) / step)));
       else params["to"] = new Date(b).toISOString();
       const r = await request(instrument, granularity, params);
       bars = r.bars;
