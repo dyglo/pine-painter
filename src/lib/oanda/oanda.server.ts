@@ -75,7 +75,7 @@ export async function fetchHistory(
   const limit = Math.min(Math.max(range.limit ?? 1500, 1), 20000);
   const from = range.from ?? to - step * limit;
   const all = new Map<number, Bar>();
-  for (const w of pageWindows(from, to, step, MAX)) {
+  for (const w of pageWindows(from, to, step, MAX - 10)) {
     // Align to step so cache keys repeat between calls.
     const a = Math.floor(w.from / step) * step;
     const b = Math.ceil(w.to / step) * step;
@@ -84,7 +84,7 @@ export async function fetchHistory(
     let bars = getCached(key);
     if (!bars) {
       const params: Record<string, string> = { from: new Date(a).toISOString() };
-      if (isRecent) params["count"] = String(Math.min(MAX, Math.ceil((now - a) / step) + 1));
+      if (isRecent) params["count"] = String(Math.min(MAX, Math.ceil((now - a) / step)));
       else params["to"] = new Date(b).toISOString();
       const r = await request(instrument, granularity, params);
       bars = r.bars;
