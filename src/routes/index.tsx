@@ -1,6 +1,19 @@
+import { BrandMark } from "@/components/BrandMark";
+import { BRAND } from "@/lib/branding";
 import { createFileRoute, ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUp, ArrowUpRight, Code2, Loader2 } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowUpRight,
+  Code2,
+  Loader2,
+  ChartNoAxesCombined,
+  Crosshair,
+  Lightbulb,
+  Wrench,
+  Plus,
+  Sparkles,
+} from "lucide-react";
 import { QuantRail } from "@/components/QuantRail";
 import { PineCodeCard } from "@/components/PineCodeCard";
 import { PineEditor } from "@/components/PineEditor";
@@ -29,13 +42,12 @@ const ChartWorkspace = lazy(() =>
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pine Lab — Quant indicator workspace" },
+      { title: BRAND.name },
       {
         name: "description",
-        content:
-          "Create, refine and test Pine Script indicators with GPT-5.6 on a live Vela chart.",
+        content: BRAND.description,
       },
-      { property: "og:title", content: "Pine Lab — Quant indicator workspace" },
+      { property: "og:title", content: BRAND.name },
       {
         property: "og:description",
         content:
@@ -213,37 +225,68 @@ function Index() {
         onToggle={() => setCollapsed((v) => !v)}
       />
       <aside
-        aria-label="Pine workspace panel"
+        aria-label="Deplyze Quant panel"
         aria-hidden={collapsed}
         inert={collapsed}
         className={cn(
-          "quant-panel flex shrink-0 flex-col overflow-hidden bg-card",
+          "quant-panel flex shrink-0 flex-col overflow-hidden bg-background",
           collapsed && "quant-panel-collapsed",
+          tab === "code" && "quant-panel-code",
         )}
       >
         <div className="quant-panel-inner flex h-full min-h-0 flex-col">
           {tab === "ai" ? (
             <>
-              <header className="flex h-14 shrink-0 items-center justify-between px-5">
-                <h1 className="text-sm font-medium">
-                  Pine Lab <span className="ml-1 text-muted-foreground">/ Quant</span>
-                </h1>
-                <span className="text-[10px] text-muted-foreground">ASSISTANT</span>
+              <header className="quant-panel-header flex h-10 shrink-0 items-center justify-between border-b border-border px-3">
+                <h1 className="text-[13px] font-semibold tracking-tight">{BRAND.name}</h1>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label="New chat"
+                  title="New chat"
+                  disabled={busy || running}
+                  className="text-muted-foreground"
+                  onClick={() => {
+                    historyRef.current = [];
+                    setMessages([]);
+                    setPrompt("");
+                    inputRef.current?.focus();
+                  }}
+                >
+                  <Plus className="size-4" />
+                </Button>
               </header>
-              <Conversation className="min-h-0 flex-1">
-                <ConversationContent className="gap-6 px-5 py-5">
+              <Conversation
+                className={cn("min-h-0 flex-1", !messages.length && "quant-empty-conversation")}
+              >
+                <ConversationContent className="gap-6 px-3 py-5">
+                  {!messages.length && (
+                    <div className="quant-welcome">
+                      <BrandMark className="mx-auto mb-4 size-8" />
+                      <h2>
+                        What are we
+                        <br />
+                        working on today?
+                      </h2>
+                      <p role="status">
+                        <span className={cn("quant-status-dot", !ready && "opacity-40")} />
+                        {ready ? "Your chart is ready." : "Connecting to your chart�"}
+                      </p>
+                    </div>
+                  )}
                   {messages.map((m) => (
                     <Message key={m.id} from={m.role} className="max-w-full">
                       {m.role === "assistant" && (
                         <div className="mb-1 text-[11px] font-medium text-muted-foreground">
-                          Pine Assistant
+                          Deplyze Quant
                         </div>
                       )}
                       <MessageContent
                         className={cn(
                           "w-full leading-relaxed",
                           m.role === "user" &&
-                            "group-[.is-user]:bg-secondary group-[.is-user]:text-secondary-foreground",
+                            "group-[.is-user]:bg-transparent group-[.is-user]:px-0 group-[.is-user]:text-foreground",
                         )}
                       >
                         {m.parts.map((part, i) =>
@@ -299,54 +342,45 @@ function Index() {
                 </ConversationContent>
                 <ConversationScrollButton />
               </Conversation>
-              <div className="quant-dock shrink-0 p-4">
-                {!busy && (
-                  <div className="mb-2 flex flex-wrap gap-1">
-                    {(messages.length
-                      ? ["Add alerts", "Refine styling"]
-                      : ["EMA ribbon", "RSI levels", "Bollinger Bands"]
-                    ).map((suggestion) => (
-                      <Button
-                        key={suggestion}
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 px-2 text-[10px] font-normal text-muted-foreground"
-                        onClick={() => {
-                          setPrompt(suggestion);
-                          inputRef.current?.focus();
-                        }}
-                      >
-                        {suggestion}
-                        <ArrowUpRight className="size-3" />
-                      </Button>
-                    ))}
-                  </div>
+              <div
+                className={cn(
+                  "quant-dock shrink-0 px-3 pb-3",
+                  !messages.length && "quant-dock-welcome",
                 )}
+              >
                 <PromptInput onSubmit={({ text }) => ask(text)}>
                   <PromptInputTextarea
                     ref={inputRef}
-                    aria-label="Message Pine Assistant"
+                    aria-label="Message Deplyze Quant"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Describe or refine an indicator…"
-                    className="px-3.5 pt-3.5"
+                    placeholder="Ask Quant anything"
+                    className="px-2.5 pt-3"
                   />
-                  <PromptInputFooter className="px-3 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full border border-border bg-card px-2.5 py-1 text-[10px] font-medium text-muted-foreground">
-                        GPT-5.6
-                      </span>
+                  <PromptInputFooter className="px-2 pb-2">
+                    <div className="flex min-w-0 items-center gap-1.5">
                       <Button
+                        type="button"
                         variant="ghost"
                         size="icon-xs"
+                        className="rounded-full bg-secondary"
                         title="Open Pine editor"
                         aria-label="Open Pine editor"
                         onClick={() => selectView("code")}
                       >
-                        <Code2 />
+                        <Plus className="size-3.5" />
                       </Button>
+                      <select
+                        aria-label="AI model"
+                        className="quant-model"
+                        defaultValue="gpt-5.6"
+                        title="Configured generation model"
+                      >
+                        <option value="gpt-5.6">GPT-5.6</option>
+                      </select>
                     </div>
                     <PromptInputSubmit
+                      className="size-8 rounded-full"
                       aria-label="Send message"
                       title="Send message"
                       status={busy ? "submitted" : "ready"}
@@ -360,7 +394,69 @@ function Index() {
                     </PromptInputSubmit>
                   </PromptInputFooter>
                 </PromptInput>
+                {!busy && (
+                  <div className="quant-action-chips">
+                    {(messages.length
+                      ? [
+                          {
+                            label: "Add alerts",
+                            Icon: Plus,
+                            prompt: "Add alerts to the current indicator",
+                          },
+                          {
+                            label: "Refine styling",
+                            Icon: Sparkles,
+                            prompt: "Refine the styling of the current indicator",
+                          },
+                        ]
+                      : [
+                          {
+                            label: "My chart",
+                            Icon: Crosshair,
+                            prompt: "Explain the current indicator and suggest useful improvements",
+                          },
+                          {
+                            label: "Indicator",
+                            Icon: ChartNoAxesCombined,
+                            prompt: "Create an indicator that ",
+                          },
+                          {
+                            label: "Fix my code",
+                            Icon: Wrench,
+                            prompt: "Review and fix the current Pine Script",
+                          },
+                          { label: "Pine editor", Icon: Code2, prompt: null },
+                          {
+                            label: "Brainstorm",
+                            Icon: Lightbulb,
+                            prompt: "Suggest three indicator ideas for intraday trading",
+                          },
+                        ]
+                    ).map(({ label, Icon, prompt: suggestion }) => (
+                      <button
+                        key={label}
+                        type="button"
+                        onClick={() => {
+                          if (suggestion === null) {
+                            selectView("code");
+                            return;
+                          }
+                          setPrompt(suggestion);
+                          inputRef.current?.focus();
+                        }}
+                      >
+                        <Icon aria-hidden="true" />
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+              <p className="quant-disclaimer">
+                Quant can make mistakes. Check important results
+                <br />
+                before you trade.
+              </p>
             </>
           ) : (
             <PineEditor

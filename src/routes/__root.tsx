@@ -1,3 +1,4 @@
+import { BRAND, brandIcon } from "@/lib/branding";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -78,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pine Lab" },
+      { title: BRAND.name },
       { name: "description", content: "Write and test Pine Script indicators on a live chart." },
     ],
     links: [
@@ -91,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Geist:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: brandIcon, type: "image/svg+xml" },
     ],
   }),
   shellComponent: RootShell,

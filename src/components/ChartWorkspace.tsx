@@ -1,3 +1,4 @@
+import { brandSvg } from "@/lib/branding";
 import { useEffect, useRef } from "react";
 
 export type RunOutcome = { ok: true } | { ok: false; error: string };
@@ -25,24 +26,28 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
 
   useEffect(() => {
     let disposed = false;
+    let restoreBranding: (() => void) | undefined;
     let ws: InstanceType<typeof import("@luxalgo/vela/workspace").VelaWorkspace> | null = null;
     let handle: { remove: () => void } | null = null;
 
     (async () => {
       const [
         { VelaWorkspace },
+        { registerRendererDefaults },
         { BinanceProvider },
         { CoinbaseProvider },
         { PineEngine },
         { OandaProvider },
       ] = await Promise.all([
         import("@luxalgo/vela/workspace"),
+        import("@luxalgo/vela"),
         import("@luxalgo/vela/providers/binance"),
         import("@luxalgo/vela/providers/coinbase"),
         import("@luxalgo/vela-pinets"),
         import("@/lib/oanda/oanda-provider"),
       ]);
       if (disposed || !ref.current) return;
+      restoreBranding = registerRendererDefaults({ attribution: brandSvg });
       const tokens = getComputedStyle(ref.current);
       const token = (name: string) => tokens.getPropertyValue(name).trim();
       ws = new VelaWorkspace(ref.current, {
@@ -94,6 +99,7 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
     return () => {
       disposed = true;
       ws?.destroy();
+      restoreBranding?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -143,17 +143,17 @@
   }
 }
 
-/* Pine Lab theme: terminal-dark with amber signal accent */
+/* Deplyze Quant workspace theme */
 .dark {
-  --background: oklch(0.158 0.003 248);
+  --background: oklch(0.19 0.004 260);
   --foreground: oklch(0.94 0.003 248);
-  --card: oklch(0.199 0.005 248);
+  --card: oklch(0.18 0.004 260);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
   --secondary: oklch(0.265 0.008 248);
   --secondary-foreground: var(--foreground);
   --muted: oklch(0.238 0.009 248);
-  --muted-foreground: oklch(0.64 0.012 248);
+  --muted-foreground: oklch(0.67 0.006 260);
   --border: oklch(0.253 0.01 248);
   --input: oklch(0.284 0.01 248);
   --primary: oklch(0.94 0.003 248);
@@ -174,16 +174,16 @@
   height: 100dvh;
 }
 .quant-panel {
-  width: 400px;
-  max-width: calc(100vw - 56px);
+  width: 264px;
+  max-width: calc(100vw - 44px);
   border-right: 1px solid var(--border);
   transition:
     width 180ms ease,
     max-width 180ms ease;
 }
 .quant-panel-inner {
-  width: 400px;
-  max-width: calc(100vw - 56px);
+  width: 264px;
+  max-width: calc(100vw - 44px);
 }
 .quant-panel-collapsed {
   width: 0;
@@ -191,11 +191,14 @@
   border-right: 0;
 }
 .quant-dock [data-slot="input-group"] {
-  background: var(--background);
-  border-radius: 12px;
+  background: oklch(0.225 0.004 260);
+  border: 1px solid oklch(0.31 0.005 260);
+  border-radius: 16px;
+  box-shadow: none;
 }
 .quant-dock textarea {
-  min-height: 82px;
+  min-height: 44px;
+  max-height: min(180px, 25dvh);
   font-size: 13px;
 }
 .quant-panel [data-streamdown="list"] {
@@ -203,7 +206,7 @@
 }
 @media (max-width: 640px) {
   .quant-panel {
-    width: calc(100vw - 56px);
+    width: calc(100vw - 44px);
   }
   .quant-panel-collapsed {
     width: 0;
@@ -215,5 +218,127 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+.quant-panel-inner {
+  width: 100%;
+}
+.quant-panel {
+  --card-foreground: var(--foreground);
+}
+.quant-panel.quant-panel-code:not(.quant-panel-collapsed) {
+  width: 400px;
+}
+.quant-welcome {
+  padding: clamp(32px, 12vh, 94px) 0 30px;
+  text-align: center;
+}
+.quant-welcome h2 {
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.8px;
+  font-weight: 500;
+}
+.quant-welcome p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.quant-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: oklch(0.78 0.14 220);
+  box-shadow: 0 0 8px oklch(0.78 0.14 220 / 30%);
+}
+.quant-empty-conversation {
+  flex: 0 1 auto;
+}
+.quant-dock-welcome {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.quant-action-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 6px;
+  padding: 14px 0 4px;
+}
+.quant-action-chips button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+  transition: background 120ms;
+}
+.quant-action-chips button:hover {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+.quant-action-chips button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.quant-action-chips svg {
+  width: 14px;
+  height: 14px;
+}
+.quant-model {
+  min-width: 0;
+  width: 122px;
+  padding: 4px;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 12px;
+  outline-offset: 2px;
+}
+.quant-model option {
+  background: var(--card);
+}
+.quant-disclaimer {
+  flex-shrink: 0;
+  padding: 12px 8px 8px;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.quant-panel {
+  scrollbar-width: thin;
+  scrollbar-color: var(--secondary) transparent;
+}
+@media (max-height: 600px) {
+  .quant-welcome {
+    padding-top: 16px;
+    padding-bottom: 12px;
+  }
+  .quant-welcome > svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 8px;
+  }
+  .quant-welcome h2 {
+    font-size: 19px;
+  }
+  .quant-welcome p {
+    margin-top: 10px;
+  }
+  .quant-action-chips {
+    padding-top: 8px;
+    gap: 4px;
+  }
+  .quant-disclaimer {
+    padding-top: 4px;
   }
 }

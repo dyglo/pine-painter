@@ -1,3 +1,5 @@
+import { BrandMark } from "@/components/BrandMark";
+import { BRAND } from "@/lib/branding";
 import { ChevronsLeft, ChevronsRight, Code2, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,20 +20,13 @@ export function QuantRail({
     <TooltipProvider delayDuration={150}>
       <nav
         aria-label="Activity rail"
-        className="z-40 flex w-14 shrink-0 flex-col items-center border-r border-border bg-background py-4"
+        className="z-40 flex w-11 shrink-0 flex-col items-center border-r border-border bg-background py-2"
       >
         <div
-          aria-label="Pine Lab Quant"
-          className="mb-8 flex size-8 items-center justify-center text-foreground"
+          aria-label={BRAND.name}
+          className="mb-5 flex size-8 items-center justify-center text-foreground"
         >
-          <svg viewBox="0 0 32 32" className="size-7" fill="none" aria-hidden="true">
-            <path
-              d="M5 7h7l8 18h-7L5 7Zm15 0h7l-7 18h-7l7-18Z"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <BrandMark className="size-7" />
         </div>
         <div className="flex flex-col gap-3">
           {(
