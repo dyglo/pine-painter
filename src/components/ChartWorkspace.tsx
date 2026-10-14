@@ -29,13 +29,19 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
     let handle: { remove: () => void } | null = null;
 
     (async () => {
-      const [{ VelaWorkspace }, { BinanceProvider }, { CoinbaseProvider }, { PineEngine }] =
-        await Promise.all([
-          import("@luxalgo/vela/workspace"),
-          import("@luxalgo/vela/providers/binance"),
-          import("@luxalgo/vela/providers/coinbase"),
-          import("@luxalgo/vela-pinets"),
-        ]);
+      const [
+        { VelaWorkspace },
+        { BinanceProvider },
+        { CoinbaseProvider },
+        { PineEngine },
+        { OandaProvider },
+      ] = await Promise.all([
+        import("@luxalgo/vela/workspace"),
+        import("@luxalgo/vela/providers/binance"),
+        import("@luxalgo/vela/providers/coinbase"),
+        import("@luxalgo/vela-pinets"),
+        import("@/lib/oanda/oanda-provider"),
+      ]);
       if (disposed || !ref.current) return;
       const tokens = getComputedStyle(ref.current);
       const token = (name: string) => tokens.getPropertyValue(name).trim();
@@ -56,6 +62,8 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
         providers: {
           binance: () => new BinanceProvider(),
           coinbase: () => new CoinbaseProvider(),
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          oanda: () => new OandaProvider() as any,
         },
         engines: { pine: () => new PineEngine() },
       });
