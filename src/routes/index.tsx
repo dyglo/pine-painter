@@ -34,6 +34,15 @@ import {
 import { Shimmer } from "@/components/ai-elements/shimmer";
 import { Tool, ToolHeader, ToolContent } from "@/components/ai-elements/tool";
 import { generatePine } from "@/lib/ai/pine-ai.functions";
+import {
+  DEFAULT_BUDGET,
+  MODELS,
+  recoverIndicator,
+  totals,
+  type Budget,
+  type ModelId,
+  type Recovery,
+} from "@/lib/ai/recovery";
 import { cn } from "@/lib/utils";
 
 const ChartWorkspace = lazy(() =>
@@ -89,6 +98,7 @@ function Index() {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const historyRef = useRef<HistoryTurn[]>([]);
   const busyRef = useRef(false);
+  const taskRef = useRef<AbortController | null>(null);
   const nextId = useRef(0);
   const [ready, setReady] = useState(false);
   const [code, setCode] = useState(DEFAULT_CODE);
@@ -101,6 +111,10 @@ function Index() {
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState("Writing Pine Script…");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [model, setModel] = useState<ModelId>("openai/gpt-6.1-sol");
+  const [budget, setBudget] = useState<Budget>(DEFAULT_BUDGET);
+  const [recovery, setRecovery] = useState<Recovery | null>(null);
+  useEffect(() => () => taskRef.current?.abort(), []);
   useEffect(() => {
     if (tab === "ai" && !collapsed) inputRef.current?.focus();
   }, [tab, collapsed, busy]);
@@ -131,10 +145,12 @@ function Index() {
       setStatus({ kind: "error", msg: "Could not copy. Select the script and copy it manually." });
     }
   };
-  const ask = async (request = prompt) => {
+  const ask = async (request = prompt, resume?: Recovery) => {
     const p = request.trim();
     if (!p || busyRef.current || running || !apiRef.current) return;
     busyRef.current = true;
+    const controller = new AbortController();
+    taskRef.current = controller;
     setBusy(true);
     setPrompt("");
     setTab("ai");
@@ -153,54 +169,53 @@ function Index() {
           item.id === assistantId ? { ...item, parts: [...item.parts, part] } : item,
         ),
       );
-    let previousCode: string | undefined;
-    let error: string | undefined;
-    let runId: string | undefined;
     try {
-      for (let attempt = 0; attempt <= 3; attempt++) {
-        setPhase(attempt === 0 ? "Writing Pine Script…" : `Refining script · ${attempt}/3…`);
-        const result = await generatePine({
-          data: { prompt: p, history, currentCode: code, previousCode, error, runId },
+      const outcome = await recoverIndicator({
+        state: resume
+          ? { ...resume, currentCode: code, history, reason: undefined }
+          : { prompt: p, currentCode: code, history, attempts: [], code: "", diagnostic: "" },
+        budget,
+        model,
+        signal: controller.signal,
+        generate: (data, signal) => generatePine({ data, signal }),
+        run: (source, signal) => apiRef.current!.run(source, signal),
+        progress: setPhase,
+        checkpoint: (state) => {
+          setRecovery(state);
+          if (state.code) setCode(state.code);
+        },
+      });
+      const result = outcome.state.reply;
+      if (outcome.ok && result) {
+        setStatus({ kind: "ok", msg: "Running on chart" });
+        addPart({
+          type: "chart-run",
+          state: "output-available",
+          text: "Indicator applied to the live chart.",
         });
-        if (!result.ok) {
-          addPart({ type: "text", text: result.message });
-          historyRef.current.push({ role: "assistant", content: result.message });
-          return;
-        }
-        runId = result.runId;
-        setCode(result.code);
-        setPhase("Running on chart…");
-        const outcome = await run(result.code);
-        if (outcome?.ok) {
-          addPart({
-            type: "chart-run",
-            state: "output-available",
-            text: "Indicator applied to the live chart.",
-          });
-          addPart({ type: "text", text: `### What's Changed\n${result.summary}` });
-          setMessages((m) =>
-            m.map((item) =>
-              item.id === assistantId
-                ? { ...item, suggestions: result.suggestions, code: result.code }
-                : item,
-            ),
-          );
-          historyRef.current.push({
-            role: "assistant",
-            content: `\`\`\`pine\n${result.code}\n\`\`\`\n${result.summary}\n${result.suggestions.join("\n")}`,
-          });
-          return;
-        }
-        previousCode = result.code;
-        error = outcome && !outcome.ok ? outcome.error : "Chart not ready";
-        addPart({ type: "chart-run", state: "output-error", text: error });
+        addPart({ type: "text", text: `### What's Changed\n${result.summary}` });
+        setMessages((m) =>
+          m.map((item) =>
+            item.id === assistantId
+              ? { ...item, suggestions: result.suggestions, code: result.code }
+              : item,
+          ),
+        );
+        historyRef.current.push({
+          role: "assistant",
+          content: `\`\`\`pine\n${result.code}\n\`\`\`\n${result.summary}\n${result.suggestions.join("\n")}`,
+        });
+        return;
       }
-      const failure =
-        "The script still has an error after 3 repairs. You can refine the request or edit the script.";
+      const failure = `${outcome.state.reason} The last working chart is preserved. Code and diagnostics are available in Recovery details below; you can resume with a new budget.`;
       addPart({ type: "text", text: failure });
+      setStatus({
+        kind: "error",
+        msg: outcome.state.diagnostic || outcome.state.reason || "Recovery stopped",
+      });
       historyRef.current.push({
         role: "assistant",
-        content: `${failure}\n${previousCode ?? ""}\n${error ?? ""}`,
+        content: `${failure}\n${outcome.state.code}\n${outcome.state.diagnostic}`,
       });
     } catch (e) {
       const text = e instanceof Error ? e.message : "Request failed";
@@ -208,6 +223,7 @@ function Index() {
       historyRef.current.push({ role: "assistant", content: text });
     } finally {
       busyRef.current = false;
+      taskRef.current = null;
       setBusy(false);
       inputRef.current?.focus();
     }
@@ -250,6 +266,7 @@ function Index() {
                   onClick={() => {
                     historyRef.current = [];
                     setMessages([]);
+                    setRecovery(null);
                     setPrompt("");
                     inputRef.current?.focus();
                   }}
@@ -373,27 +390,139 @@ function Index() {
                       <select
                         aria-label="AI model"
                         className="quant-model"
-                        defaultValue="gpt-5.6"
+                        value={model}
+                        onChange={(e) => setModel(e.target.value as ModelId)}
+                        disabled={busy}
                         title="Configured generation model"
                       >
-                        <option value="gpt-5.6">GPT-5.6</option>
+                        {Object.entries(MODELS).map(([id, config]) => (
+                          <option key={id} value={id}>
+                            {config.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
-                    <PromptInputSubmit
-                      className="size-8 rounded-full"
-                      aria-label="Send message"
-                      title="Send message"
-                      status={busy ? "submitted" : "ready"}
-                      disabled={busy || running || !ready || !prompt.trim()}
-                    >
-                      {busy ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <ArrowUp className="size-4" />
-                      )}
-                    </PromptInputSubmit>
+                    {busy ? (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => taskRef.current?.abort()}
+                      >
+                        Cancel
+                      </Button>
+                    ) : (
+                      <PromptInputSubmit
+                        className="size-8 rounded-full"
+                        aria-label="Send message"
+                        title="Send message"
+                        status={busy ? "submitted" : "ready"}
+                        disabled={busy || running || !ready || !prompt.trim()}
+                      >
+                        {busy ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <ArrowUp className="size-4" />
+                        )}
+                      </PromptInputSubmit>
+                    )}
                   </PromptInputFooter>
                 </PromptInput>
+                <details className="mt-2 text-xs text-muted-foreground">
+                  <summary className="cursor-pointer">
+                    Recovery settings{recovery ? " and details" : ""}
+                  </summary>
+                  <div className="grid grid-cols-2 gap-2 py-2">
+                    {(
+                      [
+                        ["maxCost", "Spend limit (USD)", 0.01, 10, 0.1],
+                        ["maxMs", "Time limit (seconds)", 10, 600, 10],
+                        ["maxTokens", "Token limit", 1000, 200000, 1000],
+                        ["maxCalls", "Call safety limit", 1, 40, 1],
+                      ] as const
+                    ).map(([key, label, min, max, step]) => (
+                      <label key={key}>
+                        {label}
+                        <input
+                          className="mt-1 w-full rounded border border-border bg-background p-1"
+                          type="number"
+                          min={min}
+                          max={max}
+                          step={step}
+                          disabled={busy}
+                          value={key === "maxMs" ? budget[key] / 1000 : budget[key]}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (Number.isFinite(value))
+                              setBudget((b) => ({
+                                ...b,
+                                [key]:
+                                  Math.max(min, Math.min(max, value)) *
+                                  (key === "maxMs" ? 1000 : 1),
+                              }));
+                          }}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  {recovery && (
+                    <div className="max-h-48 overflow-auto whitespace-pre-wrap break-words">
+                      <p>
+                        {recovery.attempts.length} calls ·{" "}
+                        {totals(recovery.attempts).inputTokens +
+                          totals(recovery.attempts).outputTokens}{" "}
+                        tokens · estimated ${totals(recovery.attempts).estimatedCost.toFixed(4)}
+                        {totals(recovery.attempts).estimated ? " (includes reserved usage)" : ""}
+                      </p>
+                      <p>{recovery.reason}</p>
+                      <pre className="whitespace-pre-wrap">{recovery.diagnostic}</pre>
+                      {recovery.attempts.map((attempt, index) => (
+                        <details key={index} className="my-1">
+                          <summary className="cursor-pointer">
+                            Attempt {index + 1} · {attempt.strategy} ·{" "}
+                            {attempt.usage.inputTokens + attempt.usage.outputTokens} tokens ·
+                            estimated ${attempt.usage.estimatedCost.toFixed(4)}
+                          </summary>
+                          <pre className="whitespace-pre-wrap">
+                            {attempt.model}
+                            {"\n"}
+                            {attempt.diagnostic || "Verification did not complete."}
+                          </pre>
+                        </details>
+                      ))}
+                      {!busy && recovery.reason && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          disabled={!ready}
+                          onClick={() => ask(recovery.prompt, recovery)}
+                        >
+                          Resume with new budget
+                        </Button>
+                      )}
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                          const url = URL.createObjectURL(
+                            new Blob([JSON.stringify(recovery, null, 2)], {
+                              type: "application/json",
+                            }),
+                          );
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = "pine-recovery.json";
+                          a.click();
+                          setTimeout(() => URL.revokeObjectURL(url), 1000);
+                        }}
+                      >
+                        Export code and diagnostics
+                      </Button>
+                    </div>
+                  )}
+                </details>
                 {!busy && (
                   <div className="quant-action-chips">
                     {(messages.length

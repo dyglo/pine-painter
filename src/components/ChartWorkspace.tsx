@@ -1,10 +1,11 @@
 import { brandSvg } from "@/lib/branding";
 import { useEffect, useRef } from "react";
+import { createChartRunner, type RunOutcome } from "@/lib/ai/chart-runner";
 
-export type RunOutcome = { ok: true } | { ok: false; error: string };
+export type { RunOutcome } from "@/lib/ai/chart-runner";
 
 export type ChartApi = {
-  run: (code: string) => Promise<RunOutcome>;
+  run: (code: string, signal?: AbortSignal) => Promise<RunOutcome>;
 };
 
 function formatError(err: unknown): string {
@@ -28,7 +29,7 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
     let disposed = false;
     let restoreBranding: (() => void) | undefined;
     let ws: InstanceType<typeof import("@luxalgo/vela/workspace").VelaWorkspace> | null = null;
-    let handle: { remove: () => void } | null = null;
+    let runner: ReturnType<typeof createChartRunner> | undefined;
 
     (async () => {
       const [
@@ -73,31 +74,16 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
         engines: { pine: () => new PineEngine() },
       });
 
-      onReady({
-        run: async (code) => {
-          if (!ws) return { ok: false, error: "Chart not ready" };
-          try {
-            const res = await ws.chart.runIndicator(code, { language: "pine" });
-            if (res.ok) {
-              const previous = handle;
-              handle = res.handle;
-              try {
-                previous?.remove();
-              } catch {
-                /* Already removed. */
-              }
-              return { ok: true };
-            }
-            return { ok: false, error: formatError(res.error) };
-          } catch (err) {
-            return { ok: false, error: formatError(err) };
-          }
-        },
-      });
+      runner = createChartRunner(async (code) => {
+        if (!ws) throw new Error("Chart not ready");
+        return ws.chart.runIndicator(code, { language: "pine" });
+      }, formatError);
+      onReady({ run: runner.run });
     })();
 
     return () => {
       disposed = true;
+      runner?.dispose();
       ws?.destroy();
       restoreBranding?.();
     };
