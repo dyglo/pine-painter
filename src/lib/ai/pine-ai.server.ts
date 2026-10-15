@@ -71,7 +71,12 @@ export async function generatePineCode(input: GenerateInput): Promise<GenerateRe
         },
       },
     });
-    const text = await result.text;
+    let text: string;
+    try {
+      text = await result.text;
+    } catch (error) {
+      throw streamError ?? error;
+    }
     if (streamError) throw streamError;
     const reply = parsePineReply(text);
     const { code } = reply;
