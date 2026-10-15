@@ -110,7 +110,12 @@ export async function generatePineCode(
       },
     });
     usage = reservation;
-    const text = await result.text;
+    let text: string;
+    try {
+      text = await result.text;
+    } catch (error) {
+      throw streamError ?? error;
+    }
     const measured = await result.totalUsage;
     if (measured.inputTokens !== undefined && measured.outputTokens !== undefined) {
       const tier = measured.inputTokens > 272000;
