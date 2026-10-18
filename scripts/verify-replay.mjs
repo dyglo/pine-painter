@@ -72,9 +72,8 @@ try {
     sockets++;
   });
   await page.goto(process.argv[2] ?? "http://localhost:3000", { waitUntil: "networkidle" });
-  await page
-    .getByRole("button", { name: "Enter Replay", exact: true })
-    .waitFor({ state: "visible" });
+  await page.getByRole("button", { name: "Replay", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Select replay date", exact: true }).click();
   await page.waitForTimeout(1500);
   const storageKey = "deplyze.replay.v1";
   const saved = () =>
@@ -87,15 +86,64 @@ try {
   await page.getByRole("button", { name: "Enter Replay", exact: true }).click();
   await page.getByRole("button", { name: "Exit Replay", exact: true }).waitFor();
   await settled();
+  const beforeSelect = await saved();
+  await page.getByRole("button", { name: "Replay", exact: true }).click();
+  const plot = await page.locator(".replay-workspace canvas").first().boundingBox();
+  assert(plot);
+  await page.mouse.move(plot.x + plot.width * 0.65, plot.y + plot.height * 0.4);
+  await page.getByText(/Select a historical candle · .*UTC/).waitFor();
+  await page.screenshot({ path: join(output, "replay-v2-selection.png"), fullPage: true });
+  await page.mouse.click(plot.x + plot.width * 0.65, plot.y + plot.height * 0.4);
+  await settled();
   const first = await saved();
+  assert(
+    first.cursor < beforeSelect.cursor,
+    "Chart selection must seek a revealed historical candle",
+  );
+  assert.equal(
+    await page.getByRole("button", { name: "Replay", exact: true }).getAttribute("aria-pressed"),
+    "true",
+  );
   assert(first);
   assert.equal(first.dataset.symbol, "binance:BTCUSDT");
   const networkAtReplay = historyRequests;
   const socketsAtReplay = sockets;
-  await page.screenshot({ path: join(output, "replay-paused.png"), fullPage: true });
+  const chartBeforeDock = await page.locator(".replay-workspace canvas").first().boundingBox();
+  await page
+    .locator(".replay-workspace canvas")
+    .first()
+    .evaluate((el) => el.setAttribute("data-acceptance-canvas", "preserved"));
+  await page.getByRole("button", { name: "Trade", exact: true }).last().click();
+  await page.waitForTimeout(200);
+  const chartAfterDock = await page.locator(".replay-workspace canvas").first().boundingBox();
+  assert(chartAfterDock.width < chartBeforeDock.width);
+  assert.equal(
+    await page.locator(".replay-workspace canvas").first().getAttribute("data-acceptance-canvas"),
+    "preserved",
+  );
+  await page.setViewportSize({ width: 900, height: 800 });
+  await page.waitForTimeout(200);
+  assert((await page.locator(".replay-workspace canvas").first().boundingBox()).width > 150);
+  await page.screenshot({ path: join(output, "replay-v2-responsive.png"), fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 950 });
+  await page.getByRole("button", { name: "Buy · 1 MARKET" }).click();
+  assert.equal((await saved()).trading.actions.length, 1);
+  await page.getByText("Pending: buy market", { exact: true }).waitFor();
+  await page.screenshot({ path: join(output, "replay-v2-order.png"), fullPage: true });
   await page.getByRole("button", { name: "Next candle", exact: true }).click();
   await settled();
   assert.equal((await saved()).cursor, first.cursor + 1);
+  await page
+    .getByText(/^BUY 1 @/)
+    .first()
+    .waitFor();
+  await page.getByRole("button", { name: "Close at next open", exact: true }).click();
+  await page.getByRole("button", { name: "Next candle", exact: true }).click();
+  await settled();
+  await page.getByText("Flat · no open position", { exact: true }).waitFor();
+  await page.screenshot({ path: join(output, "replay-v2-fills.png"), fullPage: true });
+  await page.getByRole("button", { name: "Previous candle", exact: true }).click();
+  await settled();
   await page.getByRole("button", { name: "Previous candle", exact: true }).click();
   await settled();
   assert.equal((await saved()).cursor, first.cursor);
@@ -118,7 +166,7 @@ try {
   assert.equal((await saved()).cursor, ended.cursor);
   assert.equal(historyRequests, networkAtReplay);
   assert.equal(sockets, socketsAtReplay);
-  await page.screenshot({ path: join(output, "replay-complete.png"), fullPage: true });
+  await page.screenshot({ path: join(output, "replay-v2-complete.png"), fullPage: true });
   await page.reload({ waitUntil: "networkidle" });
   await page.getByRole("button", { name: "Restore session", exact: true }).click();
   await page.getByRole("button", { name: "Exit Replay", exact: true }).waitFor();
@@ -155,11 +203,11 @@ try {
   await page.getByRole("button", { name: "AI assistant", exact: true }).click();
 
   await page.getByRole("button", { name: "Exit Replay", exact: true }).click();
-  await page.getByRole("button", { name: "Enter Replay", exact: true }).waitFor();
+  await page.getByRole("button", { name: "Replay", exact: true }).waitFor();
   await settled();
   assert(sockets > socketsAtReplay, "Explicit exit must restore the original live subscription");
   await page.setViewportSize({ width: 900, height: 800 });
-  await page.screenshot({ path: join(output, "replay-live.png"), fullPage: true });
+  await page.screenshot({ path: join(output, "replay-v2-live.png"), fullPage: true });
   assert.deepEqual(errors, []);
   console.log(
     JSON.stringify({
@@ -171,6 +219,8 @@ try {
       historyRequestsDuringReplay: 0,
       socketsDuringReplay: 0,
       checks: [
+        "native chart candle selection",
+        "paper entry, next-bar fill and close",
         "date selection",
         "next/previous",
         "play/pause",

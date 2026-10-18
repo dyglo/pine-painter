@@ -1,3 +1,4 @@
+import { simulate, type TradingTape } from "./trading";
 import type { EngineVersions, ReplayDataset } from "./dataset";
 import { createDataset } from "./dataset";
 
@@ -138,6 +139,7 @@ export type SavedReplay = {
   cursor: number;
   speed: number;
   chartState: unknown;
+  trading?: TradingTape;
   scripts: {
     id: string;
     source: string;
@@ -176,5 +178,6 @@ export async function restoreReplay(raw: string, versions: EngineVersions): Prom
     saved.scripts.some((s) => typeof s.source !== "string" || typeof s.id !== "string")
   )
     throw new Error("Invalid saved replay cursor or chart state.");
+  if (saved.trading) simulate(verified, saved.trading, saved.cursor);
   return { ...saved, dataset: verified };
 }

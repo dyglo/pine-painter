@@ -1,4 +1,4 @@
-import { getNativeIndicator, sharedBarStore } from "@luxalgo/vela";
+import { getNativeIndicator, sharedBarStore, registerWidgetAction } from "@luxalgo/vela";
 import { VelaWorkspace } from "@luxalgo/vela/workspace";
 import { PineEngine } from "@luxalgo/vela-pinets";
 import type { DataProvider, InputValue, VelaTheme } from "@luxalgo/vela";
@@ -15,6 +15,8 @@ import {
 import { ENGINE_VERSIONS, REPLAY_VERIFIED } from "./versions";
 import { ManagedHandles, MANAGED_PREFIX } from "./managed-handle";
 
+import { simulate, type TradingTape, type TradingState, type OrderInput } from "./trading";
+
 type Script = SavedReplay["scripts"][number];
 export type ReplayHostView = {
   ready: boolean;
@@ -23,6 +25,10 @@ export type ReplayHostView = {
   view: ReplayView | null;
   error: string;
   saved: boolean;
+  selecting?: boolean;
+  selectionTime?: number | null;
+  tradeOpen?: boolean;
+  trading?: TradingState | null;
 };
 export type ReplayHost = ReturnType<typeof createReplayHost>;
 const scriptsOf = (ws: VelaWorkspace): Script[] =>
@@ -47,6 +53,7 @@ export function createReplayHost(
   let layer: HTMLDivElement;
   let session: ReplaySession | null = null;
   let disposed = false;
+  let tradingTape: TradingTape | null = null;
   const idleWaiters = new Set<() => void>();
   let operation = 0;
   const hostId = crypto.randomUUID().replaceAll("-", "").slice(0, 12);
@@ -69,6 +76,12 @@ export function createReplayHost(
     if (!disposed) {
       state = { ...state, ...next };
       changed({ ...state });
+      for (const button of element.querySelectorAll<HTMLButtonElement>(
+        ".vela-widget-action-left",
+      )) {
+        if (button.textContent === "Replay")
+          button.setAttribute("aria-pressed", String(!!state.dataset || !!state.selecting));
+      }
       if (!state.loading) {
         for (const resolve of idleWaiters) resolve();
         idleWaiters.clear();
@@ -93,6 +106,7 @@ export function createReplayHost(
         speed: session.view.speed,
         chartState: snapshot(ws),
         scripts: scriptsOf(ws),
+        ...(tradingTape ? { trading: tradingTape } : {}),
       });
       emit({ saved: true });
     } catch {
@@ -194,11 +208,18 @@ export function createReplayHost(
       symbol: dataset ? `${namespace}:${symbol}` : liveIdentity.symbol,
       timeframe: dataset?.timeframe ?? liveIdentity.timeframe,
       live: !dataset,
+      topbar: {
+        left: ["symbol", "timeframes", "style", "indicators", "actions", "undo-redo"],
+        right: ["actions", "panels", "screenshot"],
+      },
       ...(dataset
         ? {
             data: dataset.bars.map((b) => ({ ...b })),
             priceStyle: "candles",
-            topbar: { left: ["indicators", "undo-redo"], right: ["panels", "screenshot"] },
+            topbar: {
+              left: ["indicators", "actions", "undo-redo"],
+              right: ["actions", "panels", "screenshot"],
+            },
           }
         : {}),
       providers: replayProvider ? { [namespace]: () => replayProvider } : providers,
@@ -221,7 +242,7 @@ export function createReplayHost(
       // At the final candle all of the immutable bounded tape is legitimately
       // revealed. live:false and the non-streaming provider keep it frozen.
       await applySnapshot(target, chartState, !!dataset);
-      if (dataset) {
+      if (dataset && !state.dataset) {
         const lastOpen = dataset.bars[cursor]!.time;
         const visible = target.chart.getVisibleRange();
         if (visible)
@@ -253,6 +274,25 @@ export function createReplayHost(
       // analytical states; current candles remain owned by this native workspace.
       // This bounds memory without sharing future data with any new state.
       if (dataset) sharedBarStore.clear();
+      target.chart.renderer.onCrosshairMove((event) => {
+        if (state.selecting && !state.loading) emit({ selectionTime: event.time });
+      });
+      target.chart.renderer.onClick((event) => {
+        if (!state.selecting || state.loading || event.time == null) return;
+        const time = event.time;
+        if (state.dataset) {
+          const cursor = state.dataset.bars.findIndex((b) => b.time === time);
+          if (cursor < state.dataset.warmup || cursor > (state.view?.cursor ?? -1)) {
+            emit({ error: "Choose a revealed candle after the warm-up range." });
+            return;
+          }
+          emit({ selecting: false, selectionTime: null });
+          void session?.seek(cursor);
+        } else {
+          emit({ selecting: false, selectionTime: null });
+          void api.enter(time + intervalOf(target.chart.market.timeframe ?? "60"));
+        }
+      });
       target.on("state:changed", () => {
         clearTimeout(persistTimer);
         persistTimer = setTimeout(persist, 600);
@@ -265,6 +305,25 @@ export function createReplayHost(
       throw e;
     }
   }
+  function selectBar() {
+    if (state.loading) return;
+    session?.pause();
+    emit({ selecting: !state.selecting, selectionTime: null });
+  }
+  const unregisterReplay = registerWidgetAction({
+    id: `deplyze-replay-${hostId}`,
+    target: "topbar",
+    align: "left",
+    label: "Replay",
+    run: selectBar,
+  });
+  const unregisterTrade = registerWidgetAction({
+    id: `deplyze-trade-${hostId}`,
+    target: "topbar",
+    align: "right",
+    label: "Trade",
+    run: () => emit({ tradeOpen: !state.tradeOpen }),
+  });
   const firstMount = mount(null, 0, [], null)
     .then(() => {
       let saved = false;
@@ -284,9 +343,12 @@ export function createReplayHost(
     scripts: Script[],
     chartState: unknown,
     speed = 1,
+    restoredTrading?: TradingTape,
   ) {
     session?.dispose();
-    emit({ loading: true, error: "" });
+    tradingTape = restoredTrading ?? { version: 1, start: cursor, actions: [] };
+    simulate(dataset, tradingTape, cursor);
+    emit({ loading: true, error: "", selecting: false });
     let initial = true;
     session = new ReplaySession(
       dataset,
@@ -304,6 +366,15 @@ export function createReplayHost(
           seekQueue = task.catch(() => {});
           try {
             await task;
+            if (tradingTape) {
+              // Rewinding forks the action history; future decisions are discarded.
+              tradingTape = {
+                ...tradingTape,
+                start: Math.min(tradingTape.start, next),
+                actions: tradingTape.actions.filter((a) => a.cursor <= next),
+              };
+              emit({ trading: simulate(dataset, tradingTape, next) });
+            }
             initial = false;
           } finally {
             emit({ loading: false });
@@ -330,7 +401,32 @@ export function createReplayHost(
     emit({ loading: false, dataset, view: { ...session.view } });
     persist();
   }
-  return {
+  const api = {
+    selectBar,
+    toggleTrade: () => emit({ tradeOpen: !state.tradeOpen }),
+    trade(order: OrderInput | "close" | "cancel") {
+      if (
+        !state.dataset ||
+        !session ||
+        !tradingTape ||
+        state.loading ||
+        !["paused", "ended"].includes(session.view.status) ||
+        (session.view.status === "ended" && order !== "cancel")
+      )
+        return;
+      try {
+        const next = {
+          ...tradingTape,
+          actions: [...tradingTape.actions, { cursor: session.view.cursor, order }],
+        };
+        const trading = simulate(state.dataset, next, session.view.cursor);
+        tradingTape = next;
+        emit({ trading, error: "" });
+        persist();
+      } catch (error) {
+        emit({ error: error instanceof Error ? error.message : String(error) });
+      }
+    },
     async enter(selectedClose: number) {
       if (!REPLAY_VERIFIED) {
         emit({
@@ -386,7 +482,6 @@ export function createReplayHost(
         liveChart = snapshot(ws);
         await startDataset(dataset, cursor, liveScripts, {
           ...(liveChart as object),
-          drawings: undefined,
         });
       } catch (e) {
         emit({ loading: false, error: e instanceof Error ? e.message : String(e) });
@@ -411,6 +506,7 @@ export function createReplayHost(
           saved.scripts,
           saved.chartState,
           saved.speed,
+          saved.trading,
         );
       } catch (e) {
         emit({ loading: false, error: e instanceof Error ? e.message : String(e) });
@@ -426,7 +522,15 @@ export function createReplayHost(
         session.dispose();
         session = null;
         await mount(null, 0, currentScripts, liveChart);
-        emit({ dataset: null, view: null, loading: false, error: "" });
+        tradingTape = null;
+        emit({
+          dataset: null,
+          view: null,
+          trading: null,
+          selecting: false,
+          loading: false,
+          error: "",
+        });
       } catch (e) {
         emit({ loading: false, error: e instanceof Error ? e.message : String(e) });
       }
@@ -474,8 +578,11 @@ export function createReplayHost(
       ++operation;
       session?.dispose();
       clearTimeout(persistTimer);
+      unregisterReplay();
+      unregisterTrade();
       ws?.destroy();
       element.replaceChildren();
     },
   };
+  return api;
 }

@@ -21,6 +21,7 @@ export function BarReplayControls({
   host: ReplayHost | null;
 }) {
   const [date, setDate] = useState(() => utcInput(Date.now() - 7 * 86400000));
+  const [dateOpen, setDateOpen] = useState(false);
   const [selection, setSelection] = useState<number | null>(null);
   const dataset = state.dataset;
   const view = state.view;
@@ -28,6 +29,7 @@ export function BarReplayControls({
   const active = !!dataset && !!view;
   const closedAt = active ? dataset.bars[view.cursor]!.time + dataset.interval : null;
   const goToDate = () => {
+    setDateOpen(false);
     const time = Date.parse(`${date}:00Z`);
     if (dataset && host) {
       const cursor = dataset.bars.filter((bar) => bar.time + dataset.interval <= time).length - 1;
@@ -38,11 +40,26 @@ export function BarReplayControls({
   return (
     <div className="replay-strip" role="region" aria-label="Bar Replay">
       <div className="replay-tools">
+        <button
+          type="button"
+          className={state.selecting ? "replay-command is-active" : "replay-command"}
+          disabled={busy || !state.ready}
+          onClick={() => host?.selectBar()}
+        >
+          Select Bar
+        </button>
+        <button
+          type="button"
+          aria-label="Select replay date"
+          onClick={() => setDateOpen(!dateOpen)}
+        >
+          Date
+        </button>
         <span className={active ? "replay-status replay-active" : "replay-status"}>
           <span className="replay-dot" />
           {active ? "REPLAY MODE" : "BAR REPLAY"}
         </span>
-        <label className="replay-date">
+        <label className="replay-date" hidden={!dateOpen}>
           Closed candle · UTC
           <input
             aria-label="Historical closed candle time in UTC"
@@ -59,6 +76,7 @@ export function BarReplayControls({
         <button
           type="button"
           className="replay-command"
+          hidden={!dateOpen}
           disabled={busy || !state.ready || !REPLAY_VERIFIED}
           onClick={goToDate}
         >
@@ -77,6 +95,13 @@ export function BarReplayControls({
         {active && (
           <>
             <span className="replay-divider" />
+            <span className="replay-timeframe">
+              {dataset.timeframe === "60"
+                ? "1h"
+                : /D/i.test(dataset.timeframe)
+                  ? "1D"
+                  : `${dataset.timeframe}m`}
+            </span>
             <button
               type="button"
               title="First replay candle"
@@ -148,6 +173,14 @@ export function BarReplayControls({
             </button>
           </>
         )}
+        <button
+          type="button"
+          className="replay-command"
+          aria-pressed={!!state.tradeOpen}
+          onClick={() => host?.toggleTrade()}
+        >
+          Trade
+        </button>
         <a
           className="replay-attribution"
           href="https://velacharts.dev"
