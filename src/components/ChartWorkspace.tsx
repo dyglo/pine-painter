@@ -1,5 +1,7 @@
 import { brandSvg } from "@/lib/branding";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BarReplayControls } from "./BarReplayControls";
+import type { ReplayHost, ReplayHostView } from "@/lib/replay/workspace";
 import { createChartRunner, type RunOutcome } from "@/lib/ai/chart-runner";
 
 export type { RunOutcome } from "@/lib/ai/chart-runner";
@@ -24,39 +26,42 @@ function formatError(err: unknown): string {
 
 export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }) {
   const ref = useRef<HTMLDivElement>(null);
+  const hostRef = useRef<ReplayHost | null>(null);
+  const [replay, setReplay] = useState<ReplayHostView>({
+    ready: false,
+    loading: false,
+    dataset: null,
+    view: null,
+    error: "",
+    saved: false,
+  });
 
   useEffect(() => {
     let disposed = false;
     let restoreBranding: (() => void) | undefined;
-    let ws: InstanceType<typeof import("@luxalgo/vela/workspace").VelaWorkspace> | null = null;
     let runner: ReturnType<typeof createChartRunner> | undefined;
 
     (async () => {
       const [
-        { VelaWorkspace },
+        { createReplayHost },
         { registerRendererDefaults },
         { BinanceProvider },
         { CoinbaseProvider },
-        { PineEngine },
         { OandaProvider },
       ] = await Promise.all([
-        import("@luxalgo/vela/workspace"),
+        import("@/lib/replay/workspace"),
         import("@luxalgo/vela"),
         import("@luxalgo/vela/providers/binance"),
         import("@luxalgo/vela/providers/coinbase"),
-        import("@luxalgo/vela-pinets"),
         import("@/lib/oanda/oanda-provider"),
       ]);
       if (disposed || !ref.current) return;
       restoreBranding = registerRendererDefaults({ attribution: brandSvg });
       const tokens = getComputedStyle(ref.current);
       const token = (name: string) => tokens.getPropertyValue(name).trim();
-      ws = new VelaWorkspace(ref.current, {
-        layout: false,
-        symbol: "BTCUSDT",
-        timeframe: "60",
-        live: true,
-        theme: {
+      const host = createReplayHost(
+        ref.current,
+        {
           background: token("--background"),
           textColor: token("--muted-foreground"),
           gridColor: token("--card"),
@@ -65,30 +70,44 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
           downColor: token("--destructive"),
           fontFamily: token("--font-sans"),
         },
-        providers: {
+        {
           binance: () => new BinanceProvider(),
           coinbase: () => new CoinbaseProvider(),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          oanda: () => new OandaProvider() as any,
+          oanda: () => new OandaProvider(),
         },
-        engines: { pine: () => new PineEngine() },
-      });
-
-      runner = createChartRunner(async (code) => {
-        if (!ws) throw new Error("Chart not ready");
-        return ws.chart.runIndicator(code, { language: "pine" });
-      }, formatError);
+        setReplay,
+      );
+      hostRef.current = host;
+      runner = createChartRunner((code) => host.compile(code), formatError);
       onReady({ run: runner.run });
     })();
 
     return () => {
       disposed = true;
       runner?.dispose();
-      ws?.destroy();
+      hostRef.current?.dispose();
+      hostRef.current = null;
       restoreBranding?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div ref={ref} className="h-full w-full" />;
+  return (
+    <div className="flex h-full min-h-0 w-full flex-col">
+      <BarReplayControls state={replay} host={hostRef.current} />
+      <div className="relative min-h-0 flex-1">
+        <div
+          ref={ref}
+          className="absolute inset-0"
+          inert={replay.loading}
+          aria-busy={replay.loading}
+        />
+        {replay.loading && (
+          <div className="replay-calculating" role="status">
+            Preparing closed-candle state…
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

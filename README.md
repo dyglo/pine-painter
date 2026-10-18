@@ -47,3 +47,39 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Native Bar Replay
+
+Use **Enter Replay** in the chart toolbar, selecting the **close time in UTC** of the last candle you want revealed. The app snapshots up to 500 following candle intervals, plus a bounded history window, from the selected existing provider. At least 200 warm-up candles are required. Missing intervals remain gaps; the coverage count and dataset fingerprint appear in the toolbar. Loading failures leave the live chart intact.
+
+Play/pause, previous/next, the candle slider, first/final, date seeking and 0.5–10× requested speed operate on complete candles. Each analytical state waits for static indicator calculation; speed slows down rather than skipping calculations. Completion remains frozen. **Exit Replay** is the only control that recreates a live subscription. The current indicator survives exit. Replay starts with clean user drawings; pre-replay drawings return on exit.
+
+Replay uses the same native VelaWorkspace/WorkspaceReplay/ReplayControl renderer. For isolation, each state is staged in a hidden native workspace with a unique provider/cache namespace and published only after its calculations succeed. Existing provider implementations and the indicator AI/recovery runner are unchanged. Replay feeds are immutable, non-streaming snapshot adapters. Pine executions use fresh static contexts; the secondary gateway never reads the live feed or Vela cache. Same-symbol higher resolutions are aggregated from revealed constituent candles only; incomplete buckets are omitted. This conservative V1 uses UTC aggregation, not provider-specific session-aligned HTF candles.
+
+**Supported boundary:** fixed UTC time resolutions; standard candle prices; deterministic indicators; same-symbol secondary resolutions that are integer multiples of the dataset resolution. Cross-symbol requests, finer secondary resolutions, ticker modifiers, calendar resolutions, `lookahead_on`, `timenow`, `math.random`, external request methods, viewport-dependent Pine studies and restored viewport-dependent native studies fail closed. OANDA source replay supports 5m/15m/1h; 4h/daily need verified session/DST close metadata. Intrabar/tick replay, multi-chart replay and trading simulation are not implemented. This is a trusted-indicator runtime, not a sandbox for hostile JavaScript.
+
+**Restore session** validates the full stored dataset SHA-256 identity, coverage, engine versions and cursor before restoring paused (or frozen at the end). Browser localStorage contains the dataset, symbol metadata, chart cosmetics, drawings, native studies and indicator source/input/prop snapshots. Nothing is refetched for analytical replay. Storage failure is reported; there is no cloud sync. Editor/conversation/recovery state remains owned by the existing agent and is not restored by replay. Restored chart scripts therefore do not overwrite the editor. Do not treat saved annotation knowledge as a blind-trading experiment.
+
+The verified engine matrix is the unchanged `bun.lock`: Vela 0.8.3, vela-pinets 0.2.15, PineTS 0.11.0. Build-time version detection disables replay for other versions until the correctness suite is rerun and the matrix deliberately updated. Install with `bun install --frozen-lockfile`; an unconstrained `npm install` can otherwise resolve newer compatible ranges. No dependency manifest or lockfile version changes were needed.
+
+### Replay verification
+
+Run `npm test`, `npx tsc --noEmit`, `npm run lint`, and `NITRO_PRESET=vercel npm run build`. Replay tests use the real Pine engine for finite-valued primary/HTF outputs, compare against clean prefix-only runs, mutate future suffixes, exercise native ReplayControl, and cover cache isolation, calculation races, warm-up/gaps, frozen completion and session integrity. The existing billable AI smoke test remains opt-in.
+
+A repeatable browser acceptance script intercepts provider HTTP/WebSocket traffic with a deterministic historical fixture; it makes no AI or OANDA calls and adds no fixture endpoint to the shipped app. To run it without adding project dependencies:
+
+```sh
+npm install --prefix /tmp/deplyze-replay-tools --no-save playwright
+NITRO_PRESET=node-server npm run build
+PORT=3000 node .output/server/index.mjs
+# In another shell; point CHROMIUM_PATH at an installed Chromium if needed:
+PLAYWRIGHT_MODULE=/tmp/deplyze-replay-tools/node_modules/playwright/index.mjs node scripts/verify-replay.mjs http://localhost:3000
+```
+
+Screenshots default to `/tmp/deplyze-replay-artifacts`; set `REPLAY_ARTIFACTS_DIR` to override. Browser acceptance verifies the toolbar, step/play/pause/speed, frozen completion, restoration, successful indicator replacement after restoration, explicit exit, zero new history requests/sockets during replay and absence of page errors. It verifies deterministic integration, not real-account historical availability. Test real OANDA access separately with the deployed account.
+
+The V1 isolation strategy rebuilds native workspace state per analytical candle. This favors correctness over throughput; expensive synchronous Pine cannot be preempted by a JavaScript timeout. The 5,000-interval dataset ceiling and calculation barrier bound ordinary sessions, but this is not a tick-speed backtest engine. No claims of profitability, tick-path accuracy, or TradingView compiler equivalence are made.
+
+### Third-party licensing
+
+See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md). A visible **Charts by Vela** link is present on the chart screen. Vela core is Apache-2.0 with its shipped attribution NOTICE; vela-pinets and PineTS are AGPL-3.0-only. Corresponding-source, combined-work, redistribution and any commercial-license obligations remain unresolved for a closed-source commercial release. Provider historical-storage/display/redistribution terms also require separate review. This implementation does not change or relicense those dependencies.

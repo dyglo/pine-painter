@@ -6,7 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+import { replayVersions } from "./tooling/replay-versions";
+
 export default defineConfig({
+  vite: { define: { __REPLAY_ENGINE_VERSIONS__: JSON.stringify(replayVersions) } },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this

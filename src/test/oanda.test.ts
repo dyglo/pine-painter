@@ -18,7 +18,14 @@ describe("oanda helpers", () => {
         complete: true,
         mid: { o: "1.1", h: "1.2", l: "1.0", c: "1.15" },
       }),
-    ).toEqual({ time: Date.parse("2026-01-01T00:00:00Z"), open: 1.1, high: 1.2, low: 1, close: 1.15, volume: 10 });
+    ).toEqual({
+      time: Date.parse("2026-01-01T00:00:00Z"),
+      open: 1.1,
+      high: 1.2,
+      low: 1,
+      close: 1.15,
+      volume: 10,
+    });
   });
   it("pages at 5000 candles", () => {
     const w = pageWindows(0, 12000, 1, 5000);

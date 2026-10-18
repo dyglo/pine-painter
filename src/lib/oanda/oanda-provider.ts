@@ -76,10 +76,11 @@ export class OandaProvider {
       try {
         const res = await getOandaLatest({ data: { instrument, granularity } });
         if (stopped || !res.ok) return;
-        for (const b of res.bars) if (b.time >= last) {
-          last = b.time;
-          onBar(b);
-        }
+        for (const b of res.bars)
+          if (b.time >= last) {
+            last = b.time;
+            onBar(b);
+          }
       } catch {
         /* Next poll retries. */
       }

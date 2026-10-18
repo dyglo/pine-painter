@@ -12,10 +12,16 @@ describe("OANDA display symbols", () => {
 
   it("lists compact forex and gold symbols", async () => {
     expect((await provider.listSymbols()).map((symbol) => symbol.ticker)).toEqual([
-      "EURUSD", "GBPUSD", "USDJPY", "USDCAD", "XAUUSD",
+      "EURUSD",
+      "GBPUSD",
+      "USDJPY",
+      "USDCAD",
+      "XAUUSD",
     ]);
     expect(await provider.getSymbolInfo("XAUUSD")).toMatchObject({
-      ticker: "XAUUSD", type: "commodity", currency: "USD",
+      ticker: "XAUUSD",
+      type: "commodity",
+      currency: "USD",
     });
   });
 

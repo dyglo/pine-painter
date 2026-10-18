@@ -40,7 +40,14 @@ export function toGranularity(tf: string): OandaGranularity | undefined {
   return map[t];
 }
 
-export type Bar = { time: number; open: number; high: number; low: number; close: number; volume: number };
+export type Bar = {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+};
 
 type RawCandle = {
   time: string;
