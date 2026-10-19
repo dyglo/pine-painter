@@ -8,15 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import source from "./source.json";
-import {
-  fitStage,
-  orderRisk,
-  shiftedStyle,
-  viewportStyle,
-  sidebarOffset,
-  type SourceNodeData,
-} from "./layout";
-import { Sparkles } from "lucide-react";
+import { fitStage, orderRisk, shiftedStyle, viewportStyle, type SourceNodeData } from "./layout";
+import { RightSidebar } from "./RightSidebar";
 import type { WorkspacePanel } from "../ChartWorkspace";
 import { SourceNode, HitTarget } from "./SourceNode";
 import { DrawingFlyout } from "./DrawingFlyout";
@@ -316,7 +309,7 @@ export function HtmlReplayWorkspace({
     const key = node.key,
       l = parseFloat(node.style.left),
       t = parseFloat(node.style.top);
-    if (key === 1 || (key >= 169 && key <= 175)) return null;
+    if (key === 1 || (key >= 169 && key <= 175) || key >= 220) return null;
     if (l >= 1735 && l < 2330 && t >= 80 && !panel) return null;
     if (l >= 107 && l < 1740 && t >= 1268 && t < 1362 && !replay) return null;
     if (key >= 126 && key <= 140 && !menu) return null;
@@ -559,43 +552,6 @@ export function HtmlReplayWorkspace({
             />
           ))}
         {source.nodes.slice(6).map(renderNode)}
-        <button
-          type="button"
-          className="quant-copilot-toggle"
-          aria-label="AI Copilot"
-          title="AI Copilot"
-          aria-expanded={activePanel === "ai"}
-          onClick={(e) => {
-            e.stopPropagation();
-            onPanel("ai");
-          }}
-          style={{
-            left: 2345 + fit.extraWidth,
-            top: 910 + fit.extraHeight - 72 - 292 + sidebarOffset(fit.extraHeight),
-          }}
-        >
-          <Sparkles />
-        </button>
-        {hit(
-          2345,
-          1073,
-          64,
-          64,
-          "Indicators panel",
-          () => onPanel("code"),
-          false,
-          activePanel === "code",
-        )}
-        {hit(
-          2345,
-          986,
-          64,
-          64,
-          "Trade",
-          () => (panel ? host?.toggleTrade() : openPanel()),
-          false,
-          panel,
-        )}
         {panel &&
           source.nodes
             .filter((n) => n.tag === "input")
@@ -875,6 +831,12 @@ export function HtmlReplayWorkspace({
           Charts by Vela
         </a>
       </div>
+      <RightSidebar
+        activePanel={activePanel}
+        trading={panel}
+        onPanel={onPanel}
+        onTrade={() => (panel ? host?.toggleTrade() : openPanel())}
+      />
       {panel && (
         <div
           className="paper-position-footer"

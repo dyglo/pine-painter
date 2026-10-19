@@ -92,6 +92,38 @@ try {
   const workspace = page.locator(".html-workspace");
   const bounds = await workspace.boundingBox();
   assert(bounds);
+  const sidebar = page.getByRole("navigation", { name: "Chart sidebar" });
+  assert.deepEqual(
+    await sidebar
+      .getByRole("button")
+      .evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label"))),
+    [
+      "Watchlist",
+      "Alerts",
+      "Object tree",
+      "AI Copilot",
+      "Trade",
+      "Indicators panel",
+      "Calendar",
+      "News feed",
+      "Notifications",
+      "Chats",
+      "More apps",
+      "Help",
+    ],
+  );
+  for (const name of ["Calendar", "News feed", "Notifications", "Chats", "More apps", "Help"]) {
+    assert.equal(
+      await sidebar.getByRole("button", { name, exact: true }).getAttribute("aria-disabled"),
+      "true",
+    );
+  }
+  const help = await sidebar.getByRole("button", { name: "Help", exact: true }).boundingBox();
+  assert.equal(help.y + help.height, 764);
+  const agentSlot = await sidebar
+    .getByRole("button", { name: "AI Copilot", exact: true })
+    .boundingBox();
+  assert.equal(agentSlot.y + agentSlot.height / 2, 368);
 
   await page.getByRole("button", { name: "AI Copilot", exact: true }).click();
   await page.getByText("Your chart is ready.", { exact: true }).waitFor({ timeout: 60000 });
@@ -171,8 +203,12 @@ try {
   assert.equal((await page.locator(".source-chart").boundingBox()).x, closed.x);
   assert.equal(await page.locator('[data-source-node="169"]').count(), 0);
   const copilot = await page.getByRole("button", { name: "AI Copilot", exact: true }).boundingBox();
-  const chatIcon = await page.locator('[data-source-node="223"]').boundingBox();
-  assert(copilot.y >= chatIcon.y + chatIcon.height + 8);
+  const objectTree = await sidebar
+    .getByRole("button", { name: "Object tree", exact: true })
+    .boundingBox();
+  assert(copilot.y >= objectTree.y + objectTree.height + 8);
+  const smallHelp = await sidebar.getByRole("button", { name: "Help", exact: true }).boundingBox();
+  assert.equal(smallHelp.y + smallHelp.height, 614);
   await page.mouse.move(25, 400);
   await page.mouse.wheel(0, 300);
   await page.waitForTimeout(200);
