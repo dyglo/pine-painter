@@ -80,14 +80,6 @@
   z-index: 4;
   cursor: help;
 }
-.html-stage .source-position-status {
-  max-width: 1110px;
-  overflow: hidden;
-}
-.html-stage .source-close {
-  z-index: 4;
-  cursor: pointer;
-}
 .html-stage .source-selection-time {
   position: absolute;
   left: 107px;
@@ -173,4 +165,38 @@
 }
 .quant-copilot-toggle:focus-visible {
   outline: 2px solid #2962ff;
+}
+.paper-position-footer {
+  position: absolute;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid #e0e3eb;
+  background: #fff;
+  color: #131722;
+  font:
+    12px -apple-system,
+    BlinkMacSystemFont,
+    "Trebuchet MS",
+    Roboto,
+    Ubuntu,
+    sans-serif;
+}
+.paper-position-status {
+  min-width: 0;
+  flex: 1;
+}
+.paper-position-close {
+  border: 0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  background: #f0f3fa;
+  cursor: pointer;
+}
+.paper-position-close:disabled {
+  opacity: 0.5;
+  cursor: default;
 }

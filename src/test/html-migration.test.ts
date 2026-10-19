@@ -25,18 +25,25 @@ const fixture = () =>
   });
 describe("HTML layout migration", () => {
   it("fills the viewport without letterboxing and anchors the lower controls", () => {
-    expect(fitStage(2419, 1512)).toEqual({ scale: 1, left: 0, top: 0, extraHeight: 0 });
+    expect(fitStage(1366, 768)).toEqual({
+      scale: 0.5,
+      left: 0,
+      top: 0,
+      extraWidth: 313,
+      extraHeight: 96,
+    });
     const f = fitStage(1132, 950);
-    expect(f.scale).toBe(1132 / 2419);
+    expect(f.scale).toBe(0.5);
+    expect(fitStage(1920, 1080).scale).toBe(f.scale);
     expect(f.left).toBe(0);
     expect(f.top).toBe(0);
-    expect((1512 + f.extraHeight) * f.scale).toBeCloseTo(950);
+    expect((1512 + f.extraHeight - 72) * f.scale).toBeCloseTo(950);
     expect(
       viewportStyle({ left: 107, top: 80, width: 2218, height: 1352 }, -100, 600),
     ).toMatchObject({ left: 107, top: 80, width: 1618, height: 1252 });
-    expect(viewportStyle({ left: 2377, top: 1105 }, -100, 600)).toMatchObject({
-      left: 2377,
-      top: 1005,
+    expect(viewportStyle({ left: 2377, top: 1105 }, 96, 600, 313)).toMatchObject({
+      left: 2690,
+      top: 851,
     });
     expect(viewportStyle({ left: 2060, top: 8 }, -100, 600)).toMatchObject({ left: 1460, top: 8 });
   });

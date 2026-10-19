@@ -8,7 +8,14 @@ import {
   type ReactNode,
 } from "react";
 import source from "./source.json";
-import { fitStage, orderRisk, shiftedStyle, viewportStyle, type SourceNodeData } from "./layout";
+import {
+  fitStage,
+  orderRisk,
+  shiftedStyle,
+  viewportStyle,
+  sidebarOffset,
+  type SourceNodeData,
+} from "./layout";
 import { Sparkles } from "lucide-react";
 import type { WorkspacePanel } from "../ChartWorkspace";
 import { SourceNode, HitTarget } from "./SourceNode";
@@ -48,7 +55,9 @@ export function HtmlReplayWorkspace({
   panelContent: ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const [fit, setFit] = useState({ scale: 1, left: 0, top: 0, extraHeight: 0 });
+  const [fit, setFit] = useState({ scale: 0.5, left: 0, top: 0, extraHeight: 0, extraWidth: 0 });
+  const [drawingScroll, setDrawingScroll] = useState(0);
+  const maxDrawingScroll = Math.max(0, 1330 - (1512 + fit.extraHeight - 72));
   const dockPixels = activePanel
     ? Math.min(
         activePanel === "code" ? 400 : 360,
@@ -56,8 +65,28 @@ export function HtmlReplayWorkspace({
       )
     : 0;
   const dockWidth = dockPixels / fit.scale;
-  const toolbarRatio = (2335 - dockWidth) / 2419;
-  const place = (style: CSSProperties) => viewportStyle(style, fit.extraHeight, dockWidth);
+  const toolbarWidth = 2335 + fit.extraWidth - dockWidth;
+  const toolbarRatio = Math.min(1, toolbarWidth / 2419);
+  const toolbarPlace = (style: CSSProperties) => {
+    const left = parseFloat(String(style.left));
+    const width = parseFloat(String(style.width));
+    const extra = toolbarWidth / toolbarRatio - 2419;
+    return {
+      ...style,
+      ...(left >= 1700 ? { left: left + extra } : {}),
+      ...(width === 2419 ? { width: width + extra } : {}),
+    };
+  };
+  const place = (style: CSSProperties) => {
+    const mapped = viewportStyle(style, fit.extraHeight, dockWidth, fit.extraWidth);
+    const left = parseFloat(String(style.left));
+    const top = parseFloat(String(style.top));
+    if (left < 100 && top >= 90) {
+      const y = top - Math.min(drawingScroll, maxDrawingScroll);
+      return { ...mapped, top: y, visibility: y < 80 ? ("hidden" as const) : ("visible" as const) };
+    }
+    return mapped;
+  };
   const [menu, setMenu] = useState(false),
     [menuPrice, setMenuPrice] = useState<number | null>(null),
     [calendar, setCalendar] = useState(false);
@@ -269,7 +298,7 @@ export function HtmlReplayWorkspace({
   });
 
   useEffect(() => {
-    host?.scaleUi(fit.scale);
+    host?.scaleUi(12 / 26);
   }, [host, fit.scale]);
   // The existing trading panel and the Quant panels share the right-hand space.
   useEffect(() => {
@@ -287,10 +316,14 @@ export function HtmlReplayWorkspace({
     const key = node.key,
       l = parseFloat(node.style.left),
       t = parseFloat(node.style.top);
+    if (key === 1 || (key >= 169 && key <= 175)) return null;
     if (l >= 1735 && l < 2330 && t >= 80 && !panel) return null;
     if (l >= 107 && l < 1740 && t >= 1268 && t < 1362 && !replay) return null;
     if (key >= 126 && key <= 140 && !menu) return null;
-    let style = shiftedStyle(node.style as CSSProperties, panel, replay),
+    let style =
+        l < 100 && t >= 80
+          ? (node.style as CSSProperties)
+          : shiftedStyle(node.style as CSSProperties, panel, replay),
       children: ReactNode | undefined,
       markup: string | undefined;
     if (key === 35 && tool !== "cursor") style = { ...style, display: "none" };
@@ -399,7 +432,7 @@ export function HtmlReplayWorkspace({
       <SourceNode
         key={key}
         node={node}
-        style={t < 80 ? style : place(style)}
+        style={t < 80 ? toolbarPlace(style) : place(style)}
         {...(children !== undefined ? { children } : {})}
         {...(markup !== undefined ? { markup } : {})}
       />
@@ -426,8 +459,12 @@ export function HtmlReplayWorkspace({
     disabled = false,
     pressed?: boolean,
   ) => {
-    const original = shiftedStyle({ left: x, top: y, width: w, height: h }, panel, replay);
-    const style = y < 80 ? original : place(original);
+    const original =
+      x < 100 && y >= 80
+        ? { left: x, top: y, width: w, height: h }
+        : shiftedStyle({ left: x, top: y, width: w, height: h }, panel, replay);
+    const style = y < 80 ? toolbarPlace(original) : place(original);
+    if ("visibility" in style && style.visibility === "hidden") return null;
     const content = (
       <HitTarget
         x={Number(style.left)}
@@ -458,6 +495,13 @@ export function HtmlReplayWorkspace({
       className="html-workspace replay-workspace"
       role="region"
       aria-label="Deplyze Quant chart workspace"
+      onWheel={(event) => {
+        if (event.clientX - (root.current?.getBoundingClientRect().left ?? 0) < 107 * fit.scale) {
+          setDrawingScroll((value) =>
+            Math.max(0, Math.min(maxDrawingScroll, value + event.deltaY / fit.scale)),
+          );
+        }
+      }}
       onClick={() => {
         setMenu(false);
         setCalendar(false);
@@ -470,6 +514,7 @@ export function HtmlReplayWorkspace({
           left: 0,
           top: 0,
           height: 1512 + fit.extraHeight,
+          width: 2419 + fit.extraWidth,
           transform: `scale(${fit.scale})`,
         }}
         tabIndex={-1}
@@ -481,7 +526,7 @@ export function HtmlReplayWorkspace({
             {
               left: 107,
               top: 80,
-              width: (1625 + (panel ? 0 : 593) - dockWidth) * fit.scale,
+              width: (1625 + (panel ? 0 : 593) + fit.extraWidth - dockWidth) * fit.scale,
               height: (1188 + (replay ? 0 : 94) + fit.extraHeight) * fit.scale,
               transform: `scale(${1 / fit.scale})`,
               transformOrigin: "0 0",
@@ -503,14 +548,14 @@ export function HtmlReplayWorkspace({
             <div
               className="a"
               key={key}
-              style={{
+              style={place({
                 left: 17,
                 top: GROUPS[key].y - 32,
                 width: 64,
                 height: 64,
                 background: "#f0f3fa",
                 borderRadius: 10,
-              }}
+              })}
             />
           ))}
         {source.nodes.slice(6).map(renderNode)}
@@ -524,7 +569,10 @@ export function HtmlReplayWorkspace({
             e.stopPropagation();
             onPanel("ai");
           }}
-          style={{ left: 2345, top: 910 + fit.extraHeight }}
+          style={{
+            left: 2345 + fit.extraWidth,
+            top: 910 + fit.extraHeight - 72 - 292 + sidebarOffset(fit.extraHeight),
+          }}
         >
           <Sparkles />
         </button>
@@ -539,14 +587,14 @@ export function HtmlReplayWorkspace({
           activePanel === "code",
         )}
         {hit(
-          125,
-          1454,
-          180,
-          44,
-          "Pine editor",
-          () => onPanel("code"),
+          2345,
+          986,
+          64,
+          64,
+          "Trade",
+          () => (panel ? host?.toggleTrade() : openPanel()),
           false,
-          activePanel === "code",
+          panel,
         )}
         {panel &&
           source.nodes
@@ -568,7 +616,7 @@ export function HtmlReplayWorkspace({
                   }
                   style={
                     {
-                      ...node.style,
+                      ...place(node.style as CSSProperties),
                       ...((id === "sl" && stopInvalid) || (id === "tp" && targetInvalid)
                         ? { borderColor: "#f23645" }
                         : id === "sl" || id === "tp"
@@ -630,19 +678,6 @@ export function HtmlReplayWorkspace({
           setMenuPrice(state.crosshairPrice ?? mark);
           setMenu(!menu);
         })}
-        {hit(
-          550,
-          1454,
-          118,
-          44,
-          "Trade",
-          () => {
-            if (panel) host?.toggleTrade();
-            else openPanel();
-          },
-          false,
-          panel,
-        )}
         {hit(17, 95, 64, 63, "Cursor", () => {
           setTool("cursor");
           host?.tools(null);
@@ -814,47 +849,6 @@ export function HtmlReplayWorkspace({
             onSelect={(time) => void selectDate(time)}
           />
         )}
-        <div
-          className="a v source-position-status"
-          style={place({ left: 710, top: 1476, fontSize: 25 })}
-          title={`${costs} ${state.dataset && state.view ? `${state.view.cursor - state.dataset.warmup + 1}/${state.dataset.bars.length - state.dataset.warmup} ${state.view.status}` : "Live"}`}
-          role="status"
-        >
-          {p ? (
-            <>
-              <b>{p.side === "buy" ? "Long" : "Short"}</b> {p.quantity} {ticker} @{" "}
-              {priceText(p.entry)} &nbsp;P&amp;L{" "}
-              <b style={{ color: (state.trading?.unrealized ?? 0) >= 0 ? "#089981" : "#f23645" }}>
-                {signed(state.trading?.unrealized ?? 0)}
-              </b>
-            </>
-          ) : state.trading?.pending ? (
-            `Pending ${typeof state.trading.pending === "string" ? "close" : state.trading.pending.type}`
-          ) : (
-            "No open position"
-          )}{" "}
-          &nbsp;·&nbsp; Realized <b>{signed(state.trading?.realized ?? 0)}</b>
-        </div>
-        {(p || state.trading?.pending) && (
-          <button
-            className="a h source-close"
-            style={place({
-              left: 1250,
-              top: 1456,
-              width: 110,
-              height: 40,
-              background: "#f0f3fa",
-              borderRadius: 8,
-              textAlign: "center",
-              lineHeight: "40px",
-              fontSize: 24,
-            })}
-            disabled={busy || playing || !state.ready || !mark || state.view?.status === "ended"}
-            onClick={() => host?.trade(state.trading?.pending ? "cancel" : "close")}
-          >
-            {state.trading?.pending ? "Cancel" : "Close"}
-          </button>
-        )}
         {(flash || state.error || state.view?.error || busy) && (
           <div
             className="source-toast"
@@ -881,6 +875,43 @@ export function HtmlReplayWorkspace({
           Charts by Vela
         </a>
       </div>
+      {panel && (
+        <div
+          className="paper-position-footer"
+          style={{ right: 84 * fit.scale, width: 593 * fit.scale }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className="paper-position-status"
+            title={`${costs} ${state.dataset && state.view ? `${state.view.cursor - state.dataset.warmup + 1}/${state.dataset.bars.length - state.dataset.warmup} ${state.view.status}` : "Live"}`}
+            role="status"
+          >
+            {p ? (
+              <>
+                <b>{p.side === "buy" ? "Long" : "Short"}</b> {p.quantity} {ticker} @{" "}
+                {priceText(p.entry)} &nbsp;P&amp;L{" "}
+                <b style={{ color: (state.trading?.unrealized ?? 0) >= 0 ? "#089981" : "#f23645" }}>
+                  {signed(state.trading?.unrealized ?? 0)}
+                </b>
+              </>
+            ) : state.trading?.pending ? (
+              `Pending ${typeof state.trading.pending === "string" ? "close" : state.trading.pending.type}`
+            ) : (
+              "No open position"
+            )}{" "}
+            &nbsp;·&nbsp; Realized <b>{signed(state.trading?.realized ?? 0)}</b>
+          </div>
+          {(p || state.trading?.pending) && (
+            <button
+              className="paper-position-close"
+              disabled={busy || playing || !state.ready || !mark || state.view?.status === "ended"}
+              onClick={() => host?.trade(state.trading?.pending ? "cancel" : "close")}
+            >
+              {state.trading?.pending ? "Cancel" : "Close"}
+            </button>
+          )}
+        </div>
+      )}
       <div
         className="quant-right-dock"
         style={{ right: 84 * fit.scale, width: dockPixels }}

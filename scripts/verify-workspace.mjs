@@ -103,6 +103,25 @@ try {
   await page.getByRole("button", { name: "AI Copilot", exact: true }).click();
   const closed = await page.locator(".source-chart").boundingBox();
   assert(Math.abs(closed.width - opened.width - 360) < 1);
+  assert.equal(await page.locator('[data-source-node="169"]').count(), 0);
+  assert.equal(await page.locator(".source-position-status").count(), 0);
+  assert.equal(await page.getByText("Replay Trading", { exact: true }).count(), 0);
+  const drawingSize = await page.locator('[data-source-node="37"]').boundingBox();
+  const lowerDrawing = await page.locator('[data-source-node="46"]').boundingBox();
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.waitForTimeout(200);
+  const wideDrawingSize = await page.locator('[data-source-node="37"]').boundingBox();
+  assert.equal(wideDrawingSize.width, drawingSize.width);
+  assert.equal(wideDrawingSize.height, drawingSize.height);
+  assert.equal((await page.locator('[data-source-node="46"]').boundingBox()).y, lowerDrawing.y);
+  assert.equal((await page.locator(".source-chart").boundingBox()).x, closed.x);
+  await page.screenshot({ path: join(output, "workspace-wide-density.png") });
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.waitForTimeout(200);
+  await page.getByRole("button", { name: "Trade", exact: true }).click();
+  await page.getByLabel("Order quantity", { exact: true }).waitFor();
+  await page.screenshot({ path: join(output, "workspace-trade.png") });
+  await page.getByRole("button", { name: "Close trading panel", exact: true }).click();
   await page.getByRole("button", { name: "Indicators panel", exact: true }).click();
   await page.getByRole("textbox", { name: "Pine Script code" }).waitFor();
   await page.screenshot({ path: join(output, "workspace-indicators.png") });
@@ -147,6 +166,21 @@ try {
   assert.equal(desktop.width, 1310);
   assert.equal(desktop.height, 717);
   await page.screenshot({ path: join(output, "workspace-supplied-desktop.png") });
+  await page.setViewportSize({ width: 989, height: 618 });
+  await page.waitForTimeout(200);
+  assert.equal((await page.locator(".source-chart").boundingBox()).x, closed.x);
+  assert.equal(await page.locator('[data-source-node="169"]').count(), 0);
+  const copilot = await page.getByRole("button", { name: "AI Copilot", exact: true }).boundingBox();
+  const chatIcon = await page.locator('[data-source-node="223"]').boundingBox();
+  assert(copilot.y >= chatIcon.y + chatIcon.height + 8);
+  await page.mouse.move(25, 400);
+  await page.mouse.wheel(0, 300);
+  await page.waitForTimeout(200);
+  const deleteDrawings = await page
+    .getByRole("button", { name: "Delete drawings", exact: true })
+    .boundingBox();
+  assert(deleteDrawings.y + deleteDrawings.height <= 618);
+  await page.screenshot({ path: join(output, "workspace-browser-comment-size.png") });
   assert.equal(errors.length, 0);
   console.log(
     JSON.stringify({
