@@ -172,11 +172,18 @@
 
 .quant-workspace {
   height: 100dvh;
+  color: #131722;
+  --foreground: #131722;
+  --muted-foreground: #787b86;
+  --border: #e0e3eb;
+  --success: #089981;
 }
 .quant-panel {
-  width: 264px;
+  position: relative;
+  height: 100%;
+  width: 100%;
   max-width: calc(100vw - 44px);
-  border-right: 1px solid var(--border);
+  border-left: 1px solid var(--border);
   transition:
     width 180ms ease,
     max-width 180ms ease;
@@ -191,8 +198,8 @@
   border-right: 0;
 }
 .quant-dock [data-slot="input-group"] {
-  background: oklch(0.225 0.004 260);
-  border: 1px solid oklch(0.31 0.005 260);
+  background: var(--background);
+  border: 1px solid var(--border);
   border-radius: 16px;
   box-shadow: none;
 }
@@ -228,7 +235,19 @@
   --card-foreground: var(--foreground);
 }
 .quant-panel.quant-panel-code:not(.quant-panel-collapsed) {
-  width: 400px;
+  width: 100%;
+}
+.quant-panel-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+}
+.quant-panel-header {
+  padding-right: 40px;
+}
+.quant-panel-code .quant-panel-inner {
+  padding-top: 36px;
 }
 .quant-welcome {
   padding: clamp(32px, 12vh, 94px) 0 30px;

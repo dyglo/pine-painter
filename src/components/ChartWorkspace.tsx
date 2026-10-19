@@ -1,5 +1,5 @@
 import { brandSvg } from "@/lib/branding";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HtmlReplayWorkspace } from "./chart-design/HtmlReplayWorkspace";
 import type { ReplayHost, ReplayHostView } from "@/lib/replay/workspace";
 import { createChartRunner, type RunOutcome } from "@/lib/ai/chart-runner";
@@ -24,7 +24,18 @@ function formatError(err: unknown): string {
   return parts.join(" — ");
 }
 
-export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }) {
+export type WorkspacePanel = "ai" | "code" | null;
+export function ChartWorkspace({
+  onReady,
+  activePanel,
+  onPanel,
+  panel,
+}: {
+  onReady: (api: ChartApi) => void;
+  activePanel: WorkspacePanel;
+  onPanel: (panel: WorkspacePanel) => void;
+  panel: ReactNode;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const hostRef = useRef<ReplayHost | null>(null);
   const [replay, setReplay] = useState<ReplayHostView>({
@@ -90,5 +101,14 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <HtmlReplayWorkspace state={replay} host={hostRef.current} chartRef={ref} />;
+  return (
+    <HtmlReplayWorkspace
+      state={replay}
+      host={hostRef.current}
+      chartRef={ref}
+      activePanel={activePanel}
+      onPanel={onPanel}
+      panelContent={panel}
+    />
+  );
 }

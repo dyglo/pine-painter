@@ -36,11 +36,40 @@ export function shiftedStyle(style: CSSProperties, panel: boolean, replay: boole
   };
 }
 export function fitStage(width: number, height: number) {
-  const scale = Math.min(width / DESIGN.width, height / DESIGN.height);
+  const scale = width / DESIGN.width;
   return {
     scale,
-    left: (width - DESIGN.width * scale) / 2,
-    top: (height - DESIGN.height * scale) / 2,
+    left: 0,
+    top: 0,
+    extraHeight: height / scale - DESIGN.height,
+  };
+}
+/** Keep the supplied controls proportional, anchoring the chart's lower edge to the viewport. */
+export function viewportStyle(
+  style: CSSProperties,
+  extraHeight: number,
+  dockWidth = 0,
+): CSSProperties {
+  const left = parseFloat(String(style.left));
+  const top = parseFloat(String(style.top));
+  const width = parseFloat(String(style.width));
+  const height = parseFloat(String(style.height));
+  const rail = left >= 2330;
+  const lower = top >= 1172 || (rail && top >= 900);
+  const right = !rail && (left >= 1580 || (top >= 1376 && left >= 1370));
+  const centered = !rail && top >= 1268 && top < 1362 && left >= 600 && left < 1580;
+  return {
+    ...style,
+    ...(Number.isFinite(left)
+      ? { left: left - (right ? dockWidth : centered ? dockWidth / 2 : 0) }
+      : {}),
+    ...(left < 100 && top >= 800
+      ? { top: top + extraHeight * ((top - 800) / 712) }
+      : lower
+        ? { top: top + extraHeight }
+        : {}),
+    ...(width >= 1470 && width < 2330 ? { width: width - dockWidth } : {}),
+    ...(top === 80 && height >= 1188 ? { height: height + extraHeight } : {}),
   };
 }
 export function orderRisk(entry: number, stop: number, target: number, quantity: number) {

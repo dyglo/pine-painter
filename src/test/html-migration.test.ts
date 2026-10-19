@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { createDataset } from "@/lib/replay/dataset";
 import { simulate, type TradingTape } from "@/lib/replay/trading";
-import { fitStage, shiftedStyle, orderRisk } from "@/components/chart-design/layout";
+import { fitStage, shiftedStyle, viewportStyle, orderRisk } from "@/components/chart-design/layout";
 const time = Date.UTC(2026, 0, 1),
   interval = 60000;
 const bars = Array.from({ length: 12 }, (_, i) => ({
@@ -24,12 +24,21 @@ const fixture = () =>
     warmup: 2,
   });
 describe("HTML layout migration", () => {
-  it("retains original fit/letterbox geometry at actual viewport sizes", () => {
-    expect(fitStage(2419, 1512)).toEqual({ scale: 1, left: 0, top: 0 });
+  it("fills the viewport without letterboxing and anchors the lower controls", () => {
+    expect(fitStage(2419, 1512)).toEqual({ scale: 1, left: 0, top: 0, extraHeight: 0 });
     const f = fitStage(1132, 950);
     expect(f.scale).toBe(1132 / 2419);
     expect(f.left).toBe(0);
-    expect(f.top).toBeCloseTo((950 - 1512 * f.scale) / 2);
+    expect(f.top).toBe(0);
+    expect((1512 + f.extraHeight) * f.scale).toBeCloseTo(950);
+    expect(
+      viewportStyle({ left: 107, top: 80, width: 2218, height: 1352 }, -100, 600),
+    ).toMatchObject({ left: 107, top: 80, width: 1618, height: 1252 });
+    expect(viewportStyle({ left: 2377, top: 1105 }, -100, 600)).toMatchObject({
+      left: 2377,
+      top: 1005,
+    });
+    expect(viewportStyle({ left: 2060, top: 8 }, -100, 600)).toMatchObject({ left: 1460, top: 8 });
   });
   it("ports exact panel/replay shifts rather than introducing responsive breakpoints", () => {
     expect(

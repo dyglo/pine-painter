@@ -8,7 +8,9 @@ import {
   type ReactNode,
 } from "react";
 import source from "./source.json";
-import { fitStage, orderRisk, shiftedStyle, type SourceNodeData } from "./layout";
+import { fitStage, orderRisk, shiftedStyle, viewportStyle, type SourceNodeData } from "./layout";
+import { Sparkles } from "lucide-react";
+import type { WorkspacePanel } from "../ChartWorkspace";
 import { SourceNode, HitTarget } from "./SourceNode";
 import { DrawingFlyout } from "./DrawingFlyout";
 import { TOOL_MAP, GROUPS, type GroupKey } from "./drawing-tools";
@@ -34,13 +36,28 @@ export function HtmlReplayWorkspace({
   state,
   host,
   chartRef,
+  activePanel,
+  onPanel,
+  panelContent,
 }: {
   state: ReplayHostView;
   host: ReplayHost | null;
   chartRef: RefObject<HTMLDivElement | null>;
+  activePanel: WorkspacePanel;
+  onPanel: (panel: WorkspacePanel) => void;
+  panelContent: ReactNode;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const [fit, setFit] = useState({ scale: 1, left: 0, top: 0 });
+  const [fit, setFit] = useState({ scale: 1, left: 0, top: 0, extraHeight: 0 });
+  const dockPixels = activePanel
+    ? Math.min(
+        activePanel === "code" ? 400 : 360,
+        Math.max(0, (root.current?.clientWidth ?? 1366) - 320),
+      )
+    : 0;
+  const dockWidth = dockPixels / fit.scale;
+  const toolbarRatio = (2335 - dockWidth) / 2419;
+  const place = (style: CSSProperties) => viewportStyle(style, fit.extraHeight, dockWidth);
   const [menu, setMenu] = useState(false),
     [menuPrice, setMenuPrice] = useState<number | null>(null),
     [calendar, setCalendar] = useState(false);
@@ -254,6 +271,16 @@ export function HtmlReplayWorkspace({
   useEffect(() => {
     host?.scaleUi(fit.scale);
   }, [host, fit.scale]);
+  // The existing trading panel and the Quant panels share the right-hand space.
+  useEffect(() => {
+    if (activePanel && state.tradeOpen) host?.toggleTrade();
+    // A Quant-panel selection closes the trade panel once, without changing replay state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activePanel]);
+  useEffect(() => {
+    if (state.tradeOpen) onPanel(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.tradeOpen]);
   const renderNode = (node: SourceNodeData) => {
     if ((omitted.has(node.key) && ![93, 94].includes(node.key)) || node.tag === "input")
       return null;
@@ -368,14 +395,25 @@ export function HtmlReplayWorkspace({
       children = `Sell ${quantity} ${ticker} @ ${priceText(menuPrice ?? mark)} stop ${priceText((menuPrice ?? mark) + tick)} limit`;
     if (key === 135) children = `Add order on ${ticker} at ${priceText(menuPrice ?? mark)}...`;
     if (key === 138) children = `Draw Horizontal Line at ${priceText(menuPrice ?? mark)}`;
-    return (
+    const content = (
       <SourceNode
         key={key}
         node={node}
-        style={style}
+        style={t < 80 ? style : place(style)}
         {...(children !== undefined ? { children } : {})}
         {...(markup !== undefined ? { markup } : {})}
       />
+    );
+    return t < 80 ? (
+      <div
+        key={key}
+        className="source-toolbar-layer"
+        style={{ top: (80 * (1 - toolbarRatio)) / 2, transform: `scale(${toolbarRatio})` }}
+      >
+        {content}
+      </div>
+    ) : (
+      content
     );
   };
   const hit = (
@@ -388,8 +426,9 @@ export function HtmlReplayWorkspace({
     disabled = false,
     pressed?: boolean,
   ) => {
-    const style = shiftedStyle({ left: x, top: y, width: w, height: h }, panel, replay);
-    return (
+    const original = shiftedStyle({ left: x, top: y, width: w, height: h }, panel, replay);
+    const style = y < 80 ? original : place(original);
+    const content = (
       <HitTarget
         x={Number(style.left)}
         y={Number(style.top)}
@@ -400,6 +439,16 @@ export function HtmlReplayWorkspace({
         disabled={disabled}
         {...(pressed !== undefined ? { pressed } : {})}
       />
+    );
+    return y < 80 ? (
+      <div
+        className="source-toolbar-layer"
+        style={{ top: (80 * (1 - toolbarRatio)) / 2, transform: `scale(${toolbarRatio})` }}
+      >
+        {content}
+      </div>
+    ) : (
+      content
     );
   };
   const costs = `Paper execution only. ${COSTS.spreadBps} bps synthetic spread, ${COSTS.slippageBps} bp slippage, ${COSTS.commissionBps} bp commission per fill. Orders eligible next observed candle. Stop-first OHLC ambiguity, no entry-bar TP. Stop-limit limit leg starts after trigger candle closes. Quote-unit P&L; no currency conversion or leverage. Missing intervals are not fabricated. Rewinding discards future actions.`;
@@ -417,7 +466,12 @@ export function HtmlReplayWorkspace({
     >
       <div
         className="html-stage"
-        style={{ left: fit.left, top: fit.top, transform: `scale(${fit.scale})` }}
+        style={{
+          left: 0,
+          top: 0,
+          height: 1512 + fit.extraHeight,
+          transform: `scale(${fit.scale})`,
+        }}
         tabIndex={-1}
       >
         {source.nodes.slice(0, 6).map(renderNode)}
@@ -427,8 +481,8 @@ export function HtmlReplayWorkspace({
             {
               left: 107,
               top: 80,
-              width: (1625 + (panel ? 0 : 593)) * fit.scale,
-              height: (1188 + (replay ? 0 : 94)) * fit.scale,
+              width: (1625 + (panel ? 0 : 593) - dockWidth) * fit.scale,
+              height: (1188 + (replay ? 0 : 94) + fit.extraHeight) * fit.scale,
               transform: `scale(${1 / fit.scale})`,
               transformOrigin: "0 0",
               "--source-legend-offset": `${140 * fit.scale}px`,
@@ -460,6 +514,40 @@ export function HtmlReplayWorkspace({
             />
           ))}
         {source.nodes.slice(6).map(renderNode)}
+        <button
+          type="button"
+          className="quant-copilot-toggle"
+          aria-label="AI Copilot"
+          title="AI Copilot"
+          aria-expanded={activePanel === "ai"}
+          onClick={(e) => {
+            e.stopPropagation();
+            onPanel("ai");
+          }}
+          style={{ left: 2345, top: 910 + fit.extraHeight }}
+        >
+          <Sparkles />
+        </button>
+        {hit(
+          2345,
+          1073,
+          64,
+          64,
+          "Indicators panel",
+          () => onPanel("code"),
+          false,
+          activePanel === "code",
+        )}
+        {hit(
+          125,
+          1454,
+          180,
+          44,
+          "Pine editor",
+          () => onPanel("code"),
+          false,
+          activePanel === "code",
+        )}
         {panel &&
           source.nodes
             .filter((n) => n.tag === "input")
@@ -728,7 +816,7 @@ export function HtmlReplayWorkspace({
         )}
         <div
           className="a v source-position-status"
-          style={{ left: 710, top: 1476, fontSize: 25 }}
+          style={place({ left: 710, top: 1476, fontSize: 25 })}
           title={`${costs} ${state.dataset && state.view ? `${state.view.cursor - state.dataset.warmup + 1}/${state.dataset.bars.length - state.dataset.warmup} ${state.view.status}` : "Live"}`}
           role="status"
         >
@@ -750,7 +838,7 @@ export function HtmlReplayWorkspace({
         {(p || state.trading?.pending) && (
           <button
             className="a h source-close"
-            style={{
+            style={place({
               left: 1250,
               top: 1456,
               width: 110,
@@ -760,7 +848,7 @@ export function HtmlReplayWorkspace({
               textAlign: "center",
               lineHeight: "40px",
               fontSize: 24,
-            }}
+            })}
             disabled={busy || playing || !state.ready || !mark || state.view?.status === "ended"}
             onClick={() => host?.trade(state.trading?.pending ? "cancel" : "close")}
           >
@@ -784,7 +872,7 @@ export function HtmlReplayWorkspace({
           !state.dataset &&
           hit(1735, 8, 220, 58, "Restore session", () => void host?.restore(), busy)}
         <a
-          style={{ top: replay ? 1211 : 1305 }}
+          style={{ top: (replay ? 1211 : 1305) + fit.extraHeight }}
           className="source-attribution"
           href="https://velacharts.dev"
           target="_blank"
@@ -792,6 +880,13 @@ export function HtmlReplayWorkspace({
         >
           Charts by Vela
         </a>
+      </div>
+      <div
+        className="quant-right-dock"
+        style={{ right: 84 * fit.scale, width: dockPixels }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {panelContent}
       </div>
     </div>
   );

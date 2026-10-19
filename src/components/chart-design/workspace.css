@@ -6,11 +6,12 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: #eef1f6;
+  background: #fff;
   color-scheme: light;
 }
 .html-stage {
   isolation: isolate;
+  background: #fff;
 }
 .html-stage button,
 .html-stage input {
@@ -31,7 +32,7 @@
 .html-stage .source-chart {
   position: absolute;
   overflow: hidden;
-  border-radius: 14px 14px 0 0;
+  border-radius: 0;
   background: #fff;
 }
 .html-stage .html-native {
@@ -126,4 +127,50 @@
 }
 .html-native [data-vela-pane-at-top] {
   top: var(--source-legend-offset) !important;
+}
+
+.quant-right-dock {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+  overflow: hidden;
+  background: #fff;
+  font:
+    13px -apple-system,
+    BlinkMacSystemFont,
+    "Trebuchet MS",
+    Roboto,
+    Ubuntu,
+    sans-serif;
+}
+.source-toolbar-layer {
+  position: absolute;
+  left: 0;
+  transform-origin: 0 0;
+}
+.quant-copilot-toggle {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  z-index: 4;
+}
+.quant-copilot-toggle svg {
+  width: 52px;
+  height: 52px;
+  stroke-width: 1.4;
+}
+.quant-copilot-toggle:hover,
+.quant-copilot-toggle[aria-expanded="true"] {
+  background: #f0f3fa;
+}
+.quant-copilot-toggle:focus-visible {
+  outline: 2px solid #2962ff;
 }
