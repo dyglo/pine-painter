@@ -6,6 +6,7 @@ Base: LuxAlgo's open-source Vela (@luxalgo/vela, @luxalgo/vela/workspace, @luxal
 Data: Use Vela's bundled data providers (e.g. Binance/Coinbase) and its workspace symbol and timeframe controls.
 
 Features:
+
 1. Full-screen Vela workspace chart.
 2. Code editor with a Run button: executes Pine Script via chart.runIndicator / chart.addIndicator (using @luxalgo/vela-pinets / pinets) and plots the result on the chart. Show Vela's structured errors inline if compilation or execution fails.
 3. AI assistant panel: Describe an indicator in plain language. The model writes Pine v5/v6, and the app compiles and executes it on the chart. Automatic recovery sends actual chart diagnostics and unsuccessful candidates back to the model, tries targeted patches, then changes strategy to diagnosis and a compatible rewrite. Generation runs in a server function through Lovable's Responses gateway, keeping API keys on the server. Default: GPT-6.1 Sol; alternative: GPT-6 Luna.
@@ -52,11 +53,11 @@ npm run dev
 
 Use **Enter Replay** in the chart toolbar, selecting the **close time in UTC** of the last candle you want revealed. The app snapshots up to 500 following candle intervals, plus a bounded history window, from the selected existing provider. At least 200 warm-up candles are required. Missing intervals remain gaps; the coverage count and dataset fingerprint appear in the toolbar. Loading failures leave the live chart intact.
 
-Play/pause, previous/next, the candle slider, first/final, date seeking and 0.5–10× requested speed operate on complete candles. Each analytical state waits for static indicator calculation; speed slows down rather than skipping calculations. Completion remains frozen. **Exit Replay** is the only control that recreates a live subscription. The current indicator survives exit. Replay starts with clean user drawings; pre-replay drawings return on exit.
+The supplied HTML workspace provides Replay/Select bar, play/pause, next/final, calendar date seeking, and 1/3/10/30× requested speed on complete candles. The exact 2419 × 1512 design stage scales to the available chart viewport. Each analytical state waits for static indicator calculation; speed slows down rather than skipping calculations. Completion remains frozen. **Exit Replay** is the only control that recreates a live subscription. The current indicator survives exit. Native drawings persist through replay steps; pre-replay drawings return on exit.
 
 Replay uses the same native VelaWorkspace/WorkspaceReplay/ReplayControl renderer. For isolation, each state is staged in a hidden native workspace with a unique provider/cache namespace and published only after its calculations succeed. Existing provider implementations and the indicator AI/recovery runner are unchanged. Replay feeds are immutable, non-streaming snapshot adapters. Pine executions use fresh static contexts; the secondary gateway never reads the live feed or Vela cache. Same-symbol higher resolutions are aggregated from revealed constituent candles only; incomplete buckets are omitted. This conservative V1 uses UTC aggregation, not provider-specific session-aligned HTF candles.
 
-**Supported boundary:** fixed UTC time resolutions; standard candle prices; deterministic indicators; same-symbol secondary resolutions that are integer multiples of the dataset resolution. Cross-symbol requests, finer secondary resolutions, ticker modifiers, calendar resolutions, `lookahead_on`, `timenow`, `math.random`, external request methods, viewport-dependent Pine studies and restored viewport-dependent native studies fail closed. OANDA source replay supports 5m/15m/1h; 4h/daily need verified session/DST close metadata. Intrabar/tick replay, multi-chart replay and trading simulation are not implemented. This is a trusted-indicator runtime, not a sandbox for hostile JavaScript.
+**Supported boundary:** fixed UTC time resolutions; standard candle prices; deterministic indicators; same-symbol secondary resolutions that are integer multiples of the dataset resolution. Cross-symbol requests, finer secondary resolutions, ticker modifiers, calendar resolutions, `lookahead_on`, `timenow`, `math.random`, external request methods, viewport-dependent Pine studies and restored viewport-dependent native studies fail closed. OANDA source replay supports 5m/15m/1h; 4h/daily need verified session/DST close metadata. Intrabar/tick replay and multi-chart replay are not implemented. A separate deterministic paper engine supports Market/Limit/Stop/Stop Limit, protective exits, cancellation and closing; it never sends broker orders. This is a trusted-indicator runtime, not a sandbox for hostile JavaScript.
 
 **Restore session** validates the full stored dataset SHA-256 identity, coverage, engine versions and cursor before restoring paused (or frozen at the end). Browser localStorage contains the dataset, symbol metadata, chart cosmetics, drawings, native studies and indicator source/input/prop snapshots. Nothing is refetched for analytical replay. Storage failure is reported; there is no cloud sync. Editor/conversation/recovery state remains owned by the existing agent and is not restored by replay. Restored chart scripts therefore do not overwrite the editor. Do not treat saved annotation knowledge as a blind-trading experiment.
 
@@ -66,7 +67,7 @@ The verified engine matrix is the unchanged `bun.lock`: Vela 0.8.3, vela-pinets 
 
 Run `npm test`, `npx tsc --noEmit`, `npm run lint`, and `NITRO_PRESET=vercel npm run build`. Replay tests use the real Pine engine for finite-valued primary/HTF outputs, compare against clean prefix-only runs, mutate future suffixes, exercise native ReplayControl, and cover cache isolation, calculation races, warm-up/gaps, frozen completion and session integrity. The existing billable AI smoke test remains opt-in.
 
-A repeatable browser acceptance script intercepts provider HTTP/WebSocket traffic with a deterministic historical fixture; it makes no AI or OANDA calls and adds no fixture endpoint to the shipped app. To run it without adding project dependencies:
+A repeatable browser acceptance script intercepts provider HTTP/WebSocket traffic with a deterministic historical fixture; it makes no AI or OANDA calls and adds no fixture endpoint to the shipped app. It also compares the supplied HTML against React at identical viewport sizes and drags native SL drawings. The browser tool requires Python 3 with Pillow for screenshot inspection (test tooling only). To run it without adding project dependencies:
 
 ```sh
 npm install --prefix /tmp/deplyze-replay-tools --no-save playwright
@@ -74,6 +75,7 @@ NITRO_PRESET=node-server npm run build
 PORT=3000 node .output/server/index.mjs
 # In another shell; point CHROMIUM_PATH at an installed Chromium if needed:
 PLAYWRIGHT_MODULE=/tmp/deplyze-replay-tools/node_modules/playwright/index.mjs node scripts/verify-replay.mjs http://localhost:3000
+python3 scripts/compare-html-screenshots.py /tmp/deplyze-replay-artifacts
 ```
 
 Screenshots default to `/tmp/deplyze-replay-artifacts`; set `REPLAY_ARTIFACTS_DIR` to override. Browser acceptance verifies the toolbar, step/play/pause/speed, frozen completion, restoration, successful indicator replacement after restoration, explicit exit, zero new history requests/sockets during replay and absence of page errors. It verifies deterministic integration, not real-account historical availability. Test real OANDA access separately with the deployed account.

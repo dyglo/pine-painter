@@ -1,0 +1,3652 @@
+{
+  "nodes": [
+    {
+      "key": 0,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "80px",
+        "width": "1625px",
+        "height": "1352px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "14px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 1,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1440px",
+        "width": "1625px",
+        "height": "72px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "14px 14px 0 0"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 2,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1735px",
+        "top": "80px",
+        "width": "590px",
+        "height": "1432px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "14px 14px 0 0"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 3,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "0px",
+        "top": "0px",
+        "width": "2419px",
+        "height": "76px",
+        "background": "rgb(255, 255, 255)",
+        "borderBottom": "2px solid #e0e3eb"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 4,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "0px",
+        "top": "80px",
+        "width": "100px",
+        "height": "1432px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 5,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2335px",
+        "top": "80px",
+        "width": "84px",
+        "height": "1432px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 6,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "25px",
+        "top": "12px"
+      },
+      "html": "<circle cx=\"24\" cy=\"24\" r=\"24\" fill=\"#131722\"></circle><path d=\"M9 17h15v5h-5v9h-5v-9H9zM26 17h6l-6 14h-6zM33 17h7l-6 14h-6z\" fill=\"#fff\" transform=\"translate(0 -1) scale(1 1)\"></path>",
+      "attrs": {
+        "width": "48",
+        "height": "48",
+        "viewBox": "0 0 48 48"
+      }
+    },
+    {
+      "key": 7,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "133px",
+        "top": "37px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.7"
+      },
+      "html": "<circle cx=\"10\" cy=\"10\" r=\"6\"></circle><path d=\"M15 15l5.5 5.5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 8,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "160px",
+        "top": "37px",
+        "fontSize": "30px",
+        "fontWeight": "500"
+      },
+      "html": "AAPL",
+      "attrs": {}
+    },
+    {
+      "key": 9,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "322px",
+        "top": "37px",
+        "width": "50px",
+        "height": "50px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 8v8M8 12h8\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 10,
+      "tag": "div",
+      "className": "d",
+      "style": {
+        "left": "368px",
+        "top": "14px",
+        "height": "46px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 11,
+      "tag": "div",
+      "className": "a v c",
+      "style": {
+        "left": "412px",
+        "top": "37px",
+        "fontSize": "30px"
+      },
+      "html": "1h",
+      "attrs": {}
+    },
+    {
+      "key": 12,
+      "tag": "div",
+      "className": "d",
+      "style": {
+        "left": "454px",
+        "top": "14px",
+        "height": "46px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 13,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "500px",
+        "top": "37px",
+        "width": "48px",
+        "height": "48px"
+      },
+      "html": "<path d=\"M8 4v16M5 8h3M8 15h3M16 3v15M16 7h3M13 12h3\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 14,
+      "tag": "div",
+      "className": "d",
+      "style": {
+        "left": "543px",
+        "top": "14px",
+        "height": "46px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 15,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "588px",
+        "top": "37px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M3 21V12h3v9M9 21V8h3v13M15 21v-7h3v7M3 21h18M5 8l5-4 4 3 6-5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 16,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "622px",
+        "top": "37px",
+        "fontSize": "30px"
+      },
+      "html": "Indicators",
+      "attrs": {}
+    },
+    {
+      "key": 17,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "797px",
+        "top": "37px",
+        "width": "46px",
+        "height": "46px"
+      },
+      "html": "<rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><path d=\"M16.7 13.5v6.5M13.5 16.7H20\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 18,
+      "tag": "div",
+      "className": "d",
+      "style": {
+        "left": "840px",
+        "top": "14px",
+        "height": "46px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 19,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "886px",
+        "top": "37px",
+        "width": "50px",
+        "height": "50px"
+      },
+      "html": "<circle cx=\"11\" cy=\"13\" r=\"7.5\"></circle><path d=\"M11 8.5V13l3 2M19 3v6M16 6h6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 20,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "921px",
+        "top": "37px",
+        "fontSize": "30px"
+      },
+      "html": "Alert",
+      "attrs": {}
+    },
+    {
+      "key": 21,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1002px",
+        "top": "5px",
+        "width": "162px",
+        "height": "63px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "10px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 22,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1036px",
+        "top": "37px",
+        "width": "34px",
+        "height": "34px",
+        "strokeWidth": "1.9",
+        "stroke": "#fff"
+      },
+      "html": "<path d=\"M12 6l-7 6 7 6zM21 6l-7 6 7 6z\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 23,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1068px",
+        "top": "37px",
+        "fontSize": "30px",
+        "color": "rgb(255, 255, 255)"
+      },
+      "html": "Replay",
+      "attrs": {}
+    },
+    {
+      "key": 24,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1220px",
+        "top": "37px",
+        "width": "40px",
+        "height": "40px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M9 7L4 12l5 5M4 12h10a6 6 0 010 8h-3\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 25,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1291px",
+        "top": "37px",
+        "width": "40px",
+        "height": "40px",
+        "strokeWidth": "1.6",
+        "stroke": "#b2b5be"
+      },
+      "html": "<path d=\"M15 7l5 5-5 5M20 12H10a6 6 0 000 8h3\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 26,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1741px",
+        "top": "22px",
+        "width": "36px",
+        "height": "30px",
+        "border": "2.5px solid #131722",
+        "borderRadius": "6px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 27,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1815px",
+        "top": "37px",
+        "fontSize": "30px"
+      },
+      "html": "Replay",
+      "attrs": {}
+    },
+    {
+      "key": 28,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1940px",
+        "top": "37px",
+        "width": "30px",
+        "height": "30px",
+        "strokeWidth": "2"
+      },
+      "html": "<path d=\"M6 9l6 6 6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 29,
+      "tag": "div",
+      "className": "d",
+      "style": {
+        "left": "1970px",
+        "top": "14px",
+        "height": "46px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 30,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2016px",
+        "top": "37px",
+        "width": "50px",
+        "height": "50px"
+      },
+      "html": "<circle cx=\"10\" cy=\"10\" r=\"6.5\"></circle><path d=\"M15 15l5 5M10 6v4l3 2\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 31,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2088px",
+        "top": "37px",
+        "width": "50px",
+        "height": "50px"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M12 3l7 4v10l-7 4-7-4V7z\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 32,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2160px",
+        "top": "37px",
+        "width": "48px",
+        "height": "48px"
+      },
+      "html": "<path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 33,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2231px",
+        "top": "37px",
+        "width": "50px",
+        "height": "50px"
+      },
+      "html": "<path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"></path><circle cx=\"12\" cy=\"13\" r=\"3.5\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 34,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2276px",
+        "top": "8px",
+        "width": "134px",
+        "height": "58px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "29px",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "28px",
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "fontWeight": "500"
+      },
+      "html": "Publish",
+      "attrs": {}
+    },
+    {
+      "key": 35,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "17px",
+        "top": "95px",
+        "width": "64px",
+        "height": "63px",
+        "background": "rgb(240, 243, 250)",
+        "borderRadius": "10px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 36,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "127px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M12 3v7M12 14v7M3 12h7M14 12h7\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 37,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "199px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M5 19L19 5\"></path><circle cx=\"5\" cy=\"19\" r=\"2\"></circle><circle cx=\"19\" cy=\"5\" r=\"2\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 38,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "270px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M3 6h18M9 11h12M9 16h12M3 21h18\"></path><circle cx=\"4\" cy=\"11\" r=\"1.6\"></circle><circle cx=\"4\" cy=\"16\" r=\"1.6\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 39,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "341px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M5 18L9 5l8 13 3-12M9 5L5 18\"></path><circle cx=\"5\" cy=\"18\" r=\"1.8\"></circle><circle cx=\"9\" cy=\"5\" r=\"1.8\"></circle><circle cx=\"17\" cy=\"18\" r=\"1.8\"></circle><circle cx=\"20\" cy=\"6\" r=\"1.8\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 40,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "413px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M3 6h5M3 12h7M3 18h5M12 8h9M12 16h9\"></path><circle cx=\"10\" cy=\"6\" r=\"1.8\"></circle><circle cx=\"12\" cy=\"12\" r=\"1.8\"></circle><circle cx=\"19\" cy=\"12\" r=\"1.8\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 41,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "487px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M4 20c0-3 2-4 4-4l2-3 6-5 3 3-5 6-3 2c0 2-3 3-7 1zM17 5l2-2 3 3-2 2\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 42,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "557px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M5 5h14M12 5v15M9 20h6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 43,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "629px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M8 14c2 3 6 3 8 0M9 9.5v.5M15 9.5v.5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 44,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "726px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M3 16L16 3l5 5L8 21zM7 12l3 3M10 9l2 2M13 6l3 3\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 45,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "796px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<circle cx=\"11\" cy=\"11\" r=\"7.5\"></circle><path d=\"M16.5 16.5L21 21M11 8v6M8 11h6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 46,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "893px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M6 21v-9a6 6 0 0112 0v9M6 17h3v4M15 17h3v4M9 12a3 3 0 016 0v5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 47,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "968px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M5 18l-1 3 3-1L17 10l-2-2zM14 6l2-2 3 3-2 2\"></path><rect x=\"14\" y=\"14\" width=\"7\" height=\"6\" rx=\"1\"></rect><path d=\"M16 14v-2a1.5 1.5 0 013 0v2\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 48,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "1040px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"></rect><path d=\"M8 11V8a4 4 0 017-2\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 49,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "1103px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M2 12c3-5 7-7 10-7s7 2 10 7c-3 5-7 7-10 7s-7-2-10-7z\"></path><circle cx=\"12\" cy=\"12\" r=\"3\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 50,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "1278px",
+        "width": "52px",
+        "height": "52px"
+      },
+      "html": "<path d=\"M5 7h14M10 7V4h4v3M7 7l1 14h8l1-14M10 11v6M14 11v6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 51,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "17px",
+        "top": "1150px",
+        "width": "64px",
+        "height": "64px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "10px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 52,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "49px",
+        "top": "1182px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.5",
+        "stroke": "#fff"
+      },
+      "html": "<path d=\"M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 53,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "17px",
+        "top": "680px",
+        "width": "64px",
+        "height": "2px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 54,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "17px",
+        "top": "846px",
+        "width": "64px",
+        "height": "2px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 55,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "135px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 56,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "237px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 57,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "445px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 58,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "553px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 59,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "661px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 60,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "743px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 61,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "827px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 62,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "883px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 63,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "942px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 64,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "999px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 65,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1057px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 66,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1116px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 67,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1177px",
+        "width": "1513px",
+        "height": "2px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 68,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "187px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 69,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "287px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 70,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "387px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 71,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "487px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 72,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "586px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 73,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "686px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 74,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "786px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 75,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "886px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 76,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "986px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 77,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1086px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 78,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1186px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 79,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1286px",
+        "top": "80px",
+        "width": "2px",
+        "height": "1134px",
+        "background": "rgb(244, 246, 250)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 80,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "0px",
+        "top": "0px"
+      },
+      "html": "",
+      "attrs": {
+        "id": "cs",
+        "width": "2419",
+        "height": "1512"
+      }
+    },
+    {
+      "key": 81,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "121px",
+        "top": "92px"
+      },
+      "html": "<circle cx=\"18\" cy=\"18\" r=\"18\" fill=\"#131722\"></circle><path d=\"M18 11c1-2 3-3 4-3 0 2-1 4-3 5-1 0-2 0-3-1M18 13c-2-1-5 0-6 3-1 3 1 8 4 8 1 0 1-1 3-1s2 1 3 1c2 0 4-3 4-4-3-1-3-5 0-6-1-2-4-2-5-1-1 0-2 1-3 0z\" fill=\"#fff\" transform=\"scale(.95) translate(1 1)\"></path>",
+      "attrs": {
+        "width": "36",
+        "height": "36",
+        "viewBox": "0 0 36 36"
+      }
+    },
+    {
+      "key": 82,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "165px",
+        "top": "110px",
+        "fontSize": "30px",
+        "fontWeight": "500"
+      },
+      "html": "Apple Inc · 1h · NASDAQ",
+      "attrs": {}
+    },
+    {
+      "key": 83,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "523px",
+        "top": "92px"
+      },
+      "html": "<circle cx=\"18\" cy=\"18\" r=\"18\" fill=\"#2962ff\"></circle><path d=\"M17 10l-8 8 8 8zM27 10l-8 8 8 8z\" fill=\"#fff\"></path>",
+      "attrs": {
+        "width": "36",
+        "height": "36",
+        "viewBox": "0 0 36 36"
+      }
+    },
+    {
+      "key": 84,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "588px",
+        "top": "110px",
+        "fontSize": "26px"
+      },
+      "html": "<span id=\"oh\"><span style=\"color:#131722;font-weight:400\">O</span><span style=\"color:#089981\">231.15</span>&nbsp;&nbsp;<span style=\"color:#131722\">H</span><span style=\"color:#089981\">231.68</span>&nbsp;&nbsp;<span style=\"color:#131722\">L</span><span style=\"color:#089981\">231.10</span>&nbsp;&nbsp;<span style=\"color:#131722\">C</span><span style=\"color:#089981\">231.23&nbsp;&nbsp;+0.08 (+0.03%)</span></span>",
+      "attrs": {}
+    },
+    {
+      "key": 85,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "121px",
+        "top": "140px",
+        "width": "122px",
+        "height": "63px",
+        "background": "rgb(242, 54, 69)",
+        "borderRadius": "8px",
+        "color": "rgb(255, 255, 255)",
+        "textAlign": "center",
+        "fontSize": "23px",
+        "lineHeight": "26px",
+        "paddingTop": "6px",
+        "fontWeight": "500",
+        "letterSpacing": "1px"
+      },
+      "html": "<div id=\"px1\" style=\"font-size:24px\">231.23</div><div style=\"font-size:21px;letter-spacing:2px\">SELL</div>",
+      "attrs": {}
+    },
+    {
+      "key": 86,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "283px",
+        "top": "151px",
+        "fontSize": "19px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "0.00",
+      "attrs": {}
+    },
+    {
+      "key": 87,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "260px",
+        "top": "165px",
+        "width": "45px",
+        "height": "38px",
+        "background": "rgb(255, 255, 255)",
+        "border": "2px solid #e0e3eb",
+        "borderRadius": "6px",
+        "textAlign": "center",
+        "lineHeight": "34px",
+        "fontSize": "27px"
+      },
+      "html": "1",
+      "attrs": {}
+    },
+    {
+      "key": 88,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "321px",
+        "top": "140px",
+        "width": "125px",
+        "height": "63px",
+        "background": "rgb(41, 98, 255)",
+        "borderRadius": "8px",
+        "color": "rgb(255, 255, 255)",
+        "textAlign": "center",
+        "paddingTop": "6px",
+        "fontWeight": "500"
+      },
+      "html": "<div id=\"px2\" style=\"font-size:24px;line-height:26px\">231.23</div><div style=\"font-size:21px;letter-spacing:2px;line-height:26px\">BUY</div>",
+      "attrs": {}
+    },
+    {
+      "key": 89,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "296px",
+        "width": "1513px",
+        "height": "0px",
+        "borderTop": "3px dotted #4fb59f"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 90,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1620px",
+        "top": "283px",
+        "width": "104px",
+        "height": "30px",
+        "background": "rgb(8, 153, 129)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "26px",
+        "textAlign": "center",
+        "lineHeight": "30px"
+      },
+      "html": "231.23",
+      "attrs": {}
+    },
+    {
+      "key": 91,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "336px",
+        "width": "1470px",
+        "height": "0px",
+        "borderTop": "2.5px dashed #b2b5be"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 92,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1585px",
+        "top": "80px",
+        "width": "0px",
+        "height": "1134px",
+        "borderLeft": "2px dashed #b2b5be"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 93,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1580px",
+        "top": "318px",
+        "width": "38px",
+        "height": "38px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "6px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 94,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1599px",
+        "top": "337px",
+        "width": "30px",
+        "height": "30px",
+        "strokeWidth": "2",
+        "stroke": "#fff"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"></circle><path d=\"M12 8v8M8 12h8\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 95,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1620px",
+        "top": "318px",
+        "width": "104px",
+        "height": "38px",
+        "background": "rgb(19, 23, 34)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "26px",
+        "textAlign": "center",
+        "lineHeight": "38px"
+      },
+      "html": "229.64",
+      "attrs": {}
+    },
+    {
+      "key": 96,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "135px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "237.50",
+      "attrs": {}
+    },
+    {
+      "key": 97,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "237px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "233.50",
+      "attrs": {}
+    },
+    {
+      "key": 98,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "445px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "225.50",
+      "attrs": {}
+    },
+    {
+      "key": 99,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "553px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "221.50",
+      "attrs": {}
+    },
+    {
+      "key": 100,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "661px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "217.50",
+      "attrs": {}
+    },
+    {
+      "key": 101,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "743px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "214.50",
+      "attrs": {}
+    },
+    {
+      "key": 102,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "827px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "211.50",
+      "attrs": {}
+    },
+    {
+      "key": 103,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "883px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "209.50",
+      "attrs": {}
+    },
+    {
+      "key": 104,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "942px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "207.50",
+      "attrs": {}
+    },
+    {
+      "key": 105,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "999px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "205.50",
+      "attrs": {}
+    },
+    {
+      "key": 106,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "1057px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "203.50",
+      "attrs": {}
+    },
+    {
+      "key": 107,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "1116px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "201.50",
+      "attrs": {}
+    },
+    {
+      "key": 108,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1673px",
+        "top": "1177px",
+        "fontSize": "26px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "199.50",
+      "attrs": {}
+    },
+    {
+      "key": 109,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "187px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "31",
+      "attrs": {}
+    },
+    {
+      "key": 110,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "287px",
+        "top": "1241px",
+        "fontSize": "26px",
+        "fontWeight": "700"
+      },
+      "html": "Aug",
+      "attrs": {}
+    },
+    {
+      "key": 111,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "387px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "4",
+      "attrs": {}
+    },
+    {
+      "key": 112,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "487px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "5",
+      "attrs": {}
+    },
+    {
+      "key": 113,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "586px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "6",
+      "attrs": {}
+    },
+    {
+      "key": 114,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "686px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "7",
+      "attrs": {}
+    },
+    {
+      "key": 115,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "786px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "8",
+      "attrs": {}
+    },
+    {
+      "key": 116,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "886px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "11",
+      "attrs": {}
+    },
+    {
+      "key": 117,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "986px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "12",
+      "attrs": {}
+    },
+    {
+      "key": 118,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1086px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "13",
+      "attrs": {}
+    },
+    {
+      "key": 119,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1186px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "14",
+      "attrs": {}
+    },
+    {
+      "key": 120,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1286px",
+        "top": "1241px",
+        "fontSize": "26px"
+      },
+      "html": "15",
+      "attrs": {}
+    },
+    {
+      "key": 121,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1328px",
+        "top": "1214px",
+        "width": "290px",
+        "height": "44px",
+        "background": "rgb(19, 23, 34)",
+        "color": "rgb(255, 255, 255)",
+        "fontSize": "25px",
+        "lineHeight": "44px",
+        "paddingLeft": "16px",
+        "borderRadius": "2px"
+      },
+      "html": "Wed 20 Aug ’25&nbsp;&nbsp;&nbsp;13:30",
+      "attrs": {}
+    },
+    {
+      "key": 122,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1675px",
+        "top": "1241px",
+        "width": "40px",
+        "height": "40px",
+        "strokeWidth": "1.7"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M12 3l7 4v10l-7 4-7-4V7z\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 123,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "270px",
+        "top": "1172px",
+        "width": "36px",
+        "height": "38px",
+        "border": "3px solid #089981",
+        "background": "rgb(232, 245, 242)",
+        "borderRadius": "8px",
+        "color": "rgb(8, 153, 129)",
+        "fontSize": "24px",
+        "textAlign": "center",
+        "lineHeight": "32px",
+        "fontWeight": "600"
+      },
+      "html": "E",
+      "attrs": {}
+    },
+    {
+      "key": 124,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "868px",
+        "top": "1172px",
+        "width": "38px",
+        "height": "38px",
+        "border": "3px solid #2962ff",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%",
+        "color": "rgb(41, 98, 255)",
+        "fontSize": "24px",
+        "textAlign": "center",
+        "lineHeight": "32px",
+        "fontWeight": "600"
+      },
+      "html": "D",
+      "attrs": {}
+    },
+    {
+      "key": 125,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "127px",
+        "top": "1157px"
+      },
+      "html": "<path d=\"M0 0h20v6h-7v18H7V6H0zM22 0h8l-9 24h-8zM32 0h10l-9 24h-8zM44 0h10l4 0-10 24h-8z\" fill=\"#131722\" transform=\"scale(.97 1)\"></path>",
+      "attrs": {
+        "width": "58",
+        "height": "32",
+        "viewBox": "0 0 58 32"
+      }
+    },
+    {
+      "key": 126,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1015px",
+        "top": "365px",
+        "width": "603px",
+        "height": "342px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "12px",
+        "boxShadow": "0 4px 24px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.04)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 127,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1057px",
+        "top": "399px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M6 15l6-6 6 6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 128,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1095px",
+        "top": "399px",
+        "fontSize": "26px"
+      },
+      "html": "Buy 1 AAPL @ 229.64 limit",
+      "attrs": {}
+    },
+    {
+      "key": 129,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1580px",
+        "top": "399px",
+        "fontSize": "21px",
+        "color": "rgb(149, 152, 161)",
+        "transform": "translate(-100%,-50%)"
+      },
+      "html": "⌥ ⇧ B",
+      "attrs": {}
+    },
+    {
+      "key": 130,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1057px",
+        "top": "460px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M6 9l6 6 6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 131,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1095px",
+        "top": "460px",
+        "fontSize": "26px"
+      },
+      "html": "Sell 1 AAPL @ 229.64 stop",
+      "attrs": {}
+    },
+    {
+      "key": 132,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1057px",
+        "top": "520px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M6 9l6 6 6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 133,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1095px",
+        "top": "520px",
+        "fontSize": "26px"
+      },
+      "html": "Sell 1 AAPL @ 229.64 stop 229.65 limit",
+      "attrs": {}
+    },
+    {
+      "key": 134,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1057px",
+        "top": "581px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M3 19l5-6 4 3 7-9\"></path><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"></rect><path d=\"M14 17h6M17 14v6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 135,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1095px",
+        "top": "581px",
+        "fontSize": "26px"
+      },
+      "html": "Add order on AAPL at 229.64...",
+      "attrs": {}
+    },
+    {
+      "key": 136,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1580px",
+        "top": "581px",
+        "fontSize": "21px",
+        "color": "rgb(149, 152, 161)",
+        "transform": "translate(-100%,-50%)"
+      },
+      "html": "⇧ T",
+      "attrs": {}
+    },
+    {
+      "key": 137,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1057px",
+        "top": "666px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.6"
+      },
+      "html": "<path d=\"M3 12h6M15 12h6\"></path><circle cx=\"12\" cy=\"12\" r=\"2.2\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 138,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1095px",
+        "top": "666px",
+        "fontSize": "26px"
+      },
+      "html": "Draw Horizontal Line at 229.64",
+      "attrs": {}
+    },
+    {
+      "key": 139,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1580px",
+        "top": "666px",
+        "fontSize": "21px",
+        "color": "rgb(149, 152, 161)",
+        "transform": "translate(-100%,-50%)"
+      },
+      "html": "⌥ H",
+      "attrs": {}
+    },
+    {
+      "key": 140,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1015px",
+        "top": "623px",
+        "width": "603px",
+        "height": "2px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 141,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1268px",
+        "width": "1625px",
+        "height": "92px",
+        "borderTop": "2px solid #e0e3eb"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 142,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "617px",
+        "top": "1316px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<path d=\"M4 4v16M8 12h12M12 7l-5 5 5 5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 143,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "650px",
+        "top": "1316px",
+        "fontSize": "28px"
+      },
+      "html": "Select bar",
+      "attrs": {}
+    },
+    {
+      "key": 144,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "811px",
+        "top": "1316px",
+        "width": "28px",
+        "height": "28px",
+        "strokeWidth": "2"
+      },
+      "html": "<path d=\"M6 9l6 6 6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 145,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "850px",
+        "top": "1294px",
+        "width": "2px",
+        "height": "44px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 146,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "901px",
+        "top": "1316px",
+        "width": "42px",
+        "height": "42px",
+        "strokeWidth": "1.8"
+      },
+      "html": "<path d=\"M7 4l12 8-12 8z\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 147,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "974px",
+        "top": "1316px",
+        "width": "42px",
+        "height": "42px",
+        "strokeWidth": "1.8"
+      },
+      "html": "<path d=\"M5 4l10 8-10 8zM19 4v16\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 148,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1047px",
+        "top": "1316px",
+        "fontSize": "28px"
+      },
+      "html": "10x",
+      "attrs": {}
+    },
+    {
+      "key": 149,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1118px",
+        "top": "1316px",
+        "fontSize": "28px"
+      },
+      "html": "1h",
+      "attrs": {}
+    },
+    {
+      "key": 150,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1168px",
+        "top": "1294px",
+        "width": "2px",
+        "height": "44px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 151,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1222px",
+        "top": "1316px",
+        "width": "42px",
+        "height": "42px",
+        "strokeWidth": "1.8"
+      },
+      "html": "<path d=\"M4 4l10 8-10 8zM17 4v16M21 4v16\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 152,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1666px",
+        "top": "1316px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "2"
+      },
+      "html": "<path d=\"M5 5l14 14M19 5L5 19\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 153,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "150px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "1D",
+      "attrs": {}
+    },
+    {
+      "key": 154,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "208px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "5D",
+      "attrs": {}
+    },
+    {
+      "key": 155,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "269px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "1M",
+      "attrs": {}
+    },
+    {
+      "key": 156,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "330px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "3M",
+      "attrs": {}
+    },
+    {
+      "key": 157,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "391px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "6M",
+      "attrs": {}
+    },
+    {
+      "key": 158,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "460px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "YTD",
+      "attrs": {}
+    },
+    {
+      "key": 159,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "532px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "1Y",
+      "attrs": {}
+    },
+    {
+      "key": 160,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "582px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "5Y",
+      "attrs": {}
+    },
+    {
+      "key": 161,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "637px",
+        "top": "1398px",
+        "fontSize": "26px"
+      },
+      "html": "All",
+      "attrs": {}
+    },
+    {
+      "key": 162,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "672px",
+        "top": "1294px",
+        "width": "2px",
+        "height": "44px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 163,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "672px",
+        "top": "1376px",
+        "width": "2px",
+        "height": "44px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 164,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "715px",
+        "top": "1397px",
+        "width": "46px",
+        "height": "46px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"></rect><path d=\"M4 10h16M8 3v4M16 3v4\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 165,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1373px",
+        "top": "1397px",
+        "fontSize": "26px"
+      },
+      "html": "06:24:05 UTC",
+      "attrs": {}
+    },
+    {
+      "key": 166,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1570px",
+        "top": "1397px",
+        "fontSize": "26px"
+      },
+      "html": "RTH",
+      "attrs": {}
+    },
+    {
+      "key": 167,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1642px",
+        "top": "1376px",
+        "width": "2px",
+        "height": "44px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 168,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1663px",
+        "top": "1397px",
+        "fontSize": "26px"
+      },
+      "html": "ADJ",
+      "attrs": {}
+    },
+    {
+      "key": 169,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "107px",
+        "top": "1432px",
+        "width": "1625px",
+        "height": "8px",
+        "background": "rgb(238, 241, 246)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 170,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "136px",
+        "top": "1476px",
+        "fontSize": "26px"
+      },
+      "html": "Pine Editor",
+      "attrs": {}
+    },
+    {
+      "key": 171,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "329px",
+        "top": "1476px",
+        "fontSize": "26px"
+      },
+      "html": "Replay Trading",
+      "attrs": {}
+    },
+    {
+      "key": 172,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "516px",
+        "top": "1470px",
+        "width": "12px",
+        "height": "12px",
+        "background": "rgb(34, 171, 148)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 173,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "550px",
+        "top": "1454px",
+        "width": "118px",
+        "height": "44px",
+        "background": "rgb(240, 243, 250)",
+        "borderRadius": "8px",
+        "fontSize": "26px",
+        "textAlign": "center",
+        "lineHeight": "44px"
+      },
+      "html": "Trade",
+      "attrs": {}
+    },
+    {
+      "key": 174,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1628px",
+        "top": "1476px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "2"
+      },
+      "html": "<path d=\"M6 15l6-6 6 6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 175,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1680px",
+        "top": "1458px",
+        "width": "34px",
+        "height": "34px",
+        "border": "2.5px solid #131722",
+        "borderRadius": "8px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 176,
+      "tag": "svg",
+      "className": "a",
+      "style": {
+        "left": "1767px",
+        "top": "103px"
+      },
+      "html": "<rect width=\"46\" height=\"46\" rx=\"8\" fill=\"#2962ff\"></rect><path d=\"M22 12l-10 11 10 11zM35 12l-10 11 10 11z\" fill=\"#fff\"></path>",
+      "attrs": {
+        "width": "46",
+        "height": "46",
+        "viewBox": "0 0 46 46"
+      }
+    },
+    {
+      "key": 177,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1828px",
+        "top": "126px",
+        "fontSize": "28px",
+        "fontWeight": "600"
+      },
+      "html": "AAPL",
+      "attrs": {}
+    },
+    {
+      "key": 178,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2135px",
+        "top": "126px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"></rect><path d=\"M16.7 13.5v6.5M13.5 16.7H20\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 179,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2200px",
+        "top": "126px",
+        "width": "50px",
+        "height": "50px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<circle cx=\"5\" cy=\"12\" r=\"1.6\"></circle><circle cx=\"12\" cy=\"12\" r=\"1.6\"></circle><circle cx=\"19\" cy=\"12\" r=\"1.6\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 180,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2265px",
+        "top": "126px",
+        "width": "46px",
+        "height": "46px",
+        "strokeWidth": "1.8"
+      },
+      "html": "<path d=\"M5 5l14 14M19 5L5 19\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 181,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "171px",
+        "width": "532px",
+        "height": "62px",
+        "background": "rgb(240, 243, 250)",
+        "borderRadius": "12px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 182,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1769px",
+        "top": "176px",
+        "width": "260px",
+        "height": "52px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "9px",
+        "textAlign": "center",
+        "lineHeight": "52px",
+        "fontSize": "27px",
+        "fontWeight": "600"
+      },
+      "html": "Order",
+      "attrs": {}
+    },
+    {
+      "key": 183,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "2161px",
+        "top": "202px",
+        "fontSize": "27px",
+        "fontWeight": "600"
+      },
+      "html": "DOM",
+      "attrs": {}
+    },
+    {
+      "key": 184,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "265px",
+        "width": "266px",
+        "height": "97px",
+        "background": "rgb(240, 243, 250)",
+        "borderRadius": "12px 0 0 12px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 185,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2030px",
+        "top": "265px",
+        "width": "267px",
+        "height": "97px",
+        "background": "rgb(187, 217, 251)",
+        "borderRadius": "0 12px 12px 0"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 186,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1783px",
+        "top": "292px",
+        "fontSize": "27px",
+        "fontWeight": "600"
+      },
+      "html": "Sell",
+      "attrs": {}
+    },
+    {
+      "key": 187,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1783px",
+        "top": "332px",
+        "fontSize": "32px"
+      },
+      "html": "<span class=\"pp\">231.23</span>",
+      "attrs": {}
+    },
+    {
+      "key": 188,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2279px",
+        "top": "292px",
+        "fontSize": "27px",
+        "fontWeight": "600",
+        "color": "rgb(41, 98, 255)",
+        "transform": "translate(-100%,-50%)"
+      },
+      "html": "Buy",
+      "attrs": {}
+    },
+    {
+      "key": 189,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2279px",
+        "top": "332px",
+        "fontSize": "32px",
+        "color": "rgb(41, 98, 255)",
+        "transform": "translate(-100%,-50%)"
+      },
+      "html": "<span class=\"pp\">231.23</span>",
+      "attrs": {}
+    },
+    {
+      "key": 190,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1990px",
+        "top": "317px",
+        "width": "78px",
+        "height": "28px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "6px",
+        "textAlign": "center",
+        "lineHeight": "28px",
+        "fontSize": "20px",
+        "color": "rgb(19, 23, 34)"
+      },
+      "html": "0.00",
+      "attrs": {}
+    },
+    {
+      "key": 191,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1827px",
+        "top": "412px",
+        "fontSize": "27px"
+      },
+      "html": "Market",
+      "attrs": {}
+    },
+    {
+      "key": 192,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "1963px",
+        "top": "412px",
+        "fontSize": "27px"
+      },
+      "html": "Limit",
+      "attrs": {}
+    },
+    {
+      "key": 193,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "2096px",
+        "top": "412px",
+        "fontSize": "27px"
+      },
+      "html": "Stop",
+      "attrs": {}
+    },
+    {
+      "key": 194,
+      "tag": "div",
+      "className": "a c",
+      "style": {
+        "left": "2232px",
+        "top": "412px",
+        "fontSize": "27px"
+      },
+      "html": "Stop Limit",
+      "attrs": {}
+    },
+    {
+      "key": 195,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "442px",
+        "width": "532px",
+        "height": "5px",
+        "background": "rgb(224, 227, 235)",
+        "borderRadius": "3px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 196,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "442px",
+        "width": "127px",
+        "height": "5px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "3px"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 197,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "495px",
+        "fontSize": "26px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "Shares",
+      "attrs": {}
+    },
+    {
+      "key": 198,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2030px",
+        "top": "495px",
+        "fontSize": "26px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "USD",
+      "attrs": {}
+    },
+    {
+      "key": 199,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2105px",
+        "top": "495px",
+        "width": "28px",
+        "height": "28px",
+        "strokeWidth": "2",
+        "stroke": "#787b86"
+      },
+      "html": "<path d=\"M6 9l6 6 6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 200,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "521px",
+        "width": "266px",
+        "height": "62px",
+        "border": "3px solid #9598a1",
+        "borderRadius": "10px 0 0 10px",
+        "background": "rgb(255, 255, 255)"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 201,
+      "tag": "input",
+      "className": "",
+      "style": {
+        "position": "absolute",
+        "left": "1776px",
+        "top": "532px",
+        "width": "200px",
+        "height": "42px",
+        "border": "0px",
+        "background": "transparent",
+        "fontSize": "27px",
+        "color": "rgb(19, 23, 34)",
+        "outline": "none",
+        "userSelect": "text"
+      },
+      "html": "",
+      "attrs": {
+        "id": "qty",
+        "inputmode": "numeric",
+        "value": "1"
+      }
+    },
+    {
+      "key": 202,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "1992px",
+        "top": "553px",
+        "width": "44px",
+        "height": "44px",
+        "strokeWidth": "1.5"
+      },
+      "html": "<path d=\"M5 19L19 5M7 8h4M7 6v4M13 18h4\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 203,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2030px",
+        "top": "521px",
+        "width": "266px",
+        "height": "62px",
+        "border": "2px solid #e0e3eb",
+        "borderLeft": "0",
+        "borderRadius": "0 10px 10px 0"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 204,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2046px",
+        "top": "553px",
+        "fontSize": "27px"
+      },
+      "html": "<span class=\"pp\">231.23</span>",
+      "attrs": {}
+    },
+    {
+      "key": 205,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "630px",
+        "fontSize": "24px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "Take Profit",
+      "attrs": {}
+    },
+    {
+      "key": 206,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2038px",
+        "top": "630px",
+        "fontSize": "24px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "Stop Loss",
+      "attrs": {}
+    },
+    {
+      "key": 207,
+      "tag": "input",
+      "className": "",
+      "style": {
+        "position": "absolute",
+        "boxSizing": "border-box",
+        "height": "62px",
+        "border": "2px solid #e0e3eb",
+        "borderRadius": "10px",
+        "padding": "0px 14px",
+        "fontSize": "27px",
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(19, 23, 34)",
+        "outline": "none",
+        "userSelect": "text",
+        "left": "1764px",
+        "top": "650px",
+        "width": "256px"
+      },
+      "html": "",
+      "attrs": {
+        "id": "tp",
+        "inputmode": "decimal"
+      }
+    },
+    {
+      "key": 208,
+      "tag": "input",
+      "className": "",
+      "style": {
+        "position": "absolute",
+        "boxSizing": "border-box",
+        "height": "62px",
+        "border": "2px solid #e0e3eb",
+        "borderRadius": "10px",
+        "padding": "0px 14px",
+        "fontSize": "27px",
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(19, 23, 34)",
+        "outline": "none",
+        "userSelect": "text",
+        "left": "2038px",
+        "top": "650px",
+        "width": "256px"
+      },
+      "html": "",
+      "attrs": {
+        "id": "sl",
+        "inputmode": "decimal"
+      }
+    },
+    {
+      "key": 209,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "735px",
+        "fontSize": "24px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "Risk $ (sets shares)",
+      "attrs": {}
+    },
+    {
+      "key": 210,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2038px",
+        "top": "735px",
+        "fontSize": "24px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "R:R",
+      "attrs": {}
+    },
+    {
+      "key": 211,
+      "tag": "input",
+      "className": "",
+      "style": {
+        "position": "absolute",
+        "boxSizing": "border-box",
+        "height": "62px",
+        "border": "2px solid #e0e3eb",
+        "borderRadius": "10px",
+        "padding": "0px 14px",
+        "fontSize": "27px",
+        "background": "rgb(255, 255, 255)",
+        "color": "rgb(19, 23, 34)",
+        "outline": "none",
+        "userSelect": "text",
+        "left": "1764px",
+        "top": "755px",
+        "width": "256px"
+      },
+      "html": "",
+      "attrs": {
+        "id": "rk",
+        "inputmode": "decimal",
+        "placeholder": "e.g. 100"
+      }
+    },
+    {
+      "key": 212,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2038px",
+        "top": "755px",
+        "width": "256px",
+        "height": "62px",
+        "border": "2px solid #e0e3eb",
+        "borderRadius": "10px",
+        "padding": "0px 14px",
+        "fontSize": "27px",
+        "lineHeight": "58px"
+      },
+      "html": "<span id=\"rr\">–</span>",
+      "attrs": {}
+    },
+    {
+      "key": 213,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "850px",
+        "fontSize": "24px",
+        "color": "rgb(120, 123, 134)"
+      },
+      "html": "<span id=\"sm\"></span>",
+      "attrs": {}
+    },
+    {
+      "key": 214,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "910px",
+        "fontSize": "27px",
+        "fontWeight": "600"
+      },
+      "html": "Order info",
+      "attrs": {}
+    },
+    {
+      "key": 215,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "958px",
+        "fontSize": "25px"
+      },
+      "html": "Tick value",
+      "attrs": {}
+    },
+    {
+      "key": 216,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2294px",
+        "top": "958px",
+        "transform": "translate(-100%,-50%)",
+        "fontSize": "25px"
+      },
+      "html": "<b style=\"font-weight:600\">0.01</b> <span style=\"font-size:21px\">USD</span>",
+      "attrs": {}
+    },
+    {
+      "key": 217,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "1764px",
+        "top": "1004px",
+        "fontSize": "25px"
+      },
+      "html": "Trade value",
+      "attrs": {}
+    },
+    {
+      "key": 218,
+      "tag": "div",
+      "className": "a v",
+      "style": {
+        "left": "2294px",
+        "top": "1004px",
+        "transform": "translate(-100%,-50%)",
+        "fontSize": "25px"
+      },
+      "html": "<b class=\"pp\" style=\"font-weight:600\">231.23</b> <span style=\"font-size:21px\">USD</span>",
+      "attrs": {}
+    },
+    {
+      "key": 219,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "1764px",
+        "top": "1060px",
+        "width": "532px",
+        "height": "104px",
+        "background": "rgb(41, 98, 255)",
+        "borderRadius": "14px",
+        "color": "rgb(255, 255, 255)",
+        "textAlign": "center",
+        "fontSize": "27px",
+        "fontWeight": "600",
+        "lineHeight": "38px",
+        "paddingTop": "12px"
+      },
+      "html": "<div style=\"font-size:30px\">Buy</div><div style=\"font-weight:400;font-size:25px\">1 AAPL MKT</div>",
+      "attrs": {}
+    },
+    {
+      "key": 220,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "126px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M6 3h12v18H6zM9 8h6M9 12h6M9 16h4\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 221,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "210px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"8\"></circle><path d=\"M12 7v5l3 2M5 3L3 5M19 3l2 2\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 222,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "298px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M12 4l9 5-9 5-9-5zM3 14l9 5 9-5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 223,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "388px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M4 4h16v12h-9l-5 4v-4H4z\"></path><path d=\"M8 9h8M8 12h5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 224,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "1018px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<circle cx=\"12\" cy=\"12\" r=\"9\"></circle><circle cx=\"12\" cy=\"12\" r=\"5\"></circle><circle cx=\"12\" cy=\"12\" r=\"1.5\"></circle><path d=\"M12 12l6-6\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 225,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "1105px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M3 20l7-12 4 6 2-3 5 9zM9 4l3-1 3 1-3 2z\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 226,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "1187px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"></rect><path d=\"M4 10h16M8 3v4M16 3v4\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 227,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "1380px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M4 14a6 6 0 016 6M4 9a11 11 0 0111 11M4 4a16 16 0 0116 16\"></path><circle cx=\"5\" cy=\"19\" r=\"1\"></circle>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 228,
+      "tag": "svg",
+      "className": "i",
+      "style": {
+        "left": "2377px",
+        "top": "1465px",
+        "width": "52px",
+        "height": "52px",
+        "strokeWidth": "1.4"
+      },
+      "html": "<path d=\"M5 20c-2-1-2-5 0-6 0-5 4-9 9-9s7 4 6 8c-1 4-5 6-8 5\"></path><path d=\"M12 10a2 2 0 114 0c0 1.5-2 2-2 3.5M14 17v.5\"></path>",
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    },
+    {
+      "key": 229,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2345px",
+        "top": "1241px",
+        "width": "64px",
+        "height": "64px",
+        "background": "rgb(19, 23, 34)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 230,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2363px",
+        "top": "1260px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 231,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2380px",
+        "top": "1260px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 232,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2397px",
+        "top": "1260px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 233,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2363px",
+        "top": "1277px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 234,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2380px",
+        "top": "1277px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 235,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2397px",
+        "top": "1277px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 236,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2363px",
+        "top": "1294px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 237,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2380px",
+        "top": "1294px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 238,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2397px",
+        "top": "1294px",
+        "width": "9px",
+        "height": "9px",
+        "background": "rgb(255, 255, 255)",
+        "borderRadius": "50%"
+      },
+      "html": "",
+      "attrs": {}
+    },
+    {
+      "key": 239,
+      "tag": "div",
+      "className": "a",
+      "style": {
+        "left": "2347px",
+        "top": "1325px",
+        "width": "60px",
+        "height": "2px",
+        "background": "rgb(224, 227, 235)"
+      },
+      "html": "",
+      "attrs": {}
+    }
+  ],
+  "icons": {
+    "search": "<circle cx=\"10\" cy=\"10\" r=\"6\"/><path d=\"M15 15l5.5 5.5\"/>",
+    "plus": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M12 8v8M8 12h8\"/>",
+    "bars": "<path d=\"M8 4v16M5 8h3M8 15h3M16 3v15M16 7h3M13 12h3\"/>",
+    "ind": "<path d=\"M3 21V12h3v9M9 21V8h3v13M15 21v-7h3v7M3 21h18M5 8l5-4 4 3 6-5\"/>",
+    "grid": "<rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/><path d=\"M16.7 13.5v6.5M13.5 16.7H20\"/>",
+    "alert": "<circle cx=\"11\" cy=\"13\" r=\"7.5\"/><path d=\"M11 8.5V13l3 2M19 3v6M16 6h6\"/>",
+    "rew": "<path d=\"M12 6l-7 6 7 6zM21 6l-7 6 7 6z\"/>",
+    "undo": "<path d=\"M9 7L4 12l5 5M4 12h10a6 6 0 010 8h-3\"/>",
+    "redo": "<path d=\"M15 7l5 5-5 5M20 12H10a6 6 0 000 8h3\"/>",
+    "sq": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"14\" rx=\"3\"/>",
+    "chev": "<path d=\"M6 9l6 6 6-6\"/>",
+    "chevu": "<path d=\"M6 15l6-6 6 6\"/>",
+    "bolt": "<circle cx=\"10\" cy=\"10\" r=\"6.5\"/><path d=\"M15 15l5 5M10 6v4l3 2\"/>",
+    "gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 3l7 4v10l-7 4-7-4V7z\"/>",
+    "full": "<path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/>",
+    "cam": "<path d=\"M4 8h3l2-3h6l2 3h3v11H4z\"/><circle cx=\"12\" cy=\"13\" r=\"3.5\"/>",
+    "cross": "<path d=\"M12 3v7M12 14v7M3 12h7M14 12h7\"/>",
+    "line": "<path d=\"M5 19L19 5\"/><circle cx=\"5\" cy=\"19\" r=\"2\"/><circle cx=\"19\" cy=\"5\" r=\"2\"/>",
+    "fib": "<path d=\"M3 6h18M9 11h12M9 16h12M3 21h18\"/><circle cx=\"4\" cy=\"11\" r=\"1.6\"/><circle cx=\"4\" cy=\"16\" r=\"1.6\"/>",
+    "pat": "<path d=\"M5 18L9 5l8 13 3-12M9 5L5 18\"/><circle cx=\"5\" cy=\"18\" r=\"1.8\"/><circle cx=\"9\" cy=\"5\" r=\"1.8\"/><circle cx=\"17\" cy=\"18\" r=\"1.8\"/><circle cx=\"20\" cy=\"6\" r=\"1.8\"/>",
+    "fc": "<path d=\"M3 6h5M3 12h7M3 18h5M12 8h9M12 16h9\"/><circle cx=\"10\" cy=\"6\" r=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"1.8\"/><circle cx=\"19\" cy=\"12\" r=\"1.8\"/>",
+    "brush": "<path d=\"M4 20c0-3 2-4 4-4l2-3 6-5 3 3-5 6-3 2c0 2-3 3-7 1zM17 5l2-2 3 3-2 2\"/>",
+    "T": "<path d=\"M5 5h14M12 5v15M9 20h6\"/>",
+    "smile": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 14c2 3 6 3 8 0M9 9.5v.5M15 9.5v.5\"/>",
+    "ruler": "<path d=\"M3 16L16 3l5 5L8 21zM7 12l3 3M10 9l2 2M13 6l3 3\"/>",
+    "zoom": "<circle cx=\"11\" cy=\"11\" r=\"7.5\"/><path d=\"M16.5 16.5L21 21M11 8v6M8 11h6\"/>",
+    "magnet": "<path d=\"M6 21v-9a6 6 0 0112 0v9M6 17h3v4M15 17h3v4M9 12a3 3 0 016 0v5\"/>",
+    "penl": "<path d=\"M5 18l-1 3 3-1L17 10l-2-2zM14 6l2-2 3 3-2 2\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"6\" rx=\"1\"/><path d=\"M16 14v-2a1.5 1.5 0 013 0v2\"/>",
+    "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 017-2\"/>",
+    "eye": "<path d=\"M2 12c3-5 7-7 10-7s7 2 10 7c-3 5-7 7-10 7s-7-2-10-7z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>",
+    "link": "<path d=\"M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1\"/>",
+    "trash": "<path d=\"M5 7h14M10 7V4h4v3M7 7l1 14h8l1-14M10 11v6M14 11v6\"/>",
+    "note": "<path d=\"M6 3h12v18H6zM9 8h6M9 12h6M9 16h4\"/>",
+    "clock": "<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 7v5l3 2M5 3L3 5M19 3l2 2\"/>",
+    "layers": "<path d=\"M12 4l9 5-9 5-9-5zM3 14l9 5 9-5\"/>",
+    "chat": "<path d=\"M4 4h16v12h-9l-5 4v-4H4z\"/><path d=\"M8 9h8M8 12h5\"/>",
+    "radar": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"1.5\"/><path d=\"M12 12l6-6\"/>",
+    "mount": "<path d=\"M3 20l7-12 4 6 2-3 5 9zM9 4l3-1 3 1-3 2z\"/>",
+    "cal": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M4 10h16M8 3v4M16 3v4\"/>",
+    "cast": "<path d=\"M4 14a6 6 0 016 6M4 9a11 11 0 0111 11M4 4a16 16 0 0116 16\"/><circle cx=\"5\" cy=\"19\" r=\"1\"/>",
+    "help": "<path d=\"M5 20c-2-1-2-5 0-6 0-5 4-9 9-9s7 4 6 8c-1 4-5 6-8 5\"/><path d=\"M12 10a2 2 0 114 0c0 1.5-2 2-2 3.5M14 17v.5\"/>",
+    "dots": "<circle cx=\"5\" cy=\"12\" r=\"1.6\"/><circle cx=\"12\" cy=\"12\" r=\"1.6\"/><circle cx=\"19\" cy=\"12\" r=\"1.6\"/>",
+    "x": "<path d=\"M5 5l14 14M19 5L5 19\"/>",
+    "play": "<path d=\"M7 4l12 8-12 8z\"/>",
+    "step": "<path d=\"M5 4l10 8-10 8zM19 4v16\"/>",
+    "jump": "<path d=\"M4 4l10 8-10 8zM17 4v16M21 4v16\"/>",
+    "sel": "<path d=\"M4 4v16M8 12h12M12 7l-5 5 5 5\"/>",
+    "pm": "<path d=\"M5 19L19 5M7 8h4M7 6v4M13 18h4\"/>",
+    "cmp": "<path d=\"M3 17l5-6 4 3 8-9\"/><path d=\"M5 20v-3M12 20v-6M20 20V8\"/>",
+    "expand": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"14\" rx=\"3\"/><path d=\"M12 8v4\"/>",
+    "hl": "<path d=\"M3 12h6M15 12h6\"/><circle cx=\"12\" cy=\"12\" r=\"2.2\"/>",
+    "addo": "<path d=\"M3 19l5-6 4 3 7-9\"/><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M14 17h6M17 14v6\"/>",
+    "wl": "<path d=\"M4 4h16v16H4z\"/>",
+    "arrow": "<circle cx=\"5\" cy=\"19\" r=\"1.8\"/><path d=\"M6.5 17.5L19 5M19 5h-6M19 5v6\"/>",
+    "ray": "<circle cx=\"5\" cy=\"19\" r=\"1.8\"/><path d=\"M6.5 17.5L21 3\"/>",
+    "info": "<circle cx=\"4\" cy=\"19\" r=\"1.6\"/><circle cx=\"20\" cy=\"5\" r=\"1.6\"/><path d=\"M5.5 17.5L18.5 6.5\"/><rect x=\"8\" y=\"9\" width=\"7\" height=\"5\" rx=\"1\"/>",
+    "extl": "<path d=\"M3 21L21 3\"/><circle cx=\"9\" cy=\"15\" r=\"1.8\"/><circle cx=\"15\" cy=\"9\" r=\"1.8\"/>",
+    "angle": "<path d=\"M4 20L20 7M4 20h16M11 20a7 7 0 00-2-4.5\"/><circle cx=\"4\" cy=\"20\" r=\"1.6\"/>",
+    "hray": "<circle cx=\"5\" cy=\"12\" r=\"2\"/><path d=\"M7 12h14\"/>",
+    "vline": "<path d=\"M12 3v6M12 15v6\"/><circle cx=\"12\" cy=\"12\" r=\"2\"/>",
+    "crossl": "<path d=\"M12 3v18M3 12h18\"/>",
+    "chan": "<path d=\"M4 15L16 4M8 21L20 10\"/><circle cx=\"4\" cy=\"15\" r=\"1.5\"/><circle cx=\"16\" cy=\"4\" r=\"1.5\"/><circle cx=\"8\" cy=\"21\" r=\"1.5\"/><circle cx=\"20\" cy=\"10\" r=\"1.5\"/>",
+    "short": "<path d=\"M3 6h6M3 12h8M3 18h6M13 8h8M13 16h8\"/><circle cx=\"11\" cy=\"6\" r=\"1.8\"/><circle cx=\"13\" cy=\"12\" r=\"1.8\"/><circle cx=\"11\" cy=\"18\" r=\"1.8\"/>",
+    "forecast": "<path d=\"M5 5v14M3 9h4v6H3zM12 7v12M10 11h4v5h-4z\"/><path d=\"M17 9l4 3-4 3\"/>",
+    "barsp": "<path d=\"M5 4v16M3 8h2M5 14h2M12 7v13M10 11h2M12 16h2M19 4v9M17 8h2\"/>",
+    "ghost": "<path d=\"M5 6v12M3 9h2M5 14h2M11 8v10M9 11h2M11 15h2\"/><path d=\"M17 7v10M15 10h2M17 13h2\" stroke-dasharray=\"2 2\"/>",
+    "projn": "<path d=\"M6 19L10 6c5 0 9 6 10 13z\"/><circle cx=\"6\" cy=\"19\" r=\"1.5\"/><circle cx=\"10\" cy=\"6\" r=\"1.5\"/>",
+    "avwap": "<circle cx=\"5\" cy=\"12\" r=\"1.8\"/><path d=\"M6.5 11c4-8 6 9 14 0\"/>",
+    "frvp": "<path d=\"M5 4v16M5 7h9M5 11h5M5 15h11M5 19h7\"/>",
+    "avp": "<path d=\"M6 5v15M6 8h11M6 12h7M6 16h9\"/><circle cx=\"6\" cy=\"4\" r=\"1.8\"/>",
+    "prange": "<path d=\"M12 4v16M8 4h8M8 20h8M10 8l2-2 2 2M10 16l2 2 2-2\"/>",
+    "drange": "<path d=\"M4 12h16M4 8v8M20 8v8M8 10l-2 2 2 2M16 10l2 2-2 2\"/>",
+    "dprange": "<rect x=\"4\" y=\"4\" width=\"16\" height=\"16\" rx=\"1\"/><path d=\"M12 4v16M4 12h16\"/>",
+    "fibx": "<path d=\"M3 5h18M3 12h18M3 19h18\"/><path d=\"M5 17L12 8\"/><circle cx=\"5\" cy=\"17\" r=\"1.4\"/><circle cx=\"12\" cy=\"8\" r=\"1.4\"/>",
+    "pitch": "<path d=\"M4 20L12 12M12 12L20 4M12 12L21 12M12 12L20 20\"/><circle cx=\"4\" cy=\"20\" r=\"1.4\"/>",
+    "schiff": "<path d=\"M4 20L11 11M11 11L20 3M11 11L21 11M11 11L20 19\"/><circle cx=\"4\" cy=\"20\" r=\"1.4\"/>",
+    "mschiff": "<path d=\"M4 20L9 9M9 9L20 3M9 9L21 10M9 9L20 19\"/><circle cx=\"4\" cy=\"20\" r=\"1.4\"/>",
+    "inpitch": "<path d=\"M4 20L12 12M12 12L20 4M12 12L17 12M12 12L18 18\"/><circle cx=\"4\" cy=\"20\" r=\"1.4\"/>",
+    "fibch": "<path d=\"M3 21L21 3M3 15L15 3M9 21L21 9\"/>",
+    "fibtz": "<path d=\"M5 4v16M9 4v16M15 4v16M21 4v16\"/>"
+  },
+  "groups": {
+    "lines": {
+      "y": 199,
+      "cur": "trend",
+      "secs": [
+        [
+          null,
+          [
+            ["trend", "Trend Line", "line", "Alt + T", 1],
+            ["arrow", "Arrow", "arrow"],
+            ["ray", "Ray", "ray"],
+            ["info", "Info Line", "info", "", 1],
+            ["extl", "Extended Line", "extl", "", 1],
+            ["angle", "Trend Angle", "angle"],
+            ["hline", "Horizontal Line", "hl", "Alt + H"],
+            ["hray", "Horizontal Ray", "hray", "Alt + J"],
+            ["vline", "Vertical Line", "vline", "Alt + V"],
+            ["cross", "Cross Line", "crossl", "Alt + C"],
+            ["chan", "Parallel Channel", "chan"]
+          ]
+        ]
+      ]
+    },
+    "fib": {
+      "y": 270,
+      "cur": "fibr",
+      "secs": [
+        [
+          null,
+          [
+            ["fibr", "Fib Retracement", "fib", "Alt + F"],
+            ["fibext", "Trend-Based Fib Extension", "fibx"],
+            ["pitch", "Pitchfork", "pitch"],
+            ["schiff", "Schiff Pitchfork", "schiff"],
+            ["mschiff", "Modified Schiff Pitchfork", "mschiff"],
+            ["inpitch", "Inside Pitchfork", "inpitch"],
+            ["fibch", "Fib Channel", "fibch"],
+            ["fibtz", "Fib Time Zone", "fibtz"]
+          ]
+        ]
+      ]
+    },
+    "proj": {
+      "y": 413,
+      "cur": "long",
+      "secs": [
+        [
+          "PROJECTION",
+          [
+            ["long", "Long Position", "fc"],
+            ["short", "Short Position", "short"],
+            ["forecast", "Forecast", "forecast"],
+            ["barsp", "Bars Pattern", "barsp"],
+            ["ghost", "Ghost Feed", "ghost"],
+            ["projn", "Projection", "projn"]
+          ]
+        ],
+        [
+          "VOLUME-BASED",
+          [
+            ["avwap", "Anchored VWAP", "avwap"],
+            ["frvp", "Fixed Range Volume Profile", "frvp"],
+            ["avp", "Anchored Volume Profile", "avp"]
+          ]
+        ],
+        [
+          "MEASURER",
+          [
+            ["prange", "Price Range", "prange"],
+            ["drange", "Date Range", "drange"],
+            ["dprange", "Date and Price Range", "dprange"]
+          ]
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,167 @@
+/* Exact supplied styles, scoped to the chart workspace. */
+
+.html-workspace {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.html-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2419px;
+  height: 1512px;
+  transform-origin: 0 0;
+  background: #eef1f6;
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif;
+  color: #131722;
+  font-size: 28px;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+.html-stage * {
+  box-sizing: border-box;
+}
+.html-stage .a {
+  position: absolute;
+  white-space: nowrap;
+}
+.html-stage .c {
+  transform: translate(-50%, -50%);
+}
+.html-stage .v {
+  transform: translateY(-50%);
+}
+.html-stage .i {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  fill: none;
+  stroke: #131722;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.html-stage .d {
+  position: absolute;
+  width: 2px;
+  background: #e0e3eb;
+}
+.html-stage .p {
+  position: absolute;
+  background: #fff;
+  border-radius: 14px;
+}
+.html-stage .g {
+  color: #787b86;
+}
+
+.html-stage .fl {
+  position: absolute;
+  left: 104px;
+  width: 464px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.18),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  padding: 10px 0;
+  z-index: 5;
+  display: none;
+}
+.html-stage .fr {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  padding: 0 22px 0 24px;
+  font-size: 26px;
+  color: #131722;
+  cursor: pointer;
+  position: relative;
+}
+.html-stage .fr:hover {
+  background: #f0f3fa;
+}
+.html-stage .fr.on,
+.html-stage .fr.on:hover {
+  background: #2962ff;
+  color: #fff;
+}
+.html-stage .fr.dis {
+  color: #b2b5be;
+  cursor: default;
+}
+.html-stage .fr.dis:hover {
+  background: none;
+}
+.html-stage .fi {
+  width: 44px;
+  height: 44px;
+  margin-right: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.html-stage .fn {
+  flex: 1;
+  white-space: nowrap;
+}
+.html-stage .fk {
+  font-size: 22px;
+  color: #9598a1;
+  margin-right: 10px;
+}
+.html-stage .fr.on .fk {
+  color: #cfe0ff;
+}
+.html-stage .star {
+  width: 44px;
+  height: 44px;
+  opacity: 0;
+  position: relative;
+  flex: none;
+}
+.html-stage .star svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #787b86;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+.html-stage .fr:hover .star,
+.html-stage .star.fav {
+  opacity: 1;
+}
+.html-stage .star.fav svg {
+  fill: #f7a600;
+  stroke: #f7a600;
+}
+.html-stage .star:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 56px;
+  right: -6px;
+  background: #131722;
+  color: #fff;
+  font-size: 22px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.html-stage .tab {
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.html-stage .tb:hover .tab,
+.html-stage .tab.on {
+  opacity: 1;
+}
+
+.html-stage .h:hover {
+  background: rgba(120, 123, 134, 0.14);
+}

@@ -73,7 +73,7 @@ export class ReplaySession {
     if (this.view.cursor > this.dataset.warmup) await this.seek(this.view.cursor - 1);
   }
   setSpeed(speed: number) {
-    if (![0.5, 1, 2, 5, 10].includes(speed)) throw new Error("Invalid replay speed.");
+    if (![0.5, 1, 2, 3, 5, 10, 30].includes(speed)) throw new Error("Invalid replay speed.");
     this.view = { ...this.view, speed };
     this.emit();
   }
@@ -173,7 +173,7 @@ export async function restoreReplay(raw: string, versions: EngineVersions): Prom
     !Number.isInteger(saved.cursor) ||
     saved.cursor < d.warmup ||
     saved.cursor >= d.bars.length ||
-    ![0.5, 1, 2, 5, 10].includes(saved.speed) ||
+    ![0.5, 1, 2, 3, 5, 10, 30].includes(saved.speed) ||
     !Array.isArray(saved.scripts) ||
     saved.scripts.some((s) => typeof s.source !== "string" || typeof s.id !== "string")
   )

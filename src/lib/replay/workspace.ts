@@ -1,7 +1,14 @@
-import { getNativeIndicator, sharedBarStore, registerWidgetAction } from "@luxalgo/vela";
+import { getNativeIndicator, sharedBarStore } from "@luxalgo/vela";
 import { VelaWorkspace } from "@luxalgo/vela/workspace";
 import { PineEngine } from "@luxalgo/vela-pinets";
-import type { DataProvider, InputValue, VelaTheme } from "@luxalgo/vela";
+import type {
+  DataProvider,
+  InputValue,
+  VelaTheme,
+  OHLCV,
+  DrawingTypeKey,
+  VisibleRangePreset,
+} from "@luxalgo/vela";
 import { asOfSeries, createDataset, intervalOf, WARMUP_BARS, type ReplayDataset } from "./dataset";
 import { ReplayBarrier, ReplayEngine } from "./engine";
 import {
@@ -15,7 +22,13 @@ import {
 import { ENGINE_VERSIONS, REPLAY_VERIFIED } from "./versions";
 import { ManagedHandles, MANAGED_PREFIX } from "./managed-handle";
 
-import { simulate, type TradingTape, type TradingState, type OrderInput } from "./trading";
+import {
+  simulate,
+  type TradingTape,
+  type TradingState,
+  type OrderInput,
+  type TradingAction,
+} from "./trading";
 
 type Script = SavedReplay["scripts"][number];
 export type ReplayHostView = {
@@ -29,6 +42,16 @@ export type ReplayHostView = {
   selectionTime?: number | null;
   tradeOpen?: boolean;
   trading?: TradingState | null;
+  market?: {
+    symbol: string;
+    timeframe: string;
+    description: string;
+    quote: string;
+    tick: number;
+    bar: OHLCV | null;
+  };
+  crosshairPrice?: number | null;
+  drawingTool?: string | null;
 };
 export type ReplayHost = ReturnType<typeof createReplayHost>;
 const scriptsOf = (ws: VelaWorkspace): Script[] =>
@@ -54,6 +77,10 @@ export function createReplayHost(
   let session: ReplaySession | null = null;
   let disposed = false;
   let tradingTape: TradingTape | null = null;
+  let positionDrawing: string | null = null;
+  const overlayIds = new Set<string>();
+  const protectionIds = new Map<string, "stopLoss" | "takeProfit">();
+  let uiScale = 0.5;
   const idleWaiters = new Set<() => void>();
   let operation = 0;
   const hostId = crypto.randomUUID().replaceAll("-", "").slice(0, 12);
@@ -76,12 +103,6 @@ export function createReplayHost(
     if (!disposed) {
       state = { ...state, ...next };
       changed({ ...state });
-      for (const button of element.querySelectorAll<HTMLButtonElement>(
-        ".vela-widget-action-left",
-      )) {
-        if (button.textContent === "Replay")
-          button.setAttribute("aria-pressed", String(!!state.dataset || !!state.selecting));
-      }
       if (!state.loading) {
         for (const resolve of idleWaiters) resolve();
         idleWaiters.clear();
@@ -95,6 +116,91 @@ export function createReplayHost(
     element.append(node);
     return node;
   };
+  function syncPosition() {
+    if (!ws) return;
+    for (const id of overlayIds) ws.chart.drawings.remove(id);
+    overlayIds.clear();
+    protectionIds.clear();
+    positionDrawing = null;
+    const dataset = state.dataset;
+    if (!dataset || !state.view) return;
+    const remember = (doc: ReturnType<typeof ws.chart.drawings.add>, locked = false) => {
+      if (doc) {
+        overlayIds.add(doc.id);
+        if (locked) ws.chart.drawings.lock(doc.id, true);
+      }
+      return doc;
+    };
+    for (const fill of state.trading?.fills ?? []) {
+      if (fill.reason.endsWith("entry")) continue;
+      remember(
+        ws.chart.drawings.add("pricelabel", {
+          anchors: [{ time: dataset.bars[fill.cursor]!.time, price: fill.price }],
+          style: { lineColor: fill.reason.startsWith("Stop") ? "#f23645" : "#089981" },
+          text: {
+            value: `${fill.reason.startsWith("Stop") ? "SL" : fill.reason.startsWith("Take") ? "TP" : "Closed"} @ ${fill.price}`,
+            size: "normal",
+            hAlign: "left",
+            vAlign: "top",
+          },
+        }),
+        true,
+      );
+    }
+    const p = state.trading?.position;
+    if (!p) return;
+    const lastEntry = state.trading?.fills
+      .slice()
+      .reverse()
+      .find((f) => f.reason.endsWith("entry"));
+    const time = dataset.bars[lastEntry?.cursor ?? state.view.cursor]!.time;
+    for (const [key, price] of [
+      ["entry", p.entry],
+      ["stopLoss", p.stopLoss],
+      ["takeProfit", p.takeProfit],
+    ] as const) {
+      if (price == null) continue;
+      const doc = remember(
+        ws.chart.drawings.add("hline", {
+          anchors: [{ time, price }],
+          style: {
+            lineColor: key === "entry" ? "#2962ff" : key === "stopLoss" ? "#f23645" : "#089981",
+            lineWidth: 2,
+            lineStyle: "solid",
+          },
+          text: {
+            value:
+              key === "entry"
+                ? `${p.side === "buy" ? "Long" : "Short"} ${p.quantity} · ${state.trading?.unrealized.toFixed(2)}`
+                : `${key === "stopLoss" ? "SL" : "TP"} ${price}`,
+            size: "normal",
+            hAlign: "right",
+            vAlign: "top",
+          },
+        }),
+        key === "entry",
+      );
+      if (doc && key !== "entry") protectionIds.set(doc.id, key);
+    }
+    if (p.stopLoss == null || p.takeProfit == null) return;
+    const doc = remember(
+      ws.chart.drawings.add("position", {
+        anchors: [
+          { time, price: p.entry },
+          { time: time + dataset.interval * 20, price: p.stopLoss },
+          { time: time + dataset.interval * 20, price: p.takeProfit },
+        ],
+        props: {
+          quantity: p.quantity,
+          showPrices: true,
+          showHeader: true,
+          profitColor: "#089981",
+          lossColor: "#f23645",
+        },
+      }),
+    );
+    positionDrawing = doc?.id ?? null;
+  }
   function persist() {
     if (!session || !state.dataset || state.loading || state.view?.status === "calculating") return;
     try {
@@ -116,7 +222,10 @@ export function createReplayHost(
   function snapshot(target: VelaWorkspace) {
     return {
       renderer: target.chart.renderer.getConfig(),
-      drawings: target.chart.drawings.getConfig(),
+      drawings: {
+        ...target.chart.drawings.toJSON(),
+        drawings: target.chart.drawings.all().filter((d) => !overlayIds.has(d.id)),
+      },
       visibleRange: target.chart.getVisibleRange(),
       natives: target.chart
         .indicators()
@@ -204,21 +313,26 @@ export function createReplayHost(
       : null;
     const target = new VelaWorkspace(node, {
       layout: false,
+      drawingToolbar: false,
+      statusline: false,
+      watermark: false,
+      bottombar: false,
+      layoutMode: "desktop",
       theme,
       symbol: dataset ? `${namespace}:${symbol}` : liveIdentity.symbol,
       timeframe: dataset?.timeframe ?? liveIdentity.timeframe,
       live: !dataset,
       topbar: {
-        left: ["symbol", "timeframes", "style", "indicators", "actions", "undo-redo"],
-        right: ["actions", "panels", "screenshot"],
+        left: ["symbol", "timeframes", "style", "indicators", "undo-redo"],
+        right: ["panels", "screenshot"],
       },
       ...(dataset
         ? {
             data: dataset.bars.map((b) => ({ ...b })),
             priceStyle: "candles",
             topbar: {
-              left: ["indicators", "actions", "undo-redo"],
-              right: ["actions", "panels", "screenshot"],
+              left: ["indicators", "undo-redo"],
+              right: ["panels", "screenshot"],
             },
           }
         : {}),
@@ -236,12 +350,23 @@ export function createReplayHost(
     });
     try {
       await target.chart.ready();
+
       if (disposed || epoch !== operation) throw new Error("Replay transition superseded.");
       if (dataset && cursor < dataset.bars.length - 1)
         await target.replay.start({ from: dataset.bars[cursor]!.time });
       // At the final candle all of the immutable bounded tape is legitimately
       // revealed. live:false and the non-streaming provider keep it frozen.
       await applySnapshot(target, chartState, !!dataset);
+      target.chart.renderer.applyConfig({
+        layout: {
+          background: "#fff",
+          textColor: "#131722",
+          fontFamily: '-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif',
+          fontSize: 26 * uiScale,
+        },
+        grid: { vertLines: { color: "#f4f6fa" }, horzLines: { color: "#f4f6fa" } },
+        crosshair: { color: "#b2b5be", width: 2, labelBackground: "#131722" },
+      });
       if (dataset && !state.dataset) {
         const lastOpen = dataset.bars[cursor]!.time;
         const visible = target.chart.getVisibleRange();
@@ -274,7 +399,109 @@ export function createReplayHost(
       // analytical states; current candles remain owned by this native workspace.
       // This bounds memory without sharing future data with any new state.
       if (dataset) sharedBarStore.clear();
+      const info =
+        dataset?.symbolInfo ??
+        (await target.chart.data.symbolInfo(target.chart.market.symbol ?? ""));
+      const readout = target.chart.renderer.dataWindowReadout();
+      const numberOf = (value: string | undefined) => Number((value ?? "").replaceAll(",", ""));
+      const initialBar = dataset
+        ? dataset.bars[cursor]!
+        : readout?.ohlc
+          ? {
+              time: Date.parse(`${readout.date}T${readout.time}:00Z`),
+              open: numberOf(readout.ohlc.o),
+              high: numberOf(readout.ohlc.h),
+              low: numberOf(readout.ohlc.l),
+              close: numberOf(readout.ohlc.c),
+              volume: 0,
+            }
+          : null;
+      let market = {
+        symbol:
+          dataset?.symbol ??
+          target.chart.data.canonicalSymbol(target.chart.market.symbol ?? "") ??
+          target.chart.market.symbol ??
+          "BTCUSDT",
+        timeframe: dataset?.timeframe ?? target.chart.market.timeframe ?? "60",
+        description: String(info?.["description"] ?? ""),
+        quote: String(info?.["currency"] ?? "USD"),
+        tick: Number(info?.["mintick"] ?? 0.01),
+        bar: initialBar,
+      };
+      emit({ market });
+      target.chart.on("bar", (bar) => {
+        if (target === ws && !dataset) {
+          market = { ...market, bar };
+          emit({ market });
+        }
+      });
+      const refreshMarket = async () => {
+        if (target !== ws || dataset) return;
+        const symbol = target.chart.market.symbol ?? "BTCUSDT",
+          timeframe = target.chart.market.timeframe ?? "60";
+        const readout = target.chart.renderer.dataWindowReadout();
+        const nextInfo = await target.chart.data.symbolInfo(symbol).catch(() => undefined);
+        if (
+          disposed ||
+          target !== ws ||
+          symbol !== target.chart.market.symbol ||
+          timeframe !== target.chart.market.timeframe
+        )
+          return;
+        liveIdentity = { symbol, timeframe };
+        market = {
+          symbol: target.chart.data.canonicalSymbol(symbol) ?? symbol,
+          timeframe,
+          description: String(nextInfo?.["description"] ?? ""),
+          quote: String(nextInfo?.["currency"] ?? "USD"),
+          tick: Number(nextInfo?.["mintick"] ?? 0.01),
+          bar: readout?.ohlc
+            ? {
+                time: Date.parse(`${readout.date}T${readout.time}:00Z`),
+                open: numberOf(readout.ohlc.o),
+                high: numberOf(readout.ohlc.h),
+                low: numberOf(readout.ohlc.l),
+                close: numberOf(readout.ohlc.c),
+                volume: 0,
+              }
+            : null,
+        };
+        emit({ market });
+      };
+      target.chart.on("market:changed", () => {
+        void refreshMarket();
+      });
+      target.chart.on("load:end", () => {
+        void refreshMarket();
+      });
+      target.chart.on("drawing:tool", ({ type }) => emit({ drawingTool: type }));
+      target.chart.on("drawing:edited", ({ id }) => {
+        if (!state.trading?.position || state.loading) return;
+        if (session?.view.status !== "paused") {
+          syncPosition();
+          return;
+        }
+        const doc = target.chart.drawings.all().find((d) => d.id === id);
+        const protection = protectionIds.get(id);
+        if (protection && doc?.anchors[0]) {
+          const p = state.trading.position;
+          api.trade({
+            amend: {
+              stopLoss: p.stopLoss,
+              takeProfit: p.takeProfit,
+              [protection]: doc.anchors[0].price,
+            },
+          });
+        } else if (id === positionDrawing) {
+          const stopLoss = doc?.anchors[1]?.price,
+            takeProfit = doc?.anchors[2]?.price;
+          if (stopLoss != null && takeProfit != null)
+            api.trade({ amend: { stopLoss, takeProfit } });
+        }
+      });
       target.chart.renderer.onCrosshairMove((event) => {
+        if (target !== ws || state.loading) return;
+        emit({ crosshairPrice: event.price });
         if (state.selecting && !state.loading) emit({ selectionTime: event.time });
       });
       target.chart.renderer.onClick((event) => {
@@ -308,22 +535,9 @@ export function createReplayHost(
   function selectBar() {
     if (state.loading) return;
     session?.pause();
+    if (!state.selecting) ws.chart.drawings.setTool(null);
     emit({ selecting: !state.selecting, selectionTime: null });
   }
-  const unregisterReplay = registerWidgetAction({
-    id: `deplyze-replay-${hostId}`,
-    target: "topbar",
-    align: "left",
-    label: "Replay",
-    run: selectBar,
-  });
-  const unregisterTrade = registerWidgetAction({
-    id: `deplyze-trade-${hostId}`,
-    target: "topbar",
-    align: "right",
-    label: "Trade",
-    run: () => emit({ tradeOpen: !state.tradeOpen }),
-  });
   const firstMount = mount(null, 0, [], null)
     .then(() => {
       let saved = false;
@@ -346,7 +560,7 @@ export function createReplayHost(
     restoredTrading?: TradingTape,
   ) {
     session?.dispose();
-    tradingTape = restoredTrading ?? { version: 1, start: cursor, actions: [] };
+    tradingTape = restoredTrading ?? { version: 2, start: cursor, actions: [] };
     simulate(dataset, tradingTape, cursor);
     emit({ loading: true, error: "", selecting: false });
     let initial = true;
@@ -385,6 +599,7 @@ export function createReplayHost(
       (view) => {
         if (!initial) {
           emit({ dataset, view });
+          if (view.status !== "calculating") syncPosition();
           if (view.status !== "calculating") persist();
         }
       },
@@ -399,12 +614,67 @@ export function createReplayHost(
       return;
     }
     emit({ loading: false, dataset, view: { ...session.view } });
+    syncPosition();
     persist();
   }
   const api = {
     selectBar,
+    tools(type: DrawingTypeKey | null) {
+      if (!state.loading) {
+        emit({ selecting: false });
+        ws.chart.drawings.setTool(type);
+      }
+    },
+    drawHorizontal(price: number) {
+      if (!state.loading && Number.isFinite(price))
+        ws.chart.drawings.add("hline", {
+          anchors: [{ time: state.market?.bar?.time ?? Date.now(), price }],
+        });
+    },
+    clearDrawings() {
+      ws.chart.drawings.removeMany(
+        ws.chart.drawings
+          .all()
+          .filter((d) => !overlayIds.has(d.id))
+          .map((d) => d.id),
+      );
+    },
+    undo: () => ws.active.history.undo(),
+    redo: () => ws.active.history.redo(),
+    range: (preset: VisibleRangePreset) => ws.chart.setVisibleRangePreset(preset),
+    mode: (mode: "measure" | null) => ws.chart.drawings.setMode(mode),
+    snap: () =>
+      ws.chart.drawings.setSnapMode(ws.chart.drawings.getSnapMode() === "off" ? "strong" : "off"),
+    nativeControl(label: string) {
+      const button = [...element.querySelectorAll<HTMLButtonElement>("button")].find(
+        (b) =>
+          b.title === label ||
+          b.getAttribute("aria-label")?.startsWith(label) ||
+          b.textContent?.trim() === label,
+      );
+      button?.click();
+    },
+    search: () => {
+      if (!session) ws.context().openSymbolSearch();
+    },
+    timeframe: (tf: string) => {
+      if (!session) ws.context().setTimeframe(tf);
+    },
+    screenshot: () => ws.downloadScreenshot(),
+    settings: () => ws.chart.renderer.openSettings(),
+    scaleUi(value: number) {
+      uiScale = value;
+      if (ws) ws.chart.renderer.applyConfig({ layout: { fontSize: 26 * uiScale } });
+    },
+    rangeDays(days: number) {
+      const to =
+        (state.market?.bar?.time ?? Date.now()) + intervalOf(state.market?.timeframe ?? "60");
+      ws.chart.setVisibleRange({ from: to - days * 86400000, to });
+    },
+    setView: (range: { from: number; to: number }) => ws.chart.setVisibleRange(range),
+    drawings: () => ws.chart.drawings.all(),
     toggleTrade: () => emit({ tradeOpen: !state.tradeOpen }),
-    trade(order: OrderInput | "close" | "cancel") {
+    trade(order: TradingAction["order"]) {
       if (
         !state.dataset ||
         !session ||
@@ -417,14 +687,19 @@ export function createReplayHost(
       try {
         const next = {
           ...tradingTape,
-          actions: [...tradingTape.actions, { cursor: session.view.cursor, order }],
+          actions: [
+            ...tradingTape.actions,
+            { cursor: session.view.cursor, order: structuredClone(order) },
+          ],
         };
         const trading = simulate(state.dataset, next, session.view.cursor);
         tradingTape = next;
         emit({ trading, error: "" });
+        syncPosition();
         persist();
       } catch (error) {
         emit({ error: error instanceof Error ? error.message : String(error) });
+        syncPosition();
       }
     },
     async enter(selectedClose: number) {
@@ -578,8 +853,6 @@ export function createReplayHost(
       ++operation;
       session?.dispose();
       clearTimeout(persistTimer);
-      unregisterReplay();
-      unregisterTrade();
       ws?.destroy();
       element.replaceChildren();
     },

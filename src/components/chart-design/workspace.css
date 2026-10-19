@@ -1,0 +1,129 @@
+/* Integration seams only. All design geometry, color, typography and icons are supplied. */
+.html-workspace {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #eef1f6;
+  color-scheme: light;
+}
+.html-stage {
+  isolation: isolate;
+}
+.html-stage button,
+.html-stage input {
+  font-family: inherit;
+  color: inherit;
+}
+.html-stage .source-hit {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 3;
+}
+.html-stage .source-hit:disabled {
+  cursor: default;
+}
+.html-stage .source-chart {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 14px 14px 0 0;
+  background: #fff;
+}
+.html-stage .html-native {
+  position: absolute;
+  inset: 0;
+}
+.html-native .vela-widget-topbar,
+.html-native .vela-widget-bottombar,
+.html-native .vela-mobile-bar {
+  display: none !important;
+}
+.html-native .vela-workspace {
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+.html-native .vela-widget-attribution {
+  display: none;
+}
+.html-stage .source-price-input {
+  width: 220px;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  outline: none;
+  user-select: text;
+}
+.html-stage .source-toast {
+  position: absolute;
+  left: 1000px;
+  top: 130px;
+  transform: translateX(-50%);
+  background: #131722;
+  color: #fff;
+  font-size: 24px;
+  padding: 12px 26px;
+  border-radius: 10px;
+  z-index: 6;
+  white-space: nowrap;
+  max-width: 1500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.html-stage .source-execution-note {
+  z-index: 4;
+  cursor: help;
+}
+.html-stage .source-position-status {
+  max-width: 1110px;
+  overflow: hidden;
+}
+.html-stage .source-close {
+  z-index: 4;
+  cursor: pointer;
+}
+.html-stage .source-selection-time {
+  position: absolute;
+  left: 107px;
+  top: 1214px;
+  background: #131722;
+  color: #fff;
+  font-size: 25px;
+  padding: 8px 16px;
+  pointer-events: none;
+}
+.html-stage .source-attribution {
+  position: absolute;
+  left: 150px;
+
+  font-size: 16px;
+  color: #787b86;
+}
+.html-stage .tb {
+  z-index: 4;
+}
+.html-stage .source-calendar button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+}
+.html-stage .source-hit:focus-visible,
+.html-stage .tab:focus-visible,
+.html-stage .fr:focus-visible {
+  outline: 2px solid #2962ff;
+  outline-offset: 2px;
+}
+.html-stage {
+  line-height: normal;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+.html-native [data-vela-pane-at-top] {
+  top: var(--source-legend-offset) !important;
+}

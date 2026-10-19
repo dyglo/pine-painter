@@ -1,7 +1,6 @@
 import { brandSvg } from "@/lib/branding";
 import { useEffect, useRef, useState } from "react";
-import { ReplayTradingPanel } from "./ReplayTradingPanel";
-import { BarReplayControls } from "./BarReplayControls";
+import { HtmlReplayWorkspace } from "./chart-design/HtmlReplayWorkspace";
 import type { ReplayHost, ReplayHostView } from "@/lib/replay/workspace";
 import { createChartRunner, type RunOutcome } from "@/lib/ai/chart-runner";
 
@@ -58,18 +57,16 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
       ]);
       if (disposed || !ref.current) return;
       restoreBranding = registerRendererDefaults({ attribution: brandSvg });
-      const tokens = getComputedStyle(ref.current);
-      const token = (name: string) => tokens.getPropertyValue(name).trim();
       const host = createReplayHost(
         ref.current,
         {
-          background: token("--background"),
-          textColor: token("--muted-foreground"),
-          gridColor: token("--card"),
-          borderColor: token("--border"),
-          upColor: token("--success"),
-          downColor: token("--destructive"),
-          fontFamily: token("--font-sans"),
+          background: "#ffffff",
+          textColor: "#131722",
+          gridColor: "#f4f6fa",
+          borderColor: "#e0e3eb",
+          upColor: "#089981",
+          downColor: "#f23645",
+          fontFamily: '-apple-system,BlinkMacSystemFont,"Trebuchet MS",Roboto,Ubuntu,sans-serif',
         },
         {
           binance: () => new BinanceProvider(),
@@ -93,41 +90,5 @@ export function ChartWorkspace({ onReady }: { onReady: (api: ChartApi) => void }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div
-      className={`replay-workspace flex h-full min-h-0 w-full ${replay.dataset ? "is-replaying" : "is-live"} ${replay.selecting ? "is-selecting" : ""}`}
-    >
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="relative min-h-0 flex-1">
-          <div
-            ref={ref}
-            className="absolute inset-0"
-            inert={replay.loading}
-            aria-busy={replay.loading}
-          />
-          {replay.selecting && (
-            <div className="replay-selection" role="status">
-              Select a historical candle ·{" "}
-              {replay.selectionTime != null
-                ? new Date(replay.selectionTime).toISOString().replace("T", " ").slice(0, 16) +
-                  " UTC"
-                : "Move the crosshair, then click"}
-              <span>
-                {replay.dataset
-                  ? "Only revealed candles can be selected. Future candles stay hidden."
-                  : "Click to begin a bounded replay session."}
-              </span>
-            </div>
-          )}
-          {replay.loading && (
-            <div className="replay-calculating" role="status">
-              Preparing closed-candle state…
-            </div>
-          )}
-        </div>
-        <BarReplayControls state={replay} host={hostRef.current} />
-      </div>
-      {replay.tradeOpen && <ReplayTradingPanel state={replay} host={hostRef.current} />}
-    </div>
-  );
+  return <HtmlReplayWorkspace state={replay} host={hostRef.current} chartRef={ref} />;
 }

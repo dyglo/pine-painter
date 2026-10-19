@@ -1,17 +1,25 @@
 import type { ReplayDataset } from "./dataset";
 
-export const TRADING_VERSION = 1;
+export const TRADING_VERSION = 2;
 export const COSTS = Object.freeze({ spreadBps: 2, slippageBps: 1, commissionBps: 1 });
 export type OrderInput = {
   side: "buy" | "sell";
-  type: "market" | "limit" | "stop";
+  type: "market" | "limit" | "stop" | "stop-limit";
   quantity: number;
   price?: number;
+  limitPrice?: number;
   stopLoss?: number | undefined;
   takeProfit?: number | undefined;
 };
-export type TradingAction = { cursor: number; order: OrderInput | "close" | "cancel" };
-export type TradingTape = { version: 1; start: number; actions: TradingAction[] };
+export type TradingAction = {
+  cursor: number;
+  order:
+    | OrderInput
+    | "close"
+    | "cancel"
+    | { amend: { stopLoss?: number | undefined; takeProfit?: number | undefined } };
+};
+export type TradingTape = { version: 1 | 2; start: number; actions: TradingAction[] };
 export type Fill = {
   cursor: number;
   side: "buy" | "sell";
@@ -40,7 +48,7 @@ export type TradingState = {
 export function validateOrder(order: OrderInput, mark: number) {
   if (
     !["buy", "sell"].includes(order.side) ||
-    !["market", "limit", "stop"].includes(order.type) ||
+    !["market", "limit", "stop", "stop-limit"].includes(order.type) ||
     !Number.isFinite(order.quantity) ||
     order.quantity <= 0 ||
     order.quantity > 1e9
@@ -49,8 +57,9 @@ export function validateOrder(order: OrderInput, mark: number) {
   const positive = (value: number | undefined) =>
     value == null || (Number.isFinite(value) && value > 0);
   if (
-    ![order.price, order.stopLoss, order.takeProfit].every(positive) ||
-    (order.type !== "market" && !order.price)
+    ![order.price, order.limitPrice, order.stopLoss, order.takeProfit].every(positive) ||
+    (order.type !== "market" && !order.price) ||
+    (order.type === "stop-limit" && !order.limitPrice)
   )
     throw new Error("Order prices must be positive finite numbers.");
   const entry = order.type === "market" ? mark : order.price!;
@@ -68,7 +77,7 @@ export function validateOrder(order: OrderInput, mark: number) {
  * fills start at the next observed bar. No account currency conversion or leverage. */
 export function simulate(dataset: ReplayDataset, tape: TradingTape, cursor: number): TradingState {
   if (
-    tape.version !== TRADING_VERSION ||
+    ![1, TRADING_VERSION].includes(tape.version) ||
     !Number.isInteger(tape.start) ||
     tape.start < dataset.warmup ||
     tape.start > cursor ||
@@ -116,6 +125,7 @@ export function simulate(dataset: ReplayDataset, tape: TradingTape, cursor: numb
     s.position = null;
   };
   let actionIndex = 0;
+  let triggeredAt = -1;
   for (let i = tape.start; i <= cursor; i++) {
     const b = dataset.bars[i]!;
     if (i > tape.start) {
@@ -127,33 +137,42 @@ export function simulate(dataset: ReplayDataset, tape: TradingTape, cursor: numb
       } else if (s.pending) {
         const o = s.pending;
         const buy = o.side === "buy";
+        // Stop-limit activation is known only at bar close. Delay its limit leg
+        // until the following observed candle to avoid inventing intrabar ordering.
+        if (
+          o.type === "stop-limit" &&
+          triggeredAt === -1 &&
+          (buy ? b.high >= o.price! : b.low <= o.price!)
+        )
+          triggeredAt = i;
+        const isLimit =
+          o.type === "limit" || (o.type === "stop-limit" && triggeredAt >= 0 && triggeredAt < i);
+        const price = o.type === "stop-limit" ? o.limitPrice! : o.price!;
         const hit =
           o.type === "market" ||
-          (o.type === "limit"
+          (isLimit
             ? buy
-              ? b.low <= o.price!
-              : b.high >= o.price!
-            : buy
-              ? b.high >= o.price!
-              : b.low <= o.price!);
+              ? b.low <= price
+              : b.high >= price
+            : o.type !== "stop-limit" && (buy ? b.high >= price : b.low <= price));
         if (hit) {
           const raw =
             o.type === "market"
               ? b.open
-              : o.type === "limit"
+              : isLimit
                 ? buy
-                  ? Math.min(b.open, o.price!)
-                  : Math.max(b.open, o.price!)
+                  ? Math.min(b.open, price)
+                  : Math.max(b.open, price)
                 : buy
-                  ? Math.max(b.open, o.price!)
-                  : Math.min(b.open, o.price!);
+                  ? Math.max(b.open, price)
+                  : Math.min(b.open, price);
           const entry = execute(
             raw,
             o.side,
             o.quantity,
             i,
             `${o.type} entry`,
-            o.type === "limit" ? o.price : undefined,
+            isLimit ? price : undefined,
           );
           s.position = {
             side: o.side,
@@ -196,6 +215,13 @@ export function simulate(dataset: ReplayDataset, tape: TradingTape, cursor: numb
       else if (action === "close") {
         if (!s.position || s.pending) throw new Error("No available position to close.");
         s.pending = "close";
+      } else if ("amend" in action) {
+        if (!s.position) throw new Error("No open position to amend.");
+        validateOrder(
+          { side: s.position.side, type: "market", quantity: s.position.quantity, ...action.amend },
+          s.position.entry,
+        );
+        s.position = { ...s.position, ...action.amend };
       } else {
         validateOrder(action, b.close);
         if (s.position || s.pending)
@@ -203,6 +229,7 @@ export function simulate(dataset: ReplayDataset, tape: TradingTape, cursor: numb
             "Only one position or pending entry is supported. Close or cancel first.",
           );
         s.pending = { ...action };
+        triggeredAt = -1;
       }
     }
   }
