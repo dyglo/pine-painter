@@ -16,6 +16,9 @@ export function SourceNode({
     attrs["viewBox"] = attrs["viewbox"];
     delete attrs["viewbox"];
   }
+  if ([36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52].includes(node.key)) {
+    attrs["viewBox"] = "0 0 28 28";
+  }
   // SVG geometry/text from the user's local source, never remote/user input.
   return createElement(
     node.tag,

@@ -12,6 +12,7 @@
 .html-stage {
   isolation: isolate;
   background: #fff;
+  text-rendering: geometricPrecision;
 }
 .html-stage button,
 .html-stage input {
@@ -25,6 +26,404 @@
   border-radius: 8px;
   cursor: pointer;
   z-index: 3;
+}
+.html-stage .h:hover {
+  background: rgba(120, 123, 134, 0.12);
+}
+.html-stage [data-source-node="3"] {
+  height: 76px;
+}
+.html-stage [data-source-node="4"],
+.html-stage [data-source-node="5"] {
+  top: 76px;
+}
+.html-stage [data-source-node="4"] {
+  width: 104px;
+  border-right: 1px solid #e0e3eb;
+  background: #ffffff;
+}
+
+/* ───────── TradingView-style left drawing toolbar (from prototype) ───────── */
+
+/* All left-toolbar SVG icons: 56px source (28px scaled), stroke-width: 1.2 from prototype */
+.html-stage .i[data-source-node="36"],
+.html-stage .i[data-source-node="37"],
+.html-stage .i[data-source-node="38"],
+.html-stage .i[data-source-node="39"],
+.html-stage .i[data-source-node="40"],
+.html-stage .i[data-source-node="41"],
+.html-stage .i[data-source-node="42"],
+.html-stage .i[data-source-node="43"],
+.html-stage .i[data-source-node="44"],
+.html-stage .i[data-source-node="45"],
+.html-stage .i[data-source-node="46"],
+.html-stage .i[data-source-node="47"],
+.html-stage .i[data-source-node="48"],
+.html-stage .i[data-source-node="49"],
+.html-stage .i[data-source-node="50"],
+.html-stage .i[data-source-node="52"] {
+  width: 56px;
+  height: 56px;
+  left: 52px;
+  stroke: #131722;
+  stroke-width: 1.2;
+}
+.html-stage .i[data-source-node="37"] circle,
+.html-stage .i[data-source-node="38"] circle,
+.html-stage .i[data-source-node="39"] circle,
+.html-stage .i[data-source-node="40"] circle {
+  fill: #ffffff;
+  stroke: #131722;
+  stroke-width: 1.2;
+}
+
+/* Tool tile container (34px x 34px in prototype, 68px x 68px at source scale) */
+.html-stage [data-source-node="35"] {
+  border-radius: 12px !important;
+  left: 18px;
+  width: 68px;
+  height: 68px;
+}
+
+/* Separator lines (32px wide in prototype, 64px at source scale) */
+.html-stage [data-source-node="53"],
+.html-stage [data-source-node="54"] {
+  left: 20px;
+  width: 64px;
+  height: 2px;
+  background: #e0e3eb;
+}
+
+/* "Stay in Drawing Mode" toggle */
+.html-stage [data-source-node="51"] {
+  border-radius: 12px !important;
+  left: 18px;
+  width: 68px;
+  height: 68px;
+}
+
+/* Active indicator matching prototype .tile.on in light theme */
+.html-stage .tv-tool-active {
+  border-radius: 12px !important;
+  left: 18px !important;
+  width: 68px !important;
+  height: 68px !important;
+  background: #e6f0ff !important;
+}
+
+/* Prototype-style chevron indicator on active flyout groups */
+.html-stage .tb {
+  z-index: 4;
+}
+.html-stage .tab {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+.html-stage .tb:hover .tab,
+.html-stage .tab.on {
+  opacity: 1;
+}
+.html-stage .chart-widget-bar {
+  position: absolute;
+  top: 76px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 64px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  border: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(255, 255, 255, 0.82) 58%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+.html-stage .chart-widget-bar > * {
+  pointer-events: auto;
+}
+.html-stage .chart-legend {
+  display: flex;
+  min-width: 0;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  margin-right: 6px;
+}
+.html-stage .chart-legend-icon {
+  width: 32px;
+  height: 32px;
+  flex: none;
+}
+.html-stage .chart-legend-title {
+  overflow: hidden;
+  max-width: 420px;
+  color: #131722;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 32px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.html-stage .chart-quote-btn {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 168px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+}
+.html-stage .chart-quote-btn.sell {
+  background: #f23645;
+}
+.html-stage .chart-quote-btn.buy {
+  background: #2962ff;
+}
+.html-stage .chart-quote-btn:hover {
+  filter: brightness(0.96);
+}
+.html-stage .chart-quote-px {
+  font-size: 22px;
+  line-height: 22px;
+}
+.html-stage .chart-quote-side {
+  font-size: 16px;
+  letter-spacing: 1.4px;
+  line-height: 18px;
+}
+.html-stage .chart-quote-qty {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 36px;
+  border: 2px solid #e0e3eb;
+  border-radius: 6px;
+  background: #fff;
+  color: #131722;
+  font-size: 22px;
+  line-height: 32px;
+}
+.html-stage .chart-quote-btn:focus-visible {
+  outline: 2px solid #2962ff;
+  outline-offset: 2px;
+}
+/* Pixel-perfect TradingView Light Theme Drawing Flyout Modals */
+.html-stage .fl {
+  position: absolute;
+  z-index: 20;
+  box-sizing: border-box;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px #e0e3eb, 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-radius: 0 12px 12px 0;
+  padding: 12px 0;
+  color: #131722;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 1200px;
+  font-family: -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif;
+  user-select: none;
+}
+.html-stage .fl::-webkit-scrollbar {
+  width: 8px;
+}
+.html-stage .fl::-webkit-scrollbar-thumb {
+  background: #d1d4dc;
+  border-radius: 4px;
+}
+.html-stage .fl::-webkit-scrollbar-track {
+  background: transparent;
+}
+.html-stage .fl .hd {
+  box-sizing: border-box;
+  height: 60px;
+  padding: 12px 0 0 30px;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #787b86;
+  font-weight: 500;
+}
+.html-stage .fl .sp {
+  height: 2px;
+  background: #e0e3eb;
+  margin: 12px 14px 0;
+}
+.html-stage .fl .row {
+  box-sizing: border-box;
+  height: 80px;
+  margin: 0 14px;
+  padding-left: 6px;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #131722;
+  transition: background 0.1s ease;
+}
+.html-stage .fl .row:hover,
+.html-stage .fl .row.hv {
+  background: #f0f3fa;
+  color: #131722;
+}
+.html-stage .fl .row.on {
+  background: #e6f0ff;
+  color: #2962ff;
+}
+.html-stage .fl .ic {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.html-stage .fl .i {
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.html-stage .fl .lb {
+  margin-left: 10px;
+  flex: 1;
+  font-size: 28px;
+  white-space: nowrap;
+  color: inherit;
+}
+.html-stage .fl .ky {
+  margin-right: 22px;
+  font-size: 26px;
+  color: #787b86;
+  white-space: nowrap;
+}
+.html-stage .fl .row.on .ky {
+  color: #2962ff;
+}
+.html-stage .fl .st {
+  all: unset;
+  width: 36px;
+  height: 36px;
+  margin-right: 18px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b2b5be;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.1s ease, color 0.1s ease;
+}
+.html-stage .fl .row:hover .st,
+.html-stage .fl .st.fav {
+  opacity: 1;
+}
+.html-stage .fl .st.fav {
+  color: #f2a900;
+}
+.html-stage .fl .s {
+  width: 36px;
+  height: 36px;
+  fill: currentColor;
+  stroke: none;
+}
+.html-stage .fl .hp {
+  width: 32px;
+  height: 32px;
+  margin-left: 16px;
+  border-radius: 50%;
+  background: #e0e3eb;
+  color: #787b86;
+  font-size: 22px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+/* Emoji Flyout Modal */
+.html-stage .fl .emoji-panel {
+  box-sizing: border-box;
+}
+.html-stage .fl .emoji-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 -12px;
+  border-bottom: 2px solid #e0e3eb;
+  padding: 0 16px;
+}
+.html-stage .fl .emoji-tab {
+  all: unset;
+  box-sizing: border-box;
+  height: 76px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  color: #787b86;
+  border-bottom: 4px solid transparent;
+  cursor: pointer;
+}
+.html-stage .fl .emoji-tab:hover {
+  color: #131722;
+}
+.html-stage .fl .emoji-tab.on {
+  color: #131722;
+  border-bottom-color: #2962ff;
+  font-weight: 500;
+}
+.html-stage .fl .emoji-search {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  height: 68px;
+  padding: 0 24px;
+  background: #f0f3fa;
+  border: 2px solid #e0e3eb;
+  border-radius: 12px;
+  font-size: 28px;
+  color: #131722;
+}
+.html-stage .fl .emoji-search:focus {
+  border-color: #2962ff;
+  background: #ffffff;
+}
+.html-stage .fl .emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  margin: 8px -4px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.html-stage .fl .cell {
+  width: 76px;
+  height: 76px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.html-stage .fl .cell:hover {
+  background: #f0f3fa;
+}
+.html-stage .fl .f {
+  width: 56px;
+  height: 56px;
 }
 .html-stage .source-hit:disabled {
   cursor: default;
@@ -143,14 +542,14 @@
 }
 .quant-sidebar {
   position: absolute;
-  top: 44px;
+  top: 38px;
   right: 0;
   bottom: 0;
   z-index: 12;
   display: flex;
   flex-direction: column;
   width: 42px;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
   overflow-y: auto;
   scrollbar-width: none;
   overscroll-behavior: contain;
@@ -174,7 +573,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 46px;
+  height: 38px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -183,8 +582,8 @@
 }
 .quant-sidebar-button::before {
   position: absolute;
-  width: 34px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 4px;
   content: "";
 }
@@ -201,16 +600,17 @@
 }
 .quant-sidebar-button svg {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 .quant-sidebar-button[aria-label="More apps"]::before {
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #131722;
 }
@@ -230,7 +630,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 14px;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 12px;
   border-top: 1px solid #e0e3eb;
   background: #fff;
   color: #131722;

@@ -13,6 +13,7 @@ import { RightSidebar } from "./RightSidebar";
 import type { WorkspacePanel } from "../ChartWorkspace";
 import { SourceNode, HitTarget } from "./SourceNode";
 import { DrawingFlyout } from "./DrawingFlyout";
+import { FLYOUT_GROUPS } from "./flyout-data";
 import { TOOL_MAP, GROUPS, type GroupKey } from "./drawing-tools";
 import { ReplayCalendar } from "./ReplayCalendar";
 import { BRAND } from "@/lib/branding";
@@ -31,6 +32,7 @@ const omitted = new Set([
   ...Array.from({ length: 26 }, (_, i) => 55 + i),
   ...Array.from({ length: 37 }, (_, i) => 89 + i),
 ]);
+const HEADER = 76;
 
 export function HtmlReplayWorkspace({
   state,
@@ -94,9 +96,13 @@ export function HtmlReplayWorkspace({
     [riskInput, setRiskInput] = useState(""),
     [orderPrice, setOrderPrice] = useState("");
   const [groupTools, setGroupTools] = useState<Record<GroupKey, string>>({
-    lines: "trend",
-    fib: "fibr",
-    proj: "long",
+    lines: "trendline",
+    fib: "fib-retracement",
+    pattern: "xabcd-pattern",
+    proj: "long-position",
+    brush: "brush",
+    text: "text",
+    emoji: "emoji-0",
   });
   const [flash, setFlash] = useState("");
   const flashTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -309,7 +315,8 @@ export function HtmlReplayWorkspace({
     const key = node.key,
       l = parseFloat(node.style.left),
       t = parseFloat(node.style.top);
-    if (key === 1 || (key >= 169 && key <= 175) || key >= 220) return null;
+    if (key === 1 || (key >= 81 && key <= 88) || (key >= 169 && key <= 175) || key >= 220)
+      return null;
     if (l >= 1735 && l < 2330 && t >= 80 && !panel) return null;
     if (l >= 107 && l < 1740 && t >= 1268 && t < 1362 && !replay) return null;
     if (key >= 126 && key <= 140 && !menu) return null;
@@ -320,13 +327,68 @@ export function HtmlReplayWorkspace({
       children: ReactNode | undefined,
       markup: string | undefined;
     if (key === 35 && tool !== "cursor") style = { ...style, display: "none" };
-    if ([37, 38, 40].includes(key)) {
-      const group = key === 37 ? "lines" : key === 38 ? "fib" : "proj";
-      const row = GROUPS[group].secs
-        .flatMap(([, rows]) => rows)
-        .find((r) => r[0] === groupTools[group]);
-      if (row) markup = toolIcons[row[2]];
+    if (key === 35 && tool === "cursor") style = { ...style, background: "#e6f0ff" };
+    // Pixel-perfect TradingView light theme icon paths directly from the prototype
+    const tvIcons: Record<number, string> = {
+      // 1. Cross (viewBox 0 0 28 28)
+      36: '<path d="M14 5v6M14 17v6M5 14h6M17 14h6"/>',
+      // 2. Trend Line (viewBox 0 0 28 28)
+      37: '<path d="M9.2 18.8L18.8 9.2"/><circle cx="8" cy="20" r="2.2"/><circle cx="20" cy="8" r="2.2"/>',
+      // 3. Fib and Gann (viewBox 0 0 28 28)
+      38: '<path d="M11 8h11M6 14h16M6 20h11"/><circle cx="8.5" cy="8" r="2"/><circle cx="19.5" cy="20" r="2"/>',
+      // 4. Patterns (viewBox 0 0 28 28)
+      39: '<path d="M7.2 19.2L9.6 9.6M11.6 10.6l3 6.4M16.4 16.4l3.6-6.8M20.6 11.4l-6 9.6M7.8 20.2l5.4 1.2M10.4 8.5l8.4.8"/><circle cx="7" cy="20" r="1.8"/><circle cx="10" cy="8" r="1.8"/><circle cx="15" cy="18" r="1.8"/><circle cx="21" cy="9" r="1.8"/><circle cx="21" cy="21" r="1.8"/>',
+      // 5. Projection (viewBox 0 0 28 28)
+      40: '<path d="M6 8h16M13 14h9M6 20h16M9 12v8M9 12h4"/><circle cx="9" cy="20" r="1.6"/>',
+      // 6. Brushes and shapes (viewBox 0 0 28 28)
+      41: '<path d="M21.5 6.5l-8.8 8.8 2 2 8.8-8.8a1.4 1.4 0 0 0 0-2l0 0a1.4 1.4 0 0 0-2 0z"/><path d="M12.2 15.8c-2.4-.4-4 1-4.4 3-.2 1-.8 1.7-2.3 2 3.4 1.6 7.2.6 8.2-2.2.3-.8.2-1.9-.6-2.4"/>',
+      // 7. Text and notes (viewBox 0 0 28 28)
+      42: '<path d="M8 8.5h12M14 8.5v12M12 20.5h4"/>',
+      // 8. Icons and emojis (viewBox 0 0 28 28)
+      43: '<circle cx="14" cy="14" r="8.5"/><path d="M10.6 16.6c.9 1.4 2 2.1 3.4 2.1s2.5-.7 3.4-2.1"/><circle cx="11.3" cy="11.8" r=".9" fill="currentColor" stroke="none"/><circle cx="16.7" cy="11.8" r=".9" fill="currentColor" stroke="none"/>',
+      // 9. Measure (viewBox 0 0 28 28)
+      44: '<g transform="rotate(-45 14 14)"><rect x="2.5" y="10" width="23" height="8" rx="1.2"/><path d="M6.5 10v3M10.5 10v4.5M14.5 10v3M18.5 10v4.5M22.5 10v3"/></g>',
+      // 10. Zoom in (viewBox 0 0 28 28)
+      45: '<circle cx="12.5" cy="12.5" r="6.5"/><path d="M17.3 17.3L23 23M12.5 9.7v5.6M9.7 12.5h5.6"/>',
+      // 11. Magnet mode (viewBox 0 0 28 28)
+      46: '<path d="M7.5 6.5h4.5v10a2 2 0 0 0 4 0v-10h4.5v10a6.5 6.5 0 0 1-13 0z"/><path d="M7.5 11h4.5M16 11h4.5"/>',
+      // 12. Stay in drawing mode (viewBox 0 0 28 28)
+      47: '<path d="M16.6 6.4l3 3-9.5 9.5-4 1 1-4z"/><path d="M14.6 8.4l3 3"/><rect x="16.5" y="17" width="7" height="5.5" rx="1"/><path d="M18 17v-1.4a2 2 0 0 1 4 0V17"/>',
+      // 13. Lock all drawings (viewBox 0 0 28 28)
+      48: '<rect x="8" y="13" width="12" height="9" rx="1.6"/><path d="M10.5 13v-3a3.5 3.5 0 0 1 6.6-1.6"/><circle cx="14" cy="17.5" r="1" fill="currentColor" stroke="none"/>',
+      // 14. Hide all drawings (viewBox 0 0 28 28)
+      49: '<path d="M4 14s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"/><circle cx="14" cy="14" r="3"/>',
+      // 15. Stay in drawing mode toggle icon (node 52)
+      52: '<path d="M16.6 6.4l3 3-9.5 9.5-4 1 1-4z"/><path d="M14.6 8.4l3 3"/><rect x="16.5" y="17" width="7" height="5.5" rx="1"/><path d="M18 17v-1.4a2 2 0 0 1 4 0V17"/>',
+      // 16. Remove objects / Trash (viewBox 0 0 28 28)
+      50: '<path d="M7 9h14M12 9V7h4v2M9 9l1 12.5h8L19 9M12.5 12.5v6.5M15.5 12.5v6.5"/>',
+    };
+    if (tvIcons[key]) markup = tvIcons[key];
+
+    // Show currently active tool icon for any of the 7 flyout groups
+    const groupKeyMap: Record<number, GroupKey> = {
+      37: "lines",
+      38: "fib",
+      39: "pattern",
+      40: "proj",
+      41: "brush",
+      42: "text",
+      43: "emoji",
+    };
+    if (groupKeyMap[key]) {
+      const gKey = groupKeyMap[key]!;
+      const flyoutGroup = FLYOUT_GROUPS[gKey];
+      if (flyoutGroup && flyoutGroup.sections) {
+        const found = flyoutGroup.sections
+          .flatMap((s) => s.rows)
+          .find((r) => r.id === groupTools[gKey]);
+        if (found) markup = found.svg;
+      }
     }
+
+    /* "Stay in Drawing Mode" → TradingView light theme: transparent bg, dark icon */
+    if (key === 51) style = { ...style, background: "transparent", borderRadius: 8 };
+    if (key === 52) style = { ...style, stroke: "#131722" };
     if (key === 6) {
       markup = `<circle cx="24" cy="24" r="24" fill="#131722"/><path d="${BRAND.monogramPath}" fill="#fff" transform="translate(8 8)"/>`;
     }
@@ -335,33 +397,6 @@ export function HtmlReplayWorkspace({
     if (key === 21) style = { ...style, background: replay ? "#131722" : "transparent" };
     if (key === 22) style = { ...style, stroke: replay ? "#fff" : "#131722" };
     if (key === 23) style = { ...style, color: replay ? "#fff" : "#131722" };
-    if (key === 82) {
-      children = `${ticker} · ${timeframe} · ${(state.dataset?.symbol ?? state.market?.symbol ?? "").split(":")[0]?.toUpperCase() ?? ""}`;
-      style = { ...style, maxWidth: 350, overflow: "hidden" };
-    }
-    if (key === 81)
-      markup = `<circle cx="18" cy="18" r="18" fill="#131722"/><path d="${BRAND.monogramPath}" fill="#fff" transform="translate(5 3) scale(.85)"/>`;
-    if (key === 84)
-      children = bar ? (
-        <span style={{ color: bar.close >= bar.open ? "#089981" : "#f23645" }}>
-          {(["open", "high", "low", "close"] as const).map((k) => (
-            <Fragment key={k}>
-              <span style={{ color: "#131722" }}>{k[0]!.toUpperCase()}</span>
-              {priceText(bar[k])}&nbsp;&nbsp;
-            </Fragment>
-          ))}
-        </span>
-      ) : null;
-    if (key === 85 || key === 88)
-      children = (
-        <>
-          <div style={{ fontSize: 24, lineHeight: "26px" }}>{mark ? priceText(mark) : "–"}</div>
-          <div style={{ fontSize: 21, letterSpacing: 2, lineHeight: "26px" }}>
-            {key === 85 ? "SELL" : "BUY"}
-          </div>
-        </>
-      );
-    if (key === 87) children = quantity;
     if (key === 146) markup = playing ? '<path d="M8 5v14M16 5v14"/>' : toolIcons["play"];
     if (key === 148) children = `${speed}x`;
     if (key === 142) style = { ...style, stroke: state.selecting ? "#2962ff" : "#131722" };
@@ -518,12 +553,12 @@ export function HtmlReplayWorkspace({
           style={
             {
               left: 107,
-              top: 80,
+              top: HEADER,
               width: (1625 + (panel ? 0 : 593) + fit.extraWidth - dockWidth) * fit.scale,
-              height: (1188 + (replay ? 0 : 94) + fit.extraHeight) * fit.scale,
+              height: (1192 + (replay ? 0 : 94) + fit.extraHeight) * fit.scale,
               transform: `scale(${1 / fit.scale})`,
               transformOrigin: "0 0",
-              "--source-legend-offset": `${140 * fit.scale}px`,
+              "--source-legend-offset": "36px",
             } as CSSProperties
           }
           onContextMenu={(e) => {
@@ -539,19 +574,56 @@ export function HtmlReplayWorkspace({
           .filter((key) => GROUPS[key].secs.some(([, rows]) => rows.some((r) => r[0] === tool)))
           .map((key) => (
             <div
-              className="a"
+              className="a tv-tool-active"
               key={key}
               style={place({
-                left: 17,
+                left: 14,
                 top: GROUPS[key].y - 32,
-                width: 64,
-                height: 64,
-                background: "#f0f3fa",
-                borderRadius: 10,
+                width: 68,
+                height: 68,
+                background: "#e6f0ff",
+                borderRadius: 8,
               })}
             />
           ))}
         {source.nodes.slice(6).map(renderNode)}
+        <div
+          className="chart-widget-bar"
+          style={{
+            ...place({ left: 107, top: HEADER }),
+            width: 1625 + (panel ? 0 : 593) + fit.extraWidth - dockWidth,
+          }}
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="chart-legend">
+            <svg className="chart-legend-icon" viewBox="0 0 36 36" aria-hidden="true">
+              <circle cx="18" cy="18" r="18" fill="#131722" />
+              <path d={BRAND.monogramPath} fill="#fff" transform="translate(5 3) scale(.85)" />
+            </svg>
+            <div className="chart-legend-title">
+              {`${ticker} · ${timeframe} · ${(state.dataset?.symbol ?? state.market?.symbol ?? "").split(":")[0]?.toUpperCase() ?? ""}`}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="chart-quote-btn sell"
+            aria-label="Sell quote"
+            onClick={() => openPanel("sell")}
+          >
+            <span className="chart-quote-px">{mark ? priceText(mark) : "–"}</span>
+            <span className="chart-quote-side">SELL</span>
+          </button>
+          <div className="chart-quote-qty">{quantity}</div>
+          <button
+            type="button"
+            className="chart-quote-btn buy"
+            aria-label="Buy quote"
+            onClick={() => openPanel("buy")}
+          >
+            <span className="chart-quote-px">{mark ? priceText(mark) : "–"}</span>
+            <span className="chart-quote-side">BUY</span>
+          </button>
+        </div>
         {panel &&
           source.nodes
             .filter((n) => n.tag === "input")
@@ -628,22 +700,19 @@ export function HtmlReplayWorkspace({
           else void root.current?.requestFullscreen();
         })}
         {hit(2206, 8, 50, 58, "Chart screenshot", () => host?.screenshot())}
-        {hit(121, 140, 122, 63, "Sell quote", () => openPanel("sell"))}
-        {hit(321, 140, 125, 63, "Buy quote", () => openPanel("buy"))}
         {hit(1580, 318, 38, 38, "Order context menu", () => {
           setMenuPrice(state.crosshairPrice ?? mark);
           setMenu(!menu);
         })}
-        {hit(17, 95, 64, 63, "Cursor", () => {
+        {hit(18, 92, 68, 68, "Cursor", () => {
           setTool("cursor");
           host?.tools(null);
           setFly(null);
         })}
-        {hit(17, 455, 64, 64, "Brush", () => host?.tools("freehand"))}
-        {hit(17, 525, 64, 64, "Text", () => host?.tools("text"))}
-        {hit(17, 694, 64, 64, "Measure", () => host?.mode("measure"))}
-        {hit(17, 861, 64, 64, "Magnet", () => host?.snap())}
-        {hit(17, 1246, 64, 64, "Delete drawings", () => host?.clearDrawings())}
+        {hit(18, 694, 68, 68, "Measure", () => host?.mode("measure"))}
+        {hit(18, 762, 68, 68, "Zoom in", () => host?.tools("magnifier"))}
+        {hit(18, 861, 68, 68, "Magnet", () => host?.snap())}
+        {hit(18, 1246, 68, 68, "Delete drawings", () => host?.clearDrawings())}
         {replay && (
           <>
             {hit(
