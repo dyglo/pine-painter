@@ -291,6 +291,10 @@
   align-items: center;
   justify-content: center;
 }
+.html-stage .fl .ic > .i {
+  position: static;
+  transform: none;
+}
 .html-stage .fl .i {
   width: 56px;
   height: 56px;
